@@ -7,7 +7,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
-import com.squareup.javapoet.WildcardTypeName;
+import com.squareup.javapoet.TypeVariableName;
 import de.fhws.applab.gemara.welling.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
@@ -25,9 +25,8 @@ public class ResourceListAdapter extends AbstractModelClass {
 	private final ClassName thisOnResourceClickListener;
 	private final ClassName adapterClassName = getAdapterClassName();
 	private final ClassName resourceClassName;
+	private final ClassName resourceViewHolderClassName;
 
-	//todo generic class
-	private final ParameterizedTypeName test;
 	private final ParameterizedTypeName resourceListType;
 
 	private final FieldSpec onResourceClickListener;
@@ -37,15 +36,13 @@ public class ResourceListAdapter extends AbstractModelClass {
 		super(packageName + ".generic.adapter", className);
 		this.thisClass = ClassName.get(this.packageName, this.className);
 		this.thisOnResourceClickListener = ClassName.get(this.packageName, "OnResourceClickListener");
-		ClassName resourceViewHolderClassName = ClassName.get(packageName + ".generic.viewHolder", "ResourceViewHolder");
+		this.resourceViewHolderClassName = ClassName.get(packageName + ".generic.viewHolder", "ResourceViewHolder");
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
 		this.resourceListType = ParameterizedTypeName.get(ClassName.get(List.class), this.resourceClassName);
 		this.onResourceClickListener = FieldSpec.builder(thisOnResourceClickListener, "onResourceClickListener")
 				.addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
 		this.resourceList = FieldSpec.builder(this.resourceListType, "resourceList").addModifiers(Modifier.PRIVATE, Modifier.FINAL)
-				.initializer("= new $T()", ParameterizedTypeName.get(ClassName.get(ArrayList.class), this.resourceClassName)).build();
-
-		test = ParameterizedTypeName.get(thisClass, WildcardTypeName.subtypeOf(resourceViewHolderClassName));
+				.initializer("new $T()", ParameterizedTypeName.get(ClassName.get(ArrayList.class), this.resourceClassName)).build();
 
 	}
 
@@ -66,12 +63,11 @@ public class ResourceListAdapter extends AbstractModelClass {
 				.build();
 
 		MethodSpec getViewHolder = MethodSpec.methodBuilder("getViewHolder").addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED)
-				.returns(WildcardTypeName.subtypeOf(Object.class))
-				.addParameter(ParameterSpec.builder(getViewClassName(), "moduleCard").build())
+				.returns(TypeVariableName.get("T")).addParameter(ParameterSpec.builder(getViewClassName(), "moduleCard").build())
 				.addParameter(ParameterSpec.builder(thisOnResourceClickListener, "onResourceClickListener").build()).build();
 
 		MethodSpec onCreateViewHolder = MethodSpec.methodBuilder("onCreateViewHolder").addModifiers(Modifier.PUBLIC)
-				.returns(WildcardTypeName.subtypeOf(Object.class)).addAnnotation(Override.class)
+				.returns(TypeVariableName.get("T")).addAnnotation(Override.class)
 				.addParameter(ParameterSpec.builder(getViewGroupClassName(), "parent").build())
 				.addParameter(ParameterSpec.builder(int.class, "viewType").build())
 				.addStatement("$T moduleCard = $T.from(parent.getContext()).inflate($N, parent, false)", getViewClassName(),
@@ -79,17 +75,17 @@ public class ResourceListAdapter extends AbstractModelClass {
 				.addStatement("return $N(moduleCard, $N)", getViewHolder, onResourceClickListener).build();
 
 		MethodSpec onBindViewHolder = MethodSpec.methodBuilder("onBindViewHolder").addModifiers(Modifier.PUBLIC).returns(void.class)
-				.addAnnotation(Override.class).addParameter(WildcardTypeName.subtypeOf(Object.class), "holder")
-				.addParameter(int.class, "position").addStatement("holder.assignData($N.get(position))", resourceList).build();
+				.addAnnotation(Override.class).addParameter(TypeVariableName.get("T"), "holder").addParameter(int.class, "position")
+				.addStatement("holder.assignData($N.get(position))", resourceList).build();
 
 		MethodSpec getItemCount = MethodSpec.methodBuilder("getItemCount").addModifiers(Modifier.PUBLIC).returns(int.class)
 				.addAnnotation(Override.class).addStatement("return $N.size()", resourceList).build();
 
-		TypeSpec type = TypeSpec.classBuilder(thisClass)
-				.superclass(ParameterizedTypeName.get(adapterClassName, WildcardTypeName.subtypeOf(Object.class)))
-				.addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC).addField(this.onResourceClickListener).addField(this.resourceList)
-				.addType(generateInterface()).addMethod(getLayout).addMethod(getViewHolder).addMethod(constructor).addMethod(addResource)
-				.addMethod(onCreateViewHolder).addMethod(onBindViewHolder).addMethod(getItemCount).build();
+		TypeSpec type = TypeSpec.classBuilder(thisClass).superclass(ParameterizedTypeName.get(adapterClassName, TypeVariableName.get("T")))
+				.addTypeVariable(TypeVariableName.get("T", resourceViewHolderClassName)).addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
+				.addField(this.onResourceClickListener).addField(this.resourceList).addType(generateInterface()).addMethod(getLayout)
+				.addMethod(getViewHolder).addMethod(constructor).addMethod(addResource).addMethod(onCreateViewHolder)
+				.addMethod(onBindViewHolder).addMethod(getItemCount).build();
 
 		return JavaFile.builder(thisClass.packageName(), type).build();
 	}
