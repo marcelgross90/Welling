@@ -65,6 +65,62 @@ public class AndroidSpecificClasses {
 		return ClassName.get("android.support.v7.widget.RecyclerView", "Adapter");
 	}
 
+	public static ClassName getDatePickerDialogClassName() {
+		return ClassName.get("android.app", "DatePickerDialog");
+	}
+
+	public static ClassName getOnDateSetListenerClassName() {
+		return ClassName.get("android.app.DatePickerDialog", "OnDateSetListener");
+	}
+
+	public static ClassName getDialogClassName() {
+		return ClassName.get("android.app", "Dialog");
+	}
+
+	public static ClassName getTimePickerDialogClassName() {
+		return ClassName.get("android.app", "TimePickerDialog");
+	}
+
+	public static ClassName getOnTimeSetListenerClassName() {
+		return ClassName.get("android.app.TimePickerDialog", "OnTimeSetListener");
+	}
+
+	public static ClassName getNonNullClassName() {
+		return ClassName.get("android.support.annotation", "NonNull");
+	}
+
+	public static ClassName getNullableClassName() {
+		return ClassName.get("android.support.annotation", "Nullable");
+	}
+
+	public static ClassName getDialogFragmentClassName() {
+		return ClassName.get("android.support.v4.app", "DialogFragment");
+	}
+
+	public static ClassName getDatePickerClassName() {
+		return ClassName.get("android.widget", "DatePicker");
+	}
+
+	public static ClassName getTimePickerClassName() {
+		return ClassName.get("android.widget", "TimePicker");
+	}
+
+	public static ClassName getDateFormatClassName() {
+		return ClassName.get("android.text.format", "DateFormat");
+	}
+
+	public static ClassName getAlertDialogBuilderClassName() {
+		return ClassName.get("android.app.AlertDialog", "Builder");
+	}
+
+	public static ClassName getDialogInterfaceClassName() {
+		return ClassName.get("android.content", "DialogInterface");
+	}
+
+	public static ClassName getDialogInterfaceOnClickListenerClassName() {
+		return ClassName.get("android.content.DialogInterface", "OnClickListener");
+	}
+
 	//Fields
 	public static FieldSpec getFragmentManagerField(Modifier... modifiers) {
 		return FieldSpec.builder(getFragmentManagerClassName(), "fragmentManager").addModifiers(modifiers).build();

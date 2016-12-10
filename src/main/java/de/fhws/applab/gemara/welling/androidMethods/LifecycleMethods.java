@@ -36,5 +36,14 @@ public class LifecycleMethods {
 
 	}
 
+	public static MethodSpec.Builder getOnCreateDialog() {
+		return MethodSpec.methodBuilder("onCreateDialog")
+				.addAnnotation(Override.class)
+				.addAnnotation(getNonNullClassName())
+				.addParameter(getSavedInstanceStateParam())
+				.addModifiers(Modifier.PUBLIC).returns(getDialogClassName())
+				.addStatement("super.onCreate($N)", getSavedInstanceStateParam());
+	}
+
 
 }

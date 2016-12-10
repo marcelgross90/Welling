@@ -2,6 +2,8 @@ package de.fhws.applab.gemara.welling;
 
 import com.squareup.javapoet.JavaFile;
 import de.fhws.applab.gemara.welling.lib.generic.adapter.ResourceListAdapter;
+import de.fhws.applab.gemara.welling.lib.generic.fragment.DateTimePickerFragment;
+import de.fhws.applab.gemara.welling.lib.generic.fragment.DeleteDialogFragment;
 import de.fhws.applab.gemara.welling.lib.generic.model.Link;
 import de.fhws.applab.gemara.welling.lib.generic.model.Resource;
 import de.fhws.applab.gemara.welling.lib.generic.network.HeaderParser;
@@ -49,7 +51,9 @@ public class Main {
 //		Link classs = new Link(model.getPackageName(), "Link");
 //		Resource classs = new Resource(model.getPackageName(), "Resource");
 		//ResourceViewHolder classs = new ResourceViewHolder(model.getPackageName(), "ResourceViewHolder");
-		ResourceListAdapter classs = new ResourceListAdapter(model.getPackageName(), "ResourceListAdapter");
+	//	ResourceListAdapter classs = new ResourceListAdapter(model.getPackageName(), "ResourceListAdapter");
+	//	DateTimePickerFragment classs = new DateTimePickerFragment(model.getPackageName(), "DateTimePickerFragment");
+		DeleteDialogFragment classs = new DeleteDialogFragment(model.getPackageName(), "DeleteDialogFragment");
 
 		JavaFile javaFile = classs.javaFile();
 
