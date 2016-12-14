@@ -2,6 +2,12 @@ package de.fhws.applab.gemara.welling;
 
 import com.squareup.javapoet.JavaFile;
 import de.fhws.applab.gemara.welling.lib.generic.adapter.ResourceListAdapter;
+import de.fhws.applab.gemara.welling.lib.generic.customView.AttributeInput;
+import de.fhws.applab.gemara.welling.lib.generic.customView.AttributeView;
+import de.fhws.applab.gemara.welling.lib.generic.customView.DateTimeView;
+import de.fhws.applab.gemara.welling.lib.generic.customView.ProfileImageView;
+import de.fhws.applab.gemara.welling.lib.generic.customView.ResourceDetailView;
+import de.fhws.applab.gemara.welling.lib.generic.customView.ResourceInputView;
 import de.fhws.applab.gemara.welling.lib.generic.fragment.DateTimePickerFragment;
 import de.fhws.applab.gemara.welling.lib.generic.fragment.DeleteDialogFragment;
 import de.fhws.applab.gemara.welling.lib.generic.model.Link;
@@ -53,7 +59,13 @@ public class Main {
 		//ResourceViewHolder classs = new ResourceViewHolder(model.getPackageName(), "ResourceViewHolder");
 	//	ResourceListAdapter classs = new ResourceListAdapter(model.getPackageName(), "ResourceListAdapter");
 	//	DateTimePickerFragment classs = new DateTimePickerFragment(model.getPackageName(), "DateTimePickerFragment");
-		DeleteDialogFragment classs = new DeleteDialogFragment(model.getPackageName(), "DeleteDialogFragment");
+	//	DeleteDialogFragment classs = new DeleteDialogFragment(model.getPackageName(), "DeleteDialogFragment");
+		//AttributeInput classs = new AttributeInput(model.getPackageName(), "AttributeInput");
+		//AttributeView classs = new AttributeView(model.getPackageName(), "AttributeView");
+		//DateTimeView classs = new DateTimeView(model.getPackageName(), "DateTimeView");
+//		ProfileImageView classs = new ProfileImageView(model.getPackageName(), "ProfileImageView");
+//		ResourceDetailView classs = new ResourceDetailView(model.getPackageName(), "ResourceDetailView");
+		ResourceInputView classs = new ResourceInputView(model.getPackageName(), "ResourceInputView");
 
 		JavaFile javaFile = classs.javaFile();
 
@@ -84,7 +96,10 @@ public class Main {
 		list.add(new Link(model.getPackageName(), "Link"));
 		list.add(new Resource(model.getPackageName(), "Resource"));
 		list.add(new ResourceViewHolder(model.getPackageName(), "ResourceViewHolder"));
-
+		list.add(new DateTimePickerFragment(model.getPackageName(), "DateTimePickerFragment"));
+		list.add(new DeleteDialogFragment(model.getPackageName(), "DeleteDialogFragment"));
+		list.add(new AttributeInput(model.getPackageName(), "AttributeInput"));
+		list.add(new AttributeView(model.getPackageName(), "AttributeView"));
 		return list;
 	}
 

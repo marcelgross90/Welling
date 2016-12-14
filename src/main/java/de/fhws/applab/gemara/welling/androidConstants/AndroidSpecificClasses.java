@@ -121,6 +121,66 @@ public class AndroidSpecificClasses {
 		return ClassName.get("android.content.DialogInterface", "OnClickListener");
 	}
 
+	public static ClassName getAttributeSetClassName() {
+		return ClassName.get("android.util", "AttributeSet");
+	}
+
+	public static ClassName getTextInputLayoutClassName() {
+		return ClassName.get("android.support.design.widget", "TextInputLayout");
+	}
+
+	public static ClassName getEditTextClassName() {
+		return ClassName.get("andorid.widget", "EditText");
+	}
+
+	public static ClassName getTypedArrayClassName() {
+		return ClassName.get("android.content.res", "TypedArray");
+	}
+
+	public static ClassName getInputTypeClassName() {
+		return ClassName.get("android.text", "InputType");
+	}
+
+	public static ClassName getTextViewClassName() {
+		return ClassName.get("android.widget", "TextView");
+	}
+
+	public static ClassName getImageViewClassName() {
+		return ClassName.get("android.widget", "ImageView");
+	}
+
+	public static ClassName getPicassoClassName() {
+		return ClassName.get("com.squareup.picasso", "Picasso");
+	}
+
+	public static ClassName getLoadedFromClassName() {
+		return ClassName.get("com.squareup.picasso.Picasso", "LoadedFrom");
+	}
+
+	public static ClassName getTargetClassName() {
+		return ClassName.get("com.squareup.picasso", "Target");
+	}
+
+	public static ClassName getDrawableClassName() {
+		return ClassName.get("android.graphics.drawable", "Drawable");
+	}
+
+	public static ClassName getBitMapClassName() {
+		return ClassName.get("android.graphics", "Bitmap");
+	}
+
+	public static ClassName getBitMapDrawableClassName() {
+		return ClassName.get("android.graphics.drawable", "BitmapDrawable");
+	}
+
+	public static ClassName getRelativeLayoutClassName() {
+		return ClassName.get("android.widget", "RelativeLayout");
+	}
+
+	public static ClassName getScrollViewClassName() {
+		return ClassName.get("android.widget", "ScrollView");
+	}
+
 	//Fields
 	public static FieldSpec getFragmentManagerField(Modifier... modifiers) {
 		return FieldSpec.builder(getFragmentManagerClassName(), "fragmentManager").addModifiers(modifiers).build();
@@ -136,10 +196,12 @@ public class AndroidSpecificClasses {
 		return ParameterSpec.builder(getBundleClassName(), "savedInstanceState").build();
 	}
 
-
 	public static ParameterSpec getContextParam() {
 		return ParameterSpec.builder(getContextClass(), "context").build();
 	}
 
+	public static ParameterSpec getAttributeSetParam() {
+		return ParameterSpec.builder(getAttributeSetClassName(), "attributeSet").build();
+	}
 
 }
