@@ -33,7 +33,7 @@ public class DateTimeView extends CustomView {
 
 	@Override
 	public List<FieldSpec> addFields() {
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 	@Override

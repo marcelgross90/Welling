@@ -29,7 +29,7 @@ public class AttributeView extends CustomView {
 
 	@Override
 	public List<FieldSpec> addFields() {
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -41,6 +41,6 @@ public class AttributeView extends CustomView {
 
 	@Override
 	public List<MethodSpec> addAdditionalMethods() {
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 }

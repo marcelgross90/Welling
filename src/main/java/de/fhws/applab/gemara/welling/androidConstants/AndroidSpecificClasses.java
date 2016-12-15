@@ -37,6 +37,10 @@ public class AndroidSpecificClasses {
 		return ClassName.get("android.support.v4.app", "FragmentManager");
 	}
 
+	public static ClassName getOnBackStackChangedListenerClassName() {
+		return ClassName.get("android.support.v4.app.FragmentManager", "OnBackStackChangedListener");
+	}
+
 	public static ClassName getFragmentClassName() {
 		return ClassName.get("android.support.v4.app", "Fragment");
 	}
@@ -179,6 +183,42 @@ public class AndroidSpecificClasses {
 
 	public static ClassName getScrollViewClassName() {
 		return ClassName.get("android.widget", "ScrollView");
+	}
+
+	public static ClassName getAppCompatActivityClassName() {
+		return ClassName.get("android.support.v7.app", "AppCompatActivity");
+	}
+
+	public static ClassName getIntentClassName() {
+		return ClassName.get("android.content", "Intent");
+	}
+
+	public static ClassName getToastClassName() {
+		return ClassName.get("android.widget", "Toast");
+	}
+
+	public static ClassName getToolbarClassname() {
+		return ClassName.get("android.support.v7.widget", "Toolbar");
+	}
+
+	public static ClassName getActionbarClassname() {
+		return ClassName.get("android.support.v7.widget", "Actionbar");
+	}
+
+	public static ClassName getGensonClassName() {
+		return ClassName.get("com.owlike.genson", "Genson");
+	}
+
+	public static ClassName getMenuClassName() {
+		return ClassName.get("android.view", "Menu");
+	}
+
+	public static ClassName getMenuInflaterClassName() {
+		return ClassName.get("android.view", "MenuInflater");
+	}
+
+	public static ClassName getMenuItemClassName() {
+		return ClassName.get("android.view", "MenuItem");
 	}
 
 	//Fields

@@ -1,6 +1,9 @@
 package de.fhws.applab.gemara.welling;
 
 import com.squareup.javapoet.JavaFile;
+import de.fhws.applab.gemara.welling.lib.generic.activity.AbstractMainActivity;
+import de.fhws.applab.gemara.welling.lib.generic.activity.ResourceActivity;
+import de.fhws.applab.gemara.welling.lib.generic.activity.ResourceDetailActivity;
 import de.fhws.applab.gemara.welling.lib.generic.adapter.ResourceListAdapter;
 import de.fhws.applab.gemara.welling.lib.generic.customView.AttributeInput;
 import de.fhws.applab.gemara.welling.lib.generic.customView.AttributeView;
@@ -65,7 +68,10 @@ public class Main {
 		//DateTimeView classs = new DateTimeView(model.getPackageName(), "DateTimeView");
 //		ProfileImageView classs = new ProfileImageView(model.getPackageName(), "ProfileImageView");
 //		ResourceDetailView classs = new ResourceDetailView(model.getPackageName(), "ResourceDetailView");
-		ResourceInputView classs = new ResourceInputView(model.getPackageName(), "ResourceInputView");
+//		ResourceInputView classs = new ResourceInputView(model.getPackageName(), "ResourceInputView");
+	//	ResourceActivity classs = new ResourceActivity(model.getPackageName(), "ResourceActivity");
+		AbstractMainActivity classs = new AbstractMainActivity(model.getPackageName(), "AbstractMainActivity");
+//		ResourceDetailActivity classs = new ResourceDetailActivity(model.getPackageName(), "ResourceDetailActivity");
 
 		JavaFile javaFile = classs.javaFile();
 
@@ -100,6 +106,12 @@ public class Main {
 		list.add(new DeleteDialogFragment(model.getPackageName(), "DeleteDialogFragment"));
 		list.add(new AttributeInput(model.getPackageName(), "AttributeInput"));
 		list.add(new AttributeView(model.getPackageName(), "AttributeView"));
+		list.add(new DateTimeView(model.getPackageName(), "DateTimeView"));
+		list.add(new ProfileImageView(model.getPackageName(), "ProfileImageView"));
+		list.add(new ResourceDetailView(model.getPackageName(), "ResourceDetailView"));
+		list.add(new ResourceInputView(model.getPackageName(), "ResourceInputView"));
+		list.add(new ResourceActivity(model.getPackageName(), "ResourceActivity"));
+		list.add(new ResourceListAdapter(model.getPackageName(), "ResourceListAdapter"));
 		return list;
 	}
 
