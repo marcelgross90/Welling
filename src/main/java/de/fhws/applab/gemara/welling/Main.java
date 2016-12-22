@@ -1,31 +1,41 @@
 package de.fhws.applab.gemara.welling;
 
 import com.squareup.javapoet.JavaFile;
-import de.fhws.applab.gemara.welling.lib.generic.activity.AbstractMainActivity;
-import de.fhws.applab.gemara.welling.lib.generic.activity.ResourceActivity;
-import de.fhws.applab.gemara.welling.lib.generic.activity.ResourceDetailActivity;
-import de.fhws.applab.gemara.welling.lib.generic.adapter.ResourceListAdapter;
-import de.fhws.applab.gemara.welling.lib.generic.customView.AttributeInput;
-import de.fhws.applab.gemara.welling.lib.generic.customView.AttributeView;
-import de.fhws.applab.gemara.welling.lib.generic.customView.DateTimeView;
-import de.fhws.applab.gemara.welling.lib.generic.customView.ProfileImageView;
-import de.fhws.applab.gemara.welling.lib.generic.customView.ResourceDetailView;
-import de.fhws.applab.gemara.welling.lib.generic.customView.ResourceInputView;
-import de.fhws.applab.gemara.welling.lib.generic.fragment.DateTimePickerFragment;
-import de.fhws.applab.gemara.welling.lib.generic.fragment.DeleteDialogFragment;
-import de.fhws.applab.gemara.welling.lib.generic.model.Link;
-import de.fhws.applab.gemara.welling.lib.generic.model.Resource;
-import de.fhws.applab.gemara.welling.lib.generic.network.HeaderParser;
-import de.fhws.applab.gemara.welling.lib.generic.network.NetworkCallback;
-import de.fhws.applab.gemara.welling.lib.generic.network.NetworkClient;
-import de.fhws.applab.gemara.welling.lib.generic.network.NetworkRequest;
-import de.fhws.applab.gemara.welling.lib.generic.network.NetworkResponse;
-import de.fhws.applab.gemara.welling.lib.generic.network.OKHttpSingleton;
-import de.fhws.applab.gemara.welling.lib.generic.util.FragmentHandler;
-import de.fhws.applab.gemara.welling.lib.generic.util.GensonBuilder;
-import de.fhws.applab.gemara.welling.lib.generic.util.ScrollListener;
-import de.fhws.applab.gemara.welling.lib.generic.viewholder.ResourceViewHolder;
+import de.fhws.applab.gemara.dalston.generator.GeneratedFile;
+import de.fhws.applab.gemara.welling.lib.generic.java.activity.AbstractMainActivity;
+import de.fhws.applab.gemara.welling.lib.generic.java.activity.ResourceActivity;
+import de.fhws.applab.gemara.welling.lib.generic.java.adapter.ResourceListAdapter;
+import de.fhws.applab.gemara.welling.lib.generic.java.customView.AttributeInput;
+import de.fhws.applab.gemara.welling.lib.generic.java.customView.AttributeView;
+import de.fhws.applab.gemara.welling.lib.generic.java.customView.DateTimeView;
+import de.fhws.applab.gemara.welling.lib.generic.java.customView.ProfileImageView;
+import de.fhws.applab.gemara.welling.lib.generic.java.customView.ResourceDetailView;
+import de.fhws.applab.gemara.welling.lib.generic.java.customView.ResourceInputView;
+import de.fhws.applab.gemara.welling.lib.generic.java.fragment.DateTimePickerFragment;
+import de.fhws.applab.gemara.welling.lib.generic.java.fragment.DeleteDialogFragment;
+import de.fhws.applab.gemara.welling.lib.generic.java.model.Link;
+import de.fhws.applab.gemara.welling.lib.generic.java.model.Resource;
+import de.fhws.applab.gemara.welling.lib.generic.java.network.HeaderParser;
+import de.fhws.applab.gemara.welling.lib.generic.java.network.NetworkCallback;
+import de.fhws.applab.gemara.welling.lib.generic.java.network.NetworkClient;
+import de.fhws.applab.gemara.welling.lib.generic.java.network.NetworkRequest;
+import de.fhws.applab.gemara.welling.lib.generic.java.network.NetworkResponse;
+import de.fhws.applab.gemara.welling.lib.generic.java.network.OKHttpSingleton;
+import de.fhws.applab.gemara.welling.lib.generic.java.util.FragmentHandler;
+import de.fhws.applab.gemara.welling.lib.generic.java.util.GensonBuilder;
+import de.fhws.applab.gemara.welling.lib.generic.java.util.ScrollListener;
+import de.fhws.applab.gemara.welling.lib.generic.java.viewholder.ResourceViewHolder;
+import de.fhws.applab.gemara.welling.lib.generic.res.menu.DetailMenu;
+import de.fhws.applab.gemara.welling.lib.generic.res.menu.ListMenu;
+import de.fhws.applab.gemara.welling.lib.generic.res.menu.SaveMenu;
+import de.fhws.applab.gemara.welling.lib.generic.res.values.Attr;
+import de.fhws.applab.gemara.welling.lib.generic.res.values.Colors;
+import de.fhws.applab.gemara.welling.lib.generic.res.values.Dimens;
+import de.fhws.applab.gemara.welling.lib.generic.res.values.RestApi;
+import de.fhws.applab.gemara.welling.lib.generic.res.values.Strings;
+import de.fhws.applab.gemara.welling.lib.generic.res.values.Styles;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
+import de.fhws.applab.gemara.welling.metaModel.InputException;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,11 +46,13 @@ import java.util.List;
  * Created by marcelgross on 02.12.16.
  */
 public class Main {
-	private static final AndroidMetaModel model = new AndroidMetaModel("de.fhws.applab.gemara", "Lecturer");
+	private static AndroidMetaModel model;
 
-	public static void main(String[] args) {
-		//writeFiles(getClasses());
-		test();
+	public static void main(String[] args) throws InputException{
+		model = MetaModelGenerator.generateMetaModel();
+
+		writeFiles();
+		//test();
 	}
 
 	private static void test() {
@@ -83,7 +95,7 @@ public class Main {
 
 	}
 
-	private static List<AbstractModelClass> getClasses() {
+	private static List<AbstractModelClass> getJavaClasses() {
 
 		List<AbstractModelClass> list = new ArrayList<>();
 		AppCompatActivityClass appCompatActivityClass = new AppCompatActivityClass();
@@ -115,8 +127,30 @@ public class Main {
 		return list;
 	}
 
-	private static void writeFiles(List<AbstractModelClass> classes) {
-		String baseDir = "generated/" + model.getApplicationName().toLowerCase() + "_lib/src/main/";
+	private static List<GeneratedFile> getXMLClasses() {
+		String baseDir = "generated/" + model.getApplicationName().toLowerCase() + "_lib/src/main/res/";
+		List<GeneratedFile> list = new ArrayList<>();
+		list.add(new DetailMenu(baseDir));
+		list.add(new ListMenu(baseDir));
+		list.add(new SaveMenu(baseDir));
+
+		list.add(new Attr(baseDir, model.getAppDeclareStyleable()));
+		list.add(new Colors(baseDir, model.getAppColor()));
+		list.add(new Dimens(baseDir));
+		list.add(new RestApi(baseDir, model.getAppRestAPI()));
+		list.add(new Styles(baseDir, model.getLibStyles()));
+		list.add(new Strings(baseDir, model.getLibStrings()));
+
+		return list;
+	}
+
+	private static void writeFiles() {
+	//	writeJavaFiles(getJavaClasses());
+		writeXMLFiles(getXMLClasses());
+	}
+
+	private static void writeJavaFiles(List<AbstractModelClass> classes) {
+		String baseDir = "generated/" + model.getApplicationName().toLowerCase() + "_lib/src/main/java/";
 		for (AbstractModelClass aClass : classes) {
 			File file = new File(baseDir);
 			try {
@@ -125,6 +159,12 @@ public class Main {
 				ex.printStackTrace();
 			}
 
+		}
+	}
+
+	private static void writeXMLFiles(List<GeneratedFile> files) {
+		for (GeneratedFile file : files) {
+			file.generateAndWrite();
 		}
 	}
 
