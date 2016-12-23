@@ -171,6 +171,7 @@ public class MetaModelGenerator {
 	private static AppResource getLecturerResource() {
 		AppResource appResource = new AppResource("Lecturer");
 		appResource.setAttributes(getLecturerAttributes());
+		appResource.setContainsImage(true);
 
 		return appResource;
 	}

@@ -19,7 +19,9 @@ import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Dimens;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.RestApi;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Strings;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Styles;
+import de.fhws.applab.gemara.welling.application.lib.specific.adapter.ListAdapterGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.model.ResourceGenerator;
+import de.fhws.applab.gemara.welling.application.lib.specific.viewholder.ListViewHolderGenerator;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
 import de.fhws.applab.gemara.welling.metaModel.InputException;
 
@@ -110,8 +112,10 @@ public class Main {
 		list.add(new ResourceInputView(model.getPackageName(), "ResourceInputView"));
 		list.add(new ResourceActivity(model.getPackageName(), "ResourceActivity"));
 		list.add(new ResourceListAdapter(model.getPackageName(), "ResourceListAdapter"));
-		list.add(new ResourceGenerator(model.getPackageName(), model.getAppResources().get(0)));*/
+		list.add(new ResourceGenerator(model.getPackageName(), model.getAppResources().get(0)));
 		list.add(new ResourceCardView(model.getPackageName(), "ResourceCardView"));
+		list.add(new ListAdapterGenerator(model.getPackageName(), model.getAppResources().get(0).getResourceName()));*/
+		list.add(new ListViewHolderGenerator(model.getPackageName(), model.getAppResources().get(0)));
 		return list;
 	}
 

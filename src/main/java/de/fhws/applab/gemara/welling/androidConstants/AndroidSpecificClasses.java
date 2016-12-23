@@ -21,6 +21,10 @@ public class AndroidSpecificClasses {
 		return ClassName.get("android.view", "View");
 	}
 
+	public static ClassName getViewOnClickListenerClassName() {
+		return ClassName.get("android.view.View", "OnClickListener");
+	}
+
 	public static ClassName getLayoutInflaterClassName() {
 		return ClassName.get("android.view", "LayoutInflater");
 	}
