@@ -221,6 +221,10 @@ public class AndroidSpecificClasses {
 		return ClassName.get("android.view", "MenuItem");
 	}
 
+	public static ClassName getCardViewClassName() {
+		return ClassName.get("android.support.v7.widget", "CardView");
+	}
+
 	//Fields
 	public static FieldSpec getFragmentManagerField(Modifier... modifiers) {
 		return FieldSpec.builder(getFragmentManagerClassName(), "fragmentManager").addModifiers(modifiers).build();

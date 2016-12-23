@@ -1,14 +1,19 @@
-package de.fhws.applab.gemara.welling;
+package de.fhws.applab.gemara.welling.test;
 
+import de.fhws.applab.gemara.welling.application.lib.specific.model.Attribute;
+import de.fhws.applab.gemara.welling.application.lib.specific.model.LinkAttribute;
+import de.fhws.applab.gemara.welling.application.lib.specific.model.SimpleAttribute;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
 import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
 import de.fhws.applab.gemara.welling.metaModel.AppColor;
 import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.metaModel.AppResource;
 import de.fhws.applab.gemara.welling.metaModel.AppRestAPI;
 import de.fhws.applab.gemara.welling.metaModel.AppString;
 import de.fhws.applab.gemara.welling.metaModel.AppStyle;
 import de.fhws.applab.gemara.welling.metaModel.InputException;
 
+import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +21,10 @@ import java.util.Map;
 
 public class MetaModelGenerator {
 
+	private static String packageName = "de.fhws.applab.gemara";
+
 	public static AndroidMetaModel generateMetaModel() throws InputException {
-		AndroidMetaModel model = new AndroidMetaModel("de.fhws.applab.gemara", "Lecturer");
+		AndroidMetaModel model = new AndroidMetaModel(packageName, "Lecturer");
 		AppRestAPI appRestAPI = new AppRestAPI("https://apistaging.fiw.fhws.de/mig/api/");
 		appRestAPI.setRestApi(generateRestAPI());
 
@@ -27,6 +34,7 @@ public class MetaModelGenerator {
 		model.setLibStrings(getStrings());
 		model.setAppDeclareStyleable(generateAppDeclareStyleable());
 		model.setLibManifest(generateLibManifest());
+		model.addAppResource(getLecturerResource());
 		return model;
 	}
 
@@ -158,5 +166,29 @@ public class MetaModelGenerator {
 		declareStyleables.add(attributeInput);
 
 		return new AppDeclareStyleable(declareStyleables);
+	}
+
+	private static AppResource getLecturerResource() {
+		AppResource appResource = new AppResource("Lecturer");
+		appResource.setAttributes(getLecturerAttributes());
+
+		return appResource;
+	}
+
+	private static List<Attribute> getLecturerAttributes() {
+		List<Attribute> attributes = new ArrayList<>();
+		attributes.add(new SimpleAttribute("id", SimpleAttribute.DataType.INT, Modifier.PRIVATE));
+		attributes.add(new SimpleAttribute("title", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
+		attributes.add(new SimpleAttribute("firstName", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
+		attributes.add(new SimpleAttribute("lastName", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
+		attributes.add(new SimpleAttribute("email", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
+		attributes.add(new SimpleAttribute("phone", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
+		attributes.add(new SimpleAttribute("roomNumber", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
+		attributes.add(new SimpleAttribute("address", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
+		attributes.add(new SimpleAttribute("urlWelearn", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
+		attributes.add(new LinkAttribute("profileImageUrl",packageName, Modifier.PRIVATE));
+		attributes.add(new LinkAttribute("self", packageName, Modifier.PRIVATE));
+		attributes.add(new LinkAttribute("chargeUrl", packageName, Modifier.PRIVATE));
+		return attributes;
 	}
 }

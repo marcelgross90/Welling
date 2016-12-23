@@ -1,31 +1,11 @@
-package de.fhws.applab.gemara.welling;
+package de.fhws.applab.gemara.welling.test;
 
 import com.squareup.javapoet.JavaFile;
 import de.fhws.applab.gemara.dalston.generator.GeneratedFile;
+import de.fhws.applab.gemara.welling.AbstractModelClass;
 import de.fhws.applab.gemara.welling.application.lib.generic.ManifestGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.activity.AbstractMainActivity;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.activity.ResourceActivity;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.adapter.ResourceListAdapter;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.AttributeInput;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.AttributeView;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.DateTimeView;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.ProfileImageView;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.ResourceDetailView;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.ResourceInputView;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.DateTimePickerFragment;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.DeleteDialogFragment;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.model.Link;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.model.Resource;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.HeaderParser;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.NetworkCallback;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.NetworkClient;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.NetworkRequest;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.NetworkResponse;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.OKHttpSingleton;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.util.FragmentHandler;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.util.GensonBuilder;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.util.ScrollListener;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.viewholder.ResourceViewHolder;
+import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.ResourceCardView;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.ActivityMain;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.FragmentResourceList;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.TextinputAttribute;
@@ -39,6 +19,7 @@ import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Dimens;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.RestApi;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Strings;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Styles;
+import de.fhws.applab.gemara.welling.application.lib.specific.model.ResourceGenerator;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
 import de.fhws.applab.gemara.welling.metaModel.InputException;
 
@@ -103,7 +84,7 @@ public class Main {
 	private static List<AbstractModelClass> getJavaClasses() {
 
 		List<AbstractModelClass> list = new ArrayList<>();
-		AppCompatActivityClass appCompatActivityClass = new AppCompatActivityClass();
+		/*AppCompatActivityClass appCompatActivityClass = new AppCompatActivityClass();
 		appCompatActivityClass.setClassName("MainActivity");
 		appCompatActivityClass.setPackageName(model.getPackageName());
 		list.add(appCompatActivityClass);
@@ -129,6 +110,8 @@ public class Main {
 		list.add(new ResourceInputView(model.getPackageName(), "ResourceInputView"));
 		list.add(new ResourceActivity(model.getPackageName(), "ResourceActivity"));
 		list.add(new ResourceListAdapter(model.getPackageName(), "ResourceListAdapter"));
+		list.add(new ResourceGenerator(model.getPackageName(), model.getAppResources().get(0)));*/
+		list.add(new ResourceCardView(model.getPackageName(), "ResourceCardView"));
 		return list;
 	}
 
@@ -157,7 +140,7 @@ public class Main {
 	}
 
 	private static void writeFiles() {
-	//	writeJavaFiles(getJavaClasses());
+		writeJavaFiles(getJavaClasses());
 		writeXMLFiles(getXMLClasses());
 	}
 

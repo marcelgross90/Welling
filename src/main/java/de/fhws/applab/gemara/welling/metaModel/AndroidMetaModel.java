@@ -1,5 +1,8 @@
 package de.fhws.applab.gemara.welling.metaModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AndroidMetaModel {
 
 	private String packageName;
@@ -10,6 +13,7 @@ public class AndroidMetaModel {
 	private AppString libStrings;
 	private AppDeclareStyleable appDeclareStyleable;
 	private AppAndroidManifest libManifest;
+	private final List<AppResource> appResources = new ArrayList<>();
 
 	public AndroidMetaModel(String packageName, String applicationName) {
 		this.packageName = packageName;
@@ -78,5 +82,17 @@ public class AndroidMetaModel {
 
 	public void setLibManifest(AppAndroidManifest libManifest) {
 		this.libManifest = libManifest;
+	}
+
+	public List<AppResource> getAppResources() {
+		return appResources;
+	}
+
+	public void setAppResources(List<AppResource> appResources) {
+		this.appResources.addAll(appResources);
+	}
+
+	public void addAppResource(AppResource appResource) {
+		this.appResources.add(appResource);
 	}
 }

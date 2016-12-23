@@ -55,7 +55,7 @@ public class AttributeInput extends de.fhws.applab.gemara.welling.application.li
 				.addStatement("this.$N = ($T) findViewById($T.id.attribute_et)", attribute, getEditTextClassName(), rClass)
 				.addStatement("this.$N.setHint(typedArray.getResourceId($T.styleable.AttributeInput_hintText, 0))", attribute, rClass)
 				.addStatement("this.$N.setInputType($N(typedArray.getString($T.styleable.AttributeInput_inputType)))", attribute,
-						getParseTextToInputType(), rClass).endControlFlow().beginControlFlow("finally").addStatement("typedArray.recycle()")
+						getParseTextToInputType(), rClass).endControlFlow().beginControlFlow("finally").addStatement("typedArray.recycle()").endControlFlow()
 				.build();
 	}
 

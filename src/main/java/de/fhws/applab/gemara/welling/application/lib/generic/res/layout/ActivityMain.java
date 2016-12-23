@@ -1,6 +1,5 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.layout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ActivityMain extends LayoutGenerator {
