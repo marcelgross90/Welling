@@ -1,6 +1,7 @@
 package de.fhws.applab.gemara.welling;
 
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
+import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
 import de.fhws.applab.gemara.welling.metaModel.AppColor;
 import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
 import de.fhws.applab.gemara.welling.metaModel.AppRestAPI;
@@ -25,8 +26,12 @@ public class MetaModelGenerator {
 		model.setLibStyles(generateLibStyle());
 		model.setLibStrings(getStrings());
 		model.setAppDeclareStyleable(generateAppDeclareStyleable());
-
+		model.setLibManifest(generateLibManifest());
 		return model;
+	}
+
+	private static AppAndroidManifest generateLibManifest() {
+		return new AppAndroidManifest("de.marcelgross.lecturer_lib");
 	}
 
 	private static Map<String, String> generateRestAPI() {

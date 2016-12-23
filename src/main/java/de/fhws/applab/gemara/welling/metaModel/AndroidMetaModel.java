@@ -9,6 +9,7 @@ public class AndroidMetaModel {
 	private AppStyle libStyles;
 	private AppString libStrings;
 	private AppDeclareStyleable appDeclareStyleable;
+	private AppAndroidManifest libManifest;
 
 	public AndroidMetaModel(String packageName, String applicationName) {
 		this.packageName = packageName;
@@ -69,5 +70,13 @@ public class AndroidMetaModel {
 
 	public void setAppDeclareStyleable(AppDeclareStyleable appDeclareStyleable) {
 		this.appDeclareStyleable = appDeclareStyleable;
+	}
+
+	public AppAndroidManifest getLibManifest() {
+		return libManifest;
+	}
+
+	public void setLibManifest(AppAndroidManifest libManifest) {
+		this.libManifest = libManifest;
 	}
 }
