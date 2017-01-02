@@ -213,6 +213,10 @@ public class AndroidSpecificClasses {
 		return ClassName.get("com.owlike.genson", "Genson");
 	}
 
+	public static ClassName getGenericTypeClassName() {
+		return ClassName.get("com.owlike.genson", "GenericType");
+	}
+
 	public static ClassName getMenuClassName() {
 		return ClassName.get("android.view", "Menu");
 	}

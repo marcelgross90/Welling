@@ -1,17 +1,23 @@
 package de.fhws.applab.gemara.welling.test;
 
-import de.fhws.applab.gemara.welling.application.lib.specific.model.Attribute;
-import de.fhws.applab.gemara.welling.application.lib.specific.model.LinkAttribute;
-import de.fhws.applab.gemara.welling.application.lib.specific.model.SimpleAttribute;
+import de.fhws.applab.gemara.welling.application.lib.specific.java.model.Attribute;
+import de.fhws.applab.gemara.welling.application.lib.specific.java.model.LinkAttribute;
+import de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
 import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
+import de.fhws.applab.gemara.welling.metaModel.view.AppCardView;
 import de.fhws.applab.gemara.welling.metaModel.AppColor;
 import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
 import de.fhws.applab.gemara.welling.metaModel.AppRestAPI;
 import de.fhws.applab.gemara.welling.metaModel.AppString;
 import de.fhws.applab.gemara.welling.metaModel.AppStyle;
+import de.fhws.applab.gemara.welling.metaModel.view.AttributeType;
 import de.fhws.applab.gemara.welling.metaModel.InputException;
+import de.fhws.applab.gemara.welling.metaModel.view.GroupedViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.SingleViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.ViewAttribute;
+import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
@@ -172,6 +178,7 @@ public class MetaModelGenerator {
 		AppResource appResource = new AppResource("Lecturer");
 		appResource.setAttributes(getLecturerAttributes());
 		appResource.setContainsImage(true);
+		appResource.setAppCardView(getLecturerAppCardView());
 
 		return appResource;
 	}
@@ -191,5 +198,51 @@ public class MetaModelGenerator {
 		attributes.add(new LinkAttribute("self", packageName, Modifier.PRIVATE));
 		attributes.add(new LinkAttribute("chargeUrl", packageName, Modifier.PRIVATE));
 		return attributes;
+	}
+
+	private static AppCardView getLecturerAppCardView() {
+		List<ViewObject> viewAttributes = new ArrayList<>();
+
+		ViewAttribute title = new ViewAttribute("title", AttributeType.TEXT);
+		title.setDisplayedName("Title");
+		viewAttributes.add(new SingleViewObject(title, "titleView"));
+
+		ViewAttribute firstName = new ViewAttribute("firstName", AttributeType.TEXT);
+		firstName.setDisplayedName("Firstname");
+		ViewAttribute lastName = new ViewAttribute("lastName", AttributeType.TEXT);
+		lastName.setDisplayedName("Lastname");
+		List<ViewAttribute> combinedAttributes = new ArrayList<>();
+		combinedAttributes.add(firstName);
+		combinedAttributes.add(lastName);
+		viewAttributes.add(new GroupedViewObject(combinedAttributes, "nameView"));
+
+		ViewAttribute email = new ViewAttribute("email", AttributeType.MAIL);
+		email.setDisplayedName("EMail");
+		viewAttributes.add(new SingleViewObject(email, "mailView"));
+
+		ViewAttribute phone = new ViewAttribute("phone", AttributeType.PHONE_NUMBER);
+		phone.setDisplayedName("PhoneNumber");
+		viewAttributes.add(new SingleViewObject(phone, "phoneView"));
+
+		ViewAttribute roomNumber = new ViewAttribute("roomNumber", AttributeType.TEXT);
+		roomNumber.setDisplayedName("Room");
+		viewAttributes.add(new SingleViewObject(roomNumber, "roomView"));
+
+		ViewAttribute address = new ViewAttribute("address", AttributeType.LOCATION);
+		address.setDisplayedName("Address");
+		viewAttributes.add(new SingleViewObject(address, "addressView"));
+
+		ViewAttribute urlWelearn = new ViewAttribute("urlWelearn", AttributeType.URL);
+		urlWelearn.setDisplayedName("welearn");
+		viewAttributes.add(new SingleViewObject(urlWelearn, "welearnView"));
+
+		ViewAttribute profileImageUrl = new ViewAttribute("profileImageUrl", AttributeType.PICTURE);
+		profileImageUrl.setDisplayedName("Profile-Image");
+		viewAttributes.add(new SingleViewObject(profileImageUrl, "imageView"));
+
+		AppCardView cardView = new AppCardView();
+		cardView.setViewAttributes(viewAttributes);
+
+		return cardView;
 	}
 }

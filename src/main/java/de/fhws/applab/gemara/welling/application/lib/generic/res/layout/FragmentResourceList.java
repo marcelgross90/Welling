@@ -2,7 +2,7 @@ package de.fhws.applab.gemara.welling.application.lib.generic.res.layout;
 
 import java.util.List;
 
-public class FragmentResourceList extends LayoutGenerator {
+public class FragmentResourceList extends AbstractLayoutGenerator {
 
 	public FragmentResourceList(String directoryName) {
 		super("fragment_resource_list", directoryName);

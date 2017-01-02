@@ -2,7 +2,7 @@ package de.fhws.applab.gemara.welling.application.lib.generic.res.layout;
 
 import java.util.List;
 
-public class TextinputAttribute extends LayoutGenerator {
+public class TextinputAttribute extends AbstractLayoutGenerator {
 
 	public TextinputAttribute(String directoryName) {
 		super("textinput_attribute", directoryName);

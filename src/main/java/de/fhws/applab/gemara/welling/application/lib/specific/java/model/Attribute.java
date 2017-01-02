@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.application.lib.specific.model;
+package de.fhws.applab.gemara.welling.application.lib.specific.java.model;
 
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -7,9 +7,7 @@ import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by marcelgross on 23.12.16.
- */
+
 public abstract class Attribute {
 
 	protected abstract void addReturnValue(MethodSpec.Builder builder);

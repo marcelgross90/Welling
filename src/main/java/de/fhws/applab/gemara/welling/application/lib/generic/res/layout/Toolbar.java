@@ -2,7 +2,7 @@ package de.fhws.applab.gemara.welling.application.lib.generic.res.layout;
 
 import java.util.List;
 
-public class Toolbar extends LayoutGenerator {
+public class Toolbar extends AbstractLayoutGenerator {
 
 	public Toolbar(String directoryName) {
 		super("toolbar", directoryName);

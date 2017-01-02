@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.application.lib.specific.model;
+package de.fhws.applab.gemara.welling.application.lib.specific.java.model;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;

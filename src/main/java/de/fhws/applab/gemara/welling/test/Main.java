@@ -5,7 +5,6 @@ import de.fhws.applab.gemara.dalston.generator.GeneratedFile;
 import de.fhws.applab.gemara.welling.AbstractModelClass;
 import de.fhws.applab.gemara.welling.application.lib.generic.ManifestGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.activity.AbstractMainActivity;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.ResourceCardView;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.ActivityMain;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.FragmentResourceList;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.TextinputAttribute;
@@ -19,9 +18,8 @@ import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Dimens;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.RestApi;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Strings;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Styles;
-import de.fhws.applab.gemara.welling.application.lib.specific.adapter.ListAdapterGenerator;
-import de.fhws.applab.gemara.welling.application.lib.specific.model.ResourceGenerator;
-import de.fhws.applab.gemara.welling.application.lib.specific.viewholder.ListViewHolderGenerator;
+import de.fhws.applab.gemara.welling.application.lib.specific.java.viewholder.ListViewHolderGenerator;
+import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.CardLayoutGenerator;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
 import de.fhws.applab.gemara.welling.metaModel.InputException;
 
@@ -114,7 +112,11 @@ public class Main {
 		list.add(new ResourceListAdapter(model.getPackageName(), "ResourceListAdapter"));
 		list.add(new ResourceGenerator(model.getPackageName(), model.getAppResources().get(0)));
 		list.add(new ResourceCardView(model.getPackageName(), "ResourceCardView"));
-		list.add(new ListAdapterGenerator(model.getPackageName(), model.getAppResources().get(0).getResourceName()));*/
+		list.add(new ListAdapterGenerator(model.getPackageName(), model.getAppResources().get(0).getResourceName()));
+		list.add(new ListViewHolderGenerator(model.getPackageName(), model.getAppResources().get(0)));
+		list.add(new ResourceCardViewGenerator(model.getPackageName(), model.getAppResources().get(0)));
+		list.add(new ListFragmentGenerator(model.getPackageName(), model.getAppResources().get(0)));*/
+
 		list.add(new ListViewHolderGenerator(model.getPackageName(), model.getAppResources().get(0)));
 		return list;
 	}
@@ -140,6 +142,8 @@ public class Main {
 		list.add(new TextinputAttribute(resDir));
 		list.add(new Toolbar(resDir));
 
+		list.add(new CardLayoutGenerator("view_lecturer_card", resDir, model.getAppResources().get(0), model.getPackageName()));
+
 		return list;
 	}
 
@@ -149,7 +153,7 @@ public class Main {
 	}
 
 	private static void writeJavaFiles(List<AbstractModelClass> classes) {
-		String baseDir = "generated/" + model.getApplicationName().toLowerCase() + "_lib/src/main/java/";
+		String baseDir = "gemara/android/src-gen/generated/" + model.getApplicationName().toLowerCase() + "_lib/src/main/java/";
 		for (AbstractModelClass aClass : classes) {
 			File file = new File(baseDir);
 			try {

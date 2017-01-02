@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.application.lib.specific.model;
+package de.fhws.applab.gemara.welling.application.lib.specific.java.model;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;

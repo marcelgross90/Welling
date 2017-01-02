@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.application.lib.specific.adapter;
+package de.fhws.applab.gemara.welling.application.lib.specific.java.adapter;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;

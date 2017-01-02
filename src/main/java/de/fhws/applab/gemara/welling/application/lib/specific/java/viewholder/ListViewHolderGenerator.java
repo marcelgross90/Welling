@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.application.lib.specific.viewholder;
+package de.fhws.applab.gemara.welling.application.lib.specific.java.viewholder;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -8,8 +8,14 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
+import de.fhws.applab.gemara.welling.metaModel.view.AttributeType;
+import de.fhws.applab.gemara.welling.metaModel.view.SingleViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
 
 import javax.lang.model.element.Modifier;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.*;
 
@@ -41,11 +47,13 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		this.onResourceClickListenerClassName = ClassName.get(packageName + ".generic.adapter.ResourceListAdapter", "OnResourceClickListener");
 		this.profileImgClassName = ClassName.get(packageName + ".generic.customView", "ProfileImageView");
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
-		this.resourceTypeClassName = ClassName.get(packageName + ".spcific.model", resourceName);
+		this.resourceTypeClassName = ClassName.get(packageName + ".specific.model", resourceName);
 		this.cardView = FieldSpec.builder(resourceCardView, "cardView", Modifier.PRIVATE, Modifier.FINAL).build();
 		this.onResourceClickListener = FieldSpec.builder(onResourceClickListenerClassName, "onResourceClickListener", Modifier.PRIVATE, Modifier.FINAL).build();
+
 		this.profileImg = FieldSpec.builder(profileImgClassName, "profileImg", Modifier.PRIVATE, Modifier.FINAL).build();
 	}
+
 
 	@Override
 	public JavaFile javaFile() {

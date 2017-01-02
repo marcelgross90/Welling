@@ -2,7 +2,7 @@ package de.fhws.applab.gemara.welling.application.lib.generic.res.layout;
 
 import java.util.List;
 
-public class ActivityMain extends LayoutGenerator {
+public class ActivityMain extends AbstractLayoutGenerator {
 
 	public ActivityMain(String directoryName) {
 		super("activity_main", directoryName);

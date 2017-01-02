@@ -5,14 +5,14 @@ import de.fhws.applab.gemara.welling.GeneratedFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class LayoutGenerator extends GeneratedFile {
+public abstract class AbstractLayoutGenerator extends GeneratedFile {
 
 	protected abstract View generateLayout();
 
 	private final String fileName;
 	private final String directoryName;
 
-	public LayoutGenerator(String fileName, String directoryName) {
+	public AbstractLayoutGenerator(String fileName, String directoryName) {
 		this.fileName = fileName + ".xml";
 		this.directoryName = directoryName + "/layout";
 	}
