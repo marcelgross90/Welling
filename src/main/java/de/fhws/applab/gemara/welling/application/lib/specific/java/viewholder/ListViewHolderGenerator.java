@@ -8,14 +8,8 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.AttributeType;
-import de.fhws.applab.gemara.welling.metaModel.view.SingleViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
 
 import javax.lang.model.element.Modifier;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.*;
 

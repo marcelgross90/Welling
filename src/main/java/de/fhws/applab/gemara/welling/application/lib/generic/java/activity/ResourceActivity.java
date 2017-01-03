@@ -27,7 +27,7 @@ public class ResourceActivity extends AbstractActivityClass {
 	}
 
 	@Override
-	protected List<ClassName> getSuperinterfaces() {
+	protected List<ClassName> getSuperInterfaces() {
 		return Collections.emptyList();
 	}
 

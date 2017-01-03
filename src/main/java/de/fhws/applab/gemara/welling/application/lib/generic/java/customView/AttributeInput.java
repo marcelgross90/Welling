@@ -4,7 +4,6 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;

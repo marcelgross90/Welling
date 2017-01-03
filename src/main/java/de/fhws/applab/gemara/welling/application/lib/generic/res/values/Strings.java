@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Strings extends ValueGenerator {
 
-	private AppString appString;
+	private final AppString appString;
 
 	public Strings(String directoryName, AppString appString) {
 		super("strings", directoryName);

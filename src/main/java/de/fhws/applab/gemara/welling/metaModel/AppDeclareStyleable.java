@@ -18,7 +18,7 @@ public class AppDeclareStyleable {
 	}
 
 	public static class DeclareStyleable {
-		private String name;
+		private final String name;
 		private final Map<String, String> attr = new HashMap<>();
 
 		public DeclareStyleable(String name) {

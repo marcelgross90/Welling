@@ -18,9 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by marcelgross on 02.12.16.
- */
 public class Main {
 
 	private static final String startDir = "gemara/android/src-gen/generated/";
@@ -96,9 +93,7 @@ public class Main {
 	}
 
 	private static void writeGeneratedFiles(List<GeneratedFile> files) {
-		for (GeneratedFile file : files) {
-			file.generateAndWrite();
-		}
+		files.forEach(de.fhws.applab.gemara.welling.GeneratedFile::generateAndWrite);
 	}
 
 }

@@ -138,7 +138,7 @@ public class AndroidSpecificClasses {
 	}
 
 	public static ClassName getEditTextClassName() {
-		return ClassName.get("andorid.widget", "EditText");
+		return ClassName.get("android.widget", "EditText");
 	}
 
 	public static ClassName getTypedArrayClassName() {

@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class MetaModelGenerator {
 
-	private static String packageName = "de.fhws.applab.gemara";
+	private static final String packageName = "de.fhws.applab.gemara";
 
 	public static AndroidMetaModel generateMetaModel() throws InputException {
 		AndroidMetaModel model = new AndroidMetaModel(packageName, "Lecturer");
@@ -45,7 +45,7 @@ public class MetaModelGenerator {
 	}
 
 	private static AppAndroidManifest generateLibManifest() {
-		return new AppAndroidManifest("de.marcelgross.lecturer_lib");
+		return new AppAndroidManifest("de.fhws.applab.gemara.lecturer_lib");
 	}
 
 	private static Map<String, String> generateRestAPI() {

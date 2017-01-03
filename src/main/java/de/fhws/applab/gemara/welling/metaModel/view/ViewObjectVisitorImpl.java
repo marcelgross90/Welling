@@ -3,10 +3,8 @@ package de.fhws.applab.gemara.welling.metaModel.view;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
-import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
 
 import javax.lang.model.element.Modifier;
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getViewClassName;

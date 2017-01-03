@@ -14,7 +14,7 @@ public class LibProguardRules extends GeneratedFile {
 	public void generate() {
 		appendln("# Add project specific ProGuard rules here.\n");
 		appendln("# By default, the flags in this file are appended to flags specified\n");
-		appendln("# in /Users/marcelgross/Library/Android/sdk/tools/proguard/proguard-android.txt\n");
+		appendln("# in /Users/username/Library/Android/sdk/tools/proguard/proguard-android.txt\n");
 		appendln("# You can edit the include path and order by changing the proguardFiles\n");
 		appendln("# directive in build.gradle.\n");
 		appendln("#\n");

@@ -9,6 +9,7 @@ import de.fhws.applab.gemara.welling.GeneratedFile;
 public class BuildGradleProject extends GeneratedFile {
 
 	private static final String GRADLE_VERSION = "2.2.3";
+	@SuppressWarnings("FieldCanBeLocal")
 	private final String directoryName = "generated/";
 
 	@Override

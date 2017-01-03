@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ResourceGenerator extends AbstractModelClass {
 
-	private ClassName resourceClassName = ClassName.get(this.packageName + ".generic.model", "Resource");
+	private final ClassName resourceClassName = ClassName.get(this.packageName + ".generic.model", "Resource");
 
 	private final List<Attribute> attributes = new ArrayList<>();
 

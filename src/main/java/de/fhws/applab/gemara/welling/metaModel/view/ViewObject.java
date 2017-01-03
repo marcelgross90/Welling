@@ -8,8 +8,8 @@ import java.util.List;
 
 public abstract class ViewObject<T> {
 
-	protected T viewObject;
-	protected String viewName;
+	protected final T viewObject;
+	protected final String viewName;
 
 	public ViewObject(T viewObject, String viewName) {
 		this.viewObject = viewObject;

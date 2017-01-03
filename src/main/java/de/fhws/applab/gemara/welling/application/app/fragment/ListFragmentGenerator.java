@@ -19,15 +19,13 @@ import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClas
 
 public class ListFragmentGenerator extends AbstractModelClass {
 
-	private String resourceName;
-	private AppResource appResource;
+	private final String resourceName;
+	private final AppResource appResource;
 
 	private final ClassName rClassName;
 	private final ClassName resourceListAdapterClassName;
 	private final ClassName specificResourceListAdapterClassName;
 	private final ClassName thisClassName;
-	private final ClassName networkClientClassName;
-	private final ClassName networkRequestClassName;
 	private final ClassName networkCallBackClassName;
 	private final ClassName networkResponseClassName;
 	private final ClassName specificResourceClassName;
@@ -51,14 +49,14 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		this.resourceListAdapterClassName = ClassName.get(packageName + "_lib.generic.adapter", "ResourceListAdapter");
 		this.specificResourceListAdapterClassName = ClassName.get(packageName + "_lib.specific.adapter", resourceName + "ListAdapter");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
-		this.networkClientClassName = ClassName.get(packageName + ".generic.network", "NetworkClient");
-		this.networkRequestClassName = ClassName.get(packageName + ".generic.network", "NetworkRequest");
 		this.networkCallBackClassName = ClassName.get(packageName + ".generic.network", "NetworkCallback");
 		this.networkResponseClassName = ClassName.get(packageName + ".generic.network", "NetworkResponse");
 		this.specificResourceClassName = ClassName.get(packageName + "_lib.specific.model", resourceName);
 		this.resourceClassName = ClassName.get(packageName + "_lib.generic.model", "Resource");
 		this.linkClassName = ClassName.get(packageName + "_lib.generic.model", "Link");
 		this.resourceListFragmentClassName = ClassName.get(packageName + "_lib.generic.fragment", "ResourceListFragment");
+		ClassName networkClientClassName = ClassName.get(packageName + ".generic.network", "NetworkClient");
+		ClassName networkRequestClassName = ClassName.get(packageName + ".generic.network", "NetworkRequest");
 
 		this.specificResourceListAdapter = FieldSpec.builder(specificResourceListAdapterClassName, resourceName.toLowerCase() + "ListAdapter", Modifier.PRIVATE).build();
 

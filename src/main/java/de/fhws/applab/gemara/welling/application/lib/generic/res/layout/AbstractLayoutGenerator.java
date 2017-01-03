@@ -59,7 +59,7 @@ public abstract class AbstractLayoutGenerator extends GeneratedFile {
 	}
 
 	public static class View {
-		private String viewType;
+		private final String viewType;
 		private final List<String> viewAttributes = new ArrayList<>();
 		private final List<View> subViews = new ArrayList<>();
 

@@ -17,7 +17,7 @@ public abstract class AbstractActivityClass extends AbstractModelClass {
 		super(packageName, className);
 	}
 
-	protected abstract List<ClassName> getSuperinterfaces();
+	protected abstract List<ClassName> getSuperInterfaces();
 	protected abstract Modifier[] getClassModifier();
 	protected abstract List<FieldSpec> getFields();
 	protected abstract List<MethodSpec> getMethods();
@@ -27,7 +27,7 @@ public abstract class AbstractActivityClass extends AbstractModelClass {
 	public JavaFile javaFile() {
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.superclass(getAppCompatActivityClassName())
-				.addSuperinterfaces(getSuperinterfaces())
+				.addSuperinterfaces(getSuperInterfaces())
 				.addModifiers(getClassModifier())
 				.addFields(getFields())
 				.addMethods(getMethods())

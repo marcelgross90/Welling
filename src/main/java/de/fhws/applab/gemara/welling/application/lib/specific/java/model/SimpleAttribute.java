@@ -12,7 +12,7 @@ public class SimpleAttribute extends Attribute {
 		INT, STRING
 	}
 
-	private DataType type;
+	private final DataType type;
 
 	public SimpleAttribute(String name, DataType type, Modifier... modifiers) {
 		super(name, modifiers);

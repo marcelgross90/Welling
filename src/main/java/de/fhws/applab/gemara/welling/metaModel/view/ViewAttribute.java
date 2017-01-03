@@ -2,8 +2,8 @@ package de.fhws.applab.gemara.welling.metaModel.view;
 
 public class ViewAttribute {
 
-	private String resourceName;
-	private AttributeType type;
+	private final String resourceName;
+	private final AttributeType type;
 	private String displayedName;
 
 	public ViewAttribute(String resourceName, AttributeType type) {

@@ -53,7 +53,7 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 	}
 
 	@Override
-	protected List<ClassName> getSuperinterfaces() {
+	protected List<ClassName> getSuperInterfaces() {
 		List<ClassName> interfaces = new ArrayList<>();
 		interfaces.add(deleteDialogListenerClassName);
 		return interfaces;

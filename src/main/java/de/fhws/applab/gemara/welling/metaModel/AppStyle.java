@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by marcelgross on 22.12.16.
- */
 public class AppStyle {
 
 	private final List<Style> styles = new ArrayList<>();

@@ -4,6 +4,7 @@ import de.fhws.applab.gemara.welling.GeneratedFile;
 
 public class SettingsGradle extends GeneratedFile {
 
+	@SuppressWarnings("FieldCanBeLocal")
 	private final String directoryName = "generated/";
 	private final String libName;
 

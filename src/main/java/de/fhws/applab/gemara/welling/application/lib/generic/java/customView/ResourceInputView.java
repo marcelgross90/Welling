@@ -3,7 +3,6 @@ package de.fhws.applab.gemara.welling.application.lib.generic.java.customView;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.*;
 
 import javax.lang.model.element.Modifier;
 

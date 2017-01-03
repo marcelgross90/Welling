@@ -8,7 +8,7 @@ import java.util.List;
 
 public class AppResource {
 
-	private String resourceName;
+	private final String resourceName;
 	private boolean containsImage;
 	private final List<Attribute> attributes = new ArrayList<>();
 	private AppCardView appCardView;

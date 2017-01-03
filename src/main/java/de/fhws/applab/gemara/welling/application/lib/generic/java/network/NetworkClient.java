@@ -44,7 +44,7 @@ public class NetworkClient extends AbstractModelClass {
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(getContextParam())
 				.addParameter(ParameterSpec.builder(networkRequestClassName, "request").build())
-				.addStatement("this.$N = $T.getCacheInsance($N).getClient()", clientField, okHttpSingletonClassName, getContextParam())
+				.addStatement("this.$N = $T.getCacheInstance($N).getClient()", clientField, okHttpSingletonClassName, getContextParam())
 				.addStatement("this.$N = request", this.requestField)
 				.build();
 

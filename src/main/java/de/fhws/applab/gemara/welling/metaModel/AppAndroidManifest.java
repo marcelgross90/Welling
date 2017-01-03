@@ -5,7 +5,7 @@ import java.util.List;
 
 public class AppAndroidManifest {
 
-	private String packageName;
+	private final String packageName;
 	private final List<String> permissions = new ArrayList<>();
 	private Application application;
 
@@ -67,7 +67,7 @@ public class AppAndroidManifest {
 	}
 
 	public static class Activity {
-		private String name;
+		private final String name;
 		private final List<IntentFilter> intentFilters = new ArrayList<>();
 
 		public Activity(String name) {
@@ -121,8 +121,8 @@ public class AppAndroidManifest {
 	}
 
 	public static class Data {
-		private String host;
-		private String scheme;
+		private final String host;
+		private final String scheme;
 
 		public Data(String host, String scheme) {
 			this.host = host;

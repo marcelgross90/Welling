@@ -44,7 +44,7 @@ public class AbstractMainActivity extends AbstractActivityClass {
 	}
 
 	@Override
-	protected List<ClassName> getSuperinterfaces() {
+	protected List<ClassName> getSuperInterfaces() {
 		return Collections.emptyList();
 	}
 
@@ -78,7 +78,7 @@ public class AbstractMainActivity extends AbstractActivityClass {
 	public JavaFile javaFile() {
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.superclass(getAppCompatActivityClassName())
-				.addSuperinterfaces(getSuperinterfaces())
+				.addSuperinterfaces(getSuperInterfaces())
 				.addModifiers(getClassModifier())
 				.addFields(getFields())
 				.addMethods(getMethods())

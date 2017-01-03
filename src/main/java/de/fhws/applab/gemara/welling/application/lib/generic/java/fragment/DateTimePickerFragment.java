@@ -26,7 +26,7 @@ public class DateTimePickerFragment extends AbstractModelClass {
 
 
 	private final FieldSpec calendar = FieldSpec.builder(calendarClassName, "calendar", Modifier.PRIVATE, Modifier.FINAL).initializer("$T.getInstance()", calendarClassName).build();
-	private final FieldSpec listner;
+	private final FieldSpec listener;
 
 	private final FieldSpec year = FieldSpec.builder(int.class, "year", Modifier.PRIVATE).build();
 	private final FieldSpec month = FieldSpec.builder(int.class, "month", Modifier.PRIVATE).build();
@@ -38,13 +38,13 @@ public class DateTimePickerFragment extends AbstractModelClass {
 		this.onDateTimeSetListenerClassName = ClassName.get(this.packageName, "OnDateTimeSetListener");
 		this.thisClass = ClassName.get(this.packageName, this.className);
 
-		this.listner = FieldSpec.builder(onDateTimeSetListenerClassName, "listener", Modifier.PRIVATE).build();
+		this.listener = FieldSpec.builder(onDateTimeSetListenerClassName, "listener", Modifier.PRIVATE).build();
 	}
 
 	@Override
 	public JavaFile javaFile() {
 		MethodSpec onCreate = getOnCreateFragment()
-				.addStatement("$N = ($T) getTargetFragment()", listner, onDateTimeSetListenerClassName).build();
+				.addStatement("$N = ($T) getTargetFragment()", listener, onDateTimeSetListenerClassName).build();
 
 		MethodSpec onCreateDialog = getOnCreateDialog()
 				.addStatement("return new $T(getActivity(), this, $N.get($T.YEAR), $N.get($T.MONTH), $N.get($T.DAY_OF_MONTH))",
@@ -91,13 +91,13 @@ public class DateTimePickerFragment extends AbstractModelClass {
 				.beginControlFlow("catch($T e)", ClassName.get(ParseException.class))
 				.addStatement("date = new $T()", ClassName.get(Date.class))
 				.endControlFlow()
-				.addStatement("$N.onDateTimeSet(date)", listner)
+				.addStatement("$N.onDateTimeSet(date)", listener)
 				.build();
 
 		TypeSpec type = TypeSpec.classBuilder(this.className).superclass(getDialogFragmentClassName()).addSuperinterface(getOnDateSetListenerClassName()).addSuperinterface(getOnTimeSetListenerClassName())
 				.addModifiers(Modifier.PUBLIC)
 				.addField(calendar)
-				.addField(listner)
+				.addField(listener)
 				.addField(year)
 				.addField(month)
 				.addField(day)

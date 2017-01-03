@@ -69,7 +69,7 @@ public class ScrollListener extends AbstractModelClass {
 				.endControlFlow()
 				.build();
 
-		TypeSpec tpye = TypeSpec.classBuilder(this.className)
+		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.superclass(onScrollListenerClassName)
 				.addModifiers(Modifier.PUBLIC)
 				.addType(onScrollListener)
@@ -80,7 +80,7 @@ public class ScrollListener extends AbstractModelClass {
 				.addMethod(onScrolled)
 				.build();
 
-		return JavaFile.builder(this.packageName, tpye).build();
+		return JavaFile.builder(this.packageName, type).build();
 	}
 
 

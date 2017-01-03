@@ -10,8 +10,8 @@ public abstract class MenuGenerator extends GeneratedFile {
 	protected abstract List<MenuItem> addMenuItems();
 	protected abstract List<MenuGroup> addMenuGroups();
 
-	protected String fileName;
-	protected String directoryName;
+	protected final String fileName;
+	protected final String directoryName;
 
 	public MenuGenerator(String fileName, String directoryName) {
 		this.fileName = fileName + ".xml";
@@ -64,9 +64,9 @@ public abstract class MenuGenerator extends GeneratedFile {
 	}
 
 	public class MenuItem {
-		private String id;
+		private final String id;
+		private final String title;
 		private String icon;
-		private String title;
 		private String showAsAction;
 
 		public MenuItem(String id, String title) {
@@ -100,7 +100,7 @@ public abstract class MenuGenerator extends GeneratedFile {
 	}
 
 	public class MenuGroup {
-		private List<MenuItem> items;
+		private final List<MenuItem> items;
 
 		public MenuGroup() {
 			this.items = new ArrayList<>();
