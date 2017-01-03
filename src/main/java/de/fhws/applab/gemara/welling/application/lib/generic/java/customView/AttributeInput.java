@@ -22,8 +22,8 @@ public class AttributeInput extends de.fhws.applab.gemara.welling.application.li
 
 	private final FieldSpec attribute = FieldSpec.builder(getEditTextClassName(), "attribute", Modifier.PRIVATE).build();
 
-	public AttributeInput(String packageName, String className) {
-		super(packageName, className, getTextInputLayoutClassName());
+	public AttributeInput(String packageName) {
+		super(packageName, "AttributeInput", getTextInputLayoutClassName());
 	}
 
 	@Override

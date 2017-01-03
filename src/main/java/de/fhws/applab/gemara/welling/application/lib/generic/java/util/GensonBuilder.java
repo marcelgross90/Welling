@@ -16,8 +16,8 @@ public class GensonBuilder  extends AbstractModelClass {
 	private final ClassName simpleDateFormatClassName = ClassName.get(SimpleDateFormat.class);
 	private final ClassName localeClassName = ClassName.get(Locale.class);
 
-	public GensonBuilder(String packageName, String className) {
-		super(packageName + ".generic.util", className);
+	public GensonBuilder(String packageName) {
+		super(packageName + ".generic.util", "GensonBuilder");
 	}
 
 	public JavaFile javaFile() {

@@ -33,8 +33,8 @@ public class DateTimePickerFragment extends AbstractModelClass {
 	private final FieldSpec day = FieldSpec.builder(int.class, "day", Modifier.PRIVATE).build();
 
 
-	public DateTimePickerFragment(String packageName, String className) {
-		super(packageName + ".generic.fragment", className);
+	public DateTimePickerFragment(String packageName) {
+		super(packageName + ".generic.fragment", "DateTimePickerFragment");
 		this.onDateTimeSetListenerClassName = ClassName.get(this.packageName, "OnDateTimeSetListener");
 		this.thisClass = ClassName.get(this.packageName, this.className);
 

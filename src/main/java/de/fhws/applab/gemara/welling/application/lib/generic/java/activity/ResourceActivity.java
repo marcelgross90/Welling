@@ -20,8 +20,8 @@ public class ResourceActivity extends AbstractActivityClass {
 
 	private final FieldSpec fragmentManager = getFragmentManagerField(Modifier.PROTECTED);
 
-	public ResourceActivity(String packageName, String className) {
-		super(packageName + ".generic.activity", className);
+	public ResourceActivity(String packageName) {
+		super(packageName + ".generic.activity", "ResourceActivity");
 		this.rClassName = ClassName.get(packageName, "R");
 		this.fragmentHandlerClassName = ClassName.get(packageName + ".generic.util", "FragmentHandler");
 	}

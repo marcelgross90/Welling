@@ -20,8 +20,8 @@ public class NetworkRequest extends AbstractModelClass {
 
 	private final FieldSpec requestBuilderField = FieldSpec.builder(requestBuilderClassName, "requestBuilder").build();
 
-	public NetworkRequest(String packageName, String className) {
-		super(packageName + ".generic.network", className);
+	public NetworkRequest(String packageName) {
+		super(packageName + ".generic.network", "NetworkRequest");
 		thisClass = ClassName.get(this.packageName, this.className);
 	}
 

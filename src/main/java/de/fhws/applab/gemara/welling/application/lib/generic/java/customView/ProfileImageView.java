@@ -5,7 +5,6 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.*;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
@@ -25,17 +24,16 @@ import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClas
 
 public class ProfileImageView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 
-	private final ClassName linkClassName;
 	private final ClassName builderClassName;
 	private final FieldSpec context = FieldSpec.builder(getContextClass(), "context", Modifier.PRIVATE, Modifier.FINAL).build();
 
 	private final ParameterSpec profileImage;
 
-	public ProfileImageView(String packageName, String className) {
-		super(packageName, className, getImageViewClassName());
-		this.linkClassName = ClassName.get(packageName + ".generic.model", "Link");
+	public ProfileImageView(String packageName) {
+		super(packageName, "ProfileImageView", getImageViewClassName());
+		ClassName linkClassName = ClassName.get(packageName + ".generic.model", "Link");
 		this.builderClassName = ClassName.get(packageName + ".generic.model.Link", "Builder");
-		this.profileImage = ParameterSpec.builder(this.linkClassName, "profileImage").build();
+		this.profileImage = ParameterSpec.builder(linkClassName, "profileImage").build();
 	}
 
 	@Override

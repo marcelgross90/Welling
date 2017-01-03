@@ -13,8 +13,8 @@ public class FragmentHandler extends AbstractModelClass {
 
 	private final ClassName rClassName;
 
-	public FragmentHandler(String packageName, String className) {
-		super(packageName + ".generic.util", className);
+	public FragmentHandler(String packageName) {
+		super(packageName + ".generic.util", "FragmentHandler");
 		this.rClassName = ClassName.get(packageName, "R");
 	}
 

@@ -17,8 +17,8 @@ public class ResourceViewHolder extends AbstractModelClass {
 	private final ClassName viewClassName = getViewClassName();
 	private final ClassName resourceClassName;
 
-	public ResourceViewHolder(String packageName, String className) {
-		super(packageName + ".generic.viewholder", className);
+	public ResourceViewHolder(String packageName) {
+		super(packageName + ".generic.viewholder", "ResourceViewHolder");
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
 	}
 

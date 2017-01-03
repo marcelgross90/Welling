@@ -30,8 +30,8 @@ public class ScrollListener extends AbstractModelClass {
 			.addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
 	private final FieldSpec listenerField;
 
-	public ScrollListener(String packageName, String className) {
-		super(packageName + ".generic.util", className);
+	public ScrollListener(String packageName) {
+		super(packageName + ".generic.util", "ScrollListener");
 		thisOnScrollListenerInterfaceClassName = ClassName.get(this.packageName, "OnScrollListener");
 		listenerField = FieldSpec.builder(thisOnScrollListenerInterfaceClassName, "listener")
 				.addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();

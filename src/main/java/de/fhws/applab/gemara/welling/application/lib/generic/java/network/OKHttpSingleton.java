@@ -20,8 +20,8 @@ public class OKHttpSingleton extends AbstractModelClass {
 	private final FieldSpec instance;
 	private final FieldSpec client;
 
-	public OKHttpSingleton(String packageName, String className) {
-		super(packageName + ".generic.network", className);
+	public OKHttpSingleton(String packageName) {
+		super(packageName + ".generic.network", "OKHttpSingleton");
 		thisClass = ClassName.get(this.packageName, this.className);
 		instance = FieldSpec.builder(thisClass, "instance")
 				.addModifiers(Modifier.PRIVATE, Modifier.STATIC)

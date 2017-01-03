@@ -30,8 +30,8 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 	private final FieldSpec currentResource;
 
 
-	public ResourceDetailActivity(String packageName, String className) {
-		super(packageName + ".generic.activity", className);
+	public ResourceDetailActivity(String packageName) {
+		super(packageName + ".generic.activity", "ResourceDetailActivity");
 		this.rClassName = ClassName.get(this.packageName, "R");
 		this.deleteDialogListenerClassName = ClassName.get(packageName + ".generic.fragment.DeleteDialogFragment", "DeleteDialogListener");
 		this.networkCallbackClassName = ClassName.get(packageName + ".generic.network", "NetworkCallback");

@@ -21,8 +21,8 @@ public class ResourceCardView extends CustomView {
 
 	private final ClassName resourceClassName;
 
-	public ResourceCardView(String packageName, String className) {
-		super(packageName, className, getCardViewClassName());
+	public ResourceCardView(String packageName) {
+		super(packageName, "ResourceCardView", getCardViewClassName());
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
 	}
 

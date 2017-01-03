@@ -1,15 +1,13 @@
-package de.fhws.applab.gemara.welling.application;
+package de.fhws.applab.gemara.welling.gradle;
 
 import de.fhws.applab.gemara.welling.GeneratedFile;
 
 public class SettingsGradle extends GeneratedFile {
 
-	//todo maybe replace directory with hardcoded directory
-	private final String directoryName;
+	private final String directoryName = "generated/";
 	private final String libName;
 
-	public SettingsGradle(String directoryName, String libName) {
-		this.directoryName = directoryName;
+	public SettingsGradle(String libName) {
 		this.libName = libName;
 	}
 

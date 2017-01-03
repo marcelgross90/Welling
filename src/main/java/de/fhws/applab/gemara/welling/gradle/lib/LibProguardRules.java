@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.application.lib;
+package de.fhws.applab.gemara.welling.gradle.lib;
 
 import de.fhws.applab.gemara.welling.GeneratedFile;
 

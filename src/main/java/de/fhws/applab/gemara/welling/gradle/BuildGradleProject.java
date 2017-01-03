@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.application;
+package de.fhws.applab.gemara.welling.gradle;
 
 import de.fhws.applab.gemara.welling.GeneratedFile;
 
@@ -9,12 +9,7 @@ import de.fhws.applab.gemara.welling.GeneratedFile;
 public class BuildGradleProject extends GeneratedFile {
 
 	private static final String GRADLE_VERSION = "2.2.3";
-//todo maybe replace directory with hardcoded directory
-	private final String directoryName;
-
-	public BuildGradleProject(String directoryName) {
-		this.directoryName = directoryName;
-	}
+	private final String directoryName = "generated/";
 
 	@Override
 	public void generate() {

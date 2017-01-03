@@ -29,8 +29,8 @@ public class NetworkResponse extends AbstractModelClass {
 	private final ParameterSpec reader = ParameterSpec.builder(readerClassName, "responseReader").build();
 	private final ParameterSpec header = ParameterSpec.builder(map, "header").build();
 
-	public NetworkResponse(String packageName, String className) {
-		super(packageName + ".generic.network", className);
+	public NetworkResponse(String packageName) {
+		super(packageName + ".generic.network", "NetworkResponse");
 		headerParserClassName = ClassName.get(this.packageName, "HeaderParser");
 		linkMap = ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), ClassName.get(packageName + ".generic.model", "Link") );
 	}

@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.application.lib;
+package de.fhws.applab.gemara.welling.gradle.lib;
 
 import de.fhws.applab.gemara.welling.GeneratedFile;
 
@@ -7,7 +7,6 @@ import de.fhws.applab.gemara.welling.GeneratedFile;
  */
 public class BuildGradleLib extends GeneratedFile {
 
-	//todo maybe replace directory with hardcoded directory
 	private final String directoryName;
 
 	public BuildGradleLib(String directoryName) {

@@ -8,8 +8,8 @@ import javax.lang.model.element.Modifier;
 
 public class Resource extends AbstractModelClass {
 
-	public Resource(String packageName, String className) {
-		super(packageName + ".generic.model", className);
+	public Resource(String packageName) {
+		super(packageName + ".generic.model", "Resource");
 	}
 
 	@Override

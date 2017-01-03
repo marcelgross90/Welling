@@ -32,8 +32,8 @@ public class ResourceListAdapter extends AbstractModelClass {
 	private final FieldSpec onResourceClickListener;
 	private final FieldSpec resourceList;
 
-	public ResourceListAdapter(String packageName, String className) {
-		super(packageName + ".generic.adapter", className);
+	public ResourceListAdapter(String packageName) {
+		super(packageName + ".generic.adapter", "ResourceListAdapter");
 		this.thisClass = ClassName.get(this.packageName, this.className);
 		this.thisOnResourceClickListener = ClassName.get(this.packageName, "OnResourceClickListener");
 		this.resourceViewHolderClassName = ClassName.get(packageName + ".generic.viewHolder", "ResourceViewHolder");

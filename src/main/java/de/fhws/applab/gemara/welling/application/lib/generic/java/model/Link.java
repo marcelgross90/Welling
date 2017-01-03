@@ -22,9 +22,9 @@ public class Link extends AbstractModelClass {
 	private final FieldSpec relField = FieldSpec.builder(String.class, "rel").addModifiers(Modifier.PRIVATE).build();
 	private final FieldSpec typeField = FieldSpec.builder(String.class, "type").addModifiers(Modifier.PRIVATE).build();
 
-	public Link(String packageName, String className) {
-		super(packageName + ".generic.model", className);
-		thisClass = ClassName.get(this.packageName, className);
+	public Link(String packageName) {
+		super(packageName + ".generic.model", "Link");
+		thisClass = ClassName.get(this.packageName, this.className);
 	}
 
 	@Override

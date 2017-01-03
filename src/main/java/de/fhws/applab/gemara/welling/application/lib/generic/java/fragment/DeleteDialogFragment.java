@@ -25,8 +25,8 @@ public class DeleteDialogFragment extends AbstractModelClass {
 	private final FieldSpec url = FieldSpec.builder(String.class, "url", Modifier.PRIVATE).build();
 	private final FieldSpec deleteDialogListener;
 
-	public DeleteDialogFragment(String packageName, String className) {
-		super(packageName + ".generic.fragment", className);
+	public DeleteDialogFragment(String packageName) {
+		super(packageName + ".generic.fragment", "DeleteDialogFragment");
 		this.rClassName = ClassName.get(packageName, "R");
 		this.deleteDialogListenerClassName = ClassName.get(this.packageName, "DeleteDialogListener");
 		this.networkClientClassName = ClassName.get(packageName + ".generic.network", "NetworkClient");

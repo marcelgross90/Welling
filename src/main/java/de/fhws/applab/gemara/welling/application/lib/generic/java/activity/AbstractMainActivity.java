@@ -31,8 +31,8 @@ public class AbstractMainActivity extends AbstractActivityClass {
 
 	private final FieldSpec fragmentManager = getFragmentManagerField(Modifier.PRIVATE);
 
-	public AbstractMainActivity(String packageName, String className) {
-		super(packageName + ".generic.activity", className);
+	public AbstractMainActivity(String packageName) {
+		super(packageName + ".generic.activity", "AbstractMainActivity");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
 		this.linkClassName = ClassName.get(packageName + ".generic.model", "Link");
 		this.rClassName = ClassName.get(packageName, "R");

@@ -13,8 +13,8 @@ import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClas
 
 public class AttributeView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 
-	public AttributeView(String packageName, String className) {
-		super(packageName, className, getTextViewClassName());
+	public AttributeView(String packageName) {
+		super(packageName, "AttributeView", getTextViewClassName());
 	}
 
 	@Override

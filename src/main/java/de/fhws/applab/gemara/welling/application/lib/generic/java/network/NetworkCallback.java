@@ -11,11 +11,10 @@ import javax.lang.model.element.Modifier;
 
 public class NetworkCallback extends AbstractModelClass {
 
-	public NetworkCallback(String packageName, String className) {
-		super(packageName + ".generic.network", className);
+	public NetworkCallback(String packageName) {
+		super(packageName + ".generic.network", "NetworkCallback");
 	}
 
-	//todo watchout for onSuccess
 	public JavaFile javaFile() {
 		TypeSpec type = TypeSpec.interfaceBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC)

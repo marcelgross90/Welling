@@ -29,8 +29,8 @@ public class NetworkClient extends AbstractModelClass {
 	private final FieldSpec requestField;
 
 
-	public NetworkClient(String packageName, String className) {
-		super(packageName + ".generic.network", className);
+	public NetworkClient(String packageName) {
+		super(packageName + ".generic.network", "NetworkClient");
 		this.networkRequestClassName = ClassName.get(this.packageName, "NetworkRequest");
 		this.networkResponseClassName = ClassName.get(this.packageName, "NetworkResponse");
 		this.okHttpSingletonClassName = ClassName.get(this.packageName, "OKHttpSingleton");

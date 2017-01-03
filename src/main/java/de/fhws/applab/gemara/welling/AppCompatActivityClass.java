@@ -12,8 +12,8 @@ import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClas
 
 public class AppCompatActivityClass extends AbstractModelClass {
 
-	public AppCompatActivityClass() {
-		super();
+	public AppCompatActivityClass(String packageName, String className) {
+		super(packageName, className);
 	}
 
 	public JavaFile javaFile() {
