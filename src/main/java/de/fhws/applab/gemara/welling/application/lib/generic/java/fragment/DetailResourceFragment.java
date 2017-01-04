@@ -52,7 +52,7 @@ public class DetailResourceFragment extends AbstractModelClass {
 
 		this.resourceUrl = FieldSpec.builder(String.class, "resourceUrl", Modifier.PRIVATE).build();
 		this.mediaTyp = FieldSpec.builder(String.class, "mediaType", Modifier.PRIVATE).build();
-		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL).initializer("new $T.getDateFormatter()",
+		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL).initializer("new $T().getDateFormatter()",
 				gensonBuilderClassName).build();
 		this.currentResource = FieldSpec.builder(resourceClassName, "currentResource", Modifier.PROTECTED).build();
 		this.resourceDetailView = FieldSpec.builder(resourceDetailViewClassName, "resourceDetailView", Modifier.PROTECTED).build();
@@ -164,7 +164,7 @@ public class DetailResourceFragment extends AbstractModelClass {
 		return LifecycleMethods.getOnCreateFragment()
 				.addStatement("setHasOptionsMenu(true)")
 				.beginControlFlow("if ($N == null)", getSavedInstanceStateParam())
-				.addStatement("$T $N = getArguments", bundleClassName, "bundle")
+				.addStatement("$T $N = getArguments()", bundleClassName, "bundle")
 				.addStatement("$N = $N.getString($S, $S)", resourceUrl, "bundle", "url", "")
 				.addStatement("$N = $N.getString($S, $S)", mediaTyp, "bundle", "mediaType", "")
 				.endControlFlow()
@@ -185,7 +185,7 @@ public class DetailResourceFragment extends AbstractModelClass {
 				.addParameter(outState)
 				.addStatement("$N.putString($S, $N)", outState, "url", resourceUrl)
 				.addStatement("$N.putString($S, $N)", outState, "mediaType", mediaTyp)
-				.addStatement("super.onSavedInstanceState($N)", outState)
+				.addStatement("super.onSaveInstanceState($N)", outState)
 				.build();
 	}
 
@@ -196,7 +196,7 @@ public class DetailResourceFragment extends AbstractModelClass {
 				.addParameter(getViewGroupClassName(), "container")
 				.addParameter(getSavedInstanceStateParam())
 				.addModifiers(Modifier.PUBLIC).returns(getViewClassName())
-				.addStatement("$T $N = $N.inflate($N, $N, false)", getViewClassName(), "view", "inflater", getGetLayout(), "container")
+				.addStatement("$T $N = $N.inflate($N(), $N, false)", getViewClassName(), "view", "inflater", getGetLayout(), "container")
 				.addStatement("$N($N)", getInitializeView(), "view")
 				.addStatement("return $N", "view")
 				.build();
@@ -209,7 +209,7 @@ public class DetailResourceFragment extends AbstractModelClass {
 				.returns(void.class)
 				.addParameter(getMenuClassName(), "menu")
 				.addParameter(getMenuInflaterClassName(), "inflater")
-				.addStatement("$N.inflate($T.menu.$N, $N", "inflater", rClassName, "detail_menu", "menu")
+				.addStatement("$N.inflate($T.menu.$N, $N)", "inflater", rClassName, "detail_menu", "menu")
 				.addStatement("$T $N = $N.findItem($T.id.$N)", getMenuItemClassName(), "deleteItem", "menu", rClassName, "delete_item")
 				.addStatement("$T $N = $N.findItem($T.id.$N)", getMenuItemClassName(), "editItem", "menu", rClassName, "edit_item")
 				.addStatement("$N.setVisible($N != null)", "deleteItem", deleteLink)

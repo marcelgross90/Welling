@@ -38,7 +38,7 @@ public class ManifestGenerator extends GeneratedFile {
 		appendApplicationAttributes(application);
 		appendln(">");
 		appendActivities(application);
-
+		appendln("</application>");
 	}
 
 	private void appendApplicationAttributes(AppAndroidManifest.Application application) {

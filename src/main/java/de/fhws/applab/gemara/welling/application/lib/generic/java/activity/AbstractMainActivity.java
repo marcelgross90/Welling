@@ -112,7 +112,7 @@ public class AbstractMainActivity extends AbstractActivityClass {
 	private MethodSpec getOnSupportNavigateUp() {
 		return MethodSpec.methodBuilder("onSupportNavigateUp")
 				.addAnnotation(Override.class)
-				.addModifiers(Modifier.PUBLIC).returns(Boolean.class)
+				.addModifiers(Modifier.PUBLIC).returns(boolean.class)
 				.addStatement("$N.popBackStack()", fragmentManager)
 				.addStatement("return false")
 				.build();
@@ -171,7 +171,7 @@ public class AbstractMainActivity extends AbstractActivityClass {
 						MethodSpec.methodBuilder("run")
 								.addModifiers(Modifier.PUBLIC).returns(void.class)
 								.addAnnotation(Override.class)
-								.addStatement("$T.makeText($T.this, $N(), $T.LENGTH_SHOT).show()",
+								.addStatement("$T.makeText($T.this, $N(), $T.LENGTH_SHORT).show()",
 										getToastClassName(), thisClassName, getGetLoadErrorMessage(), getToastClassName())
 								.build())
 				.build();
@@ -194,7 +194,7 @@ public class AbstractMainActivity extends AbstractActivityClass {
 				.addMethod(MethodSpec.methodBuilder("onBackStackChanged")
 						.addModifiers(Modifier.PUBLIC).returns(void.class)
 						.addAnnotation(Override.class)
-						.addStatement("$N", getCanBack())
+						.addStatement("$N()", getCanBack())
 						.build())
 				.build();
 

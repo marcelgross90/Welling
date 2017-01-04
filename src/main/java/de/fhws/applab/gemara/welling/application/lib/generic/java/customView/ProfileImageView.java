@@ -134,7 +134,7 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 				.addParameter(getLoadedFromClassName(), "from")
 				.addStatement("$T $N = $T.createBitmap($N, 0, 50, $N.getWidth(), 300)", getBitMapClassName(), "editedBitmap",
 						getBitMapClassName(), "bitmap", "bitmap")
-				.addStatement("$T $N = new $T(getResources(), $N))", getBitMapDrawableClassName(), "drawable", getBitMapDrawableClassName(), "editedBitmap")
+				.addStatement("$T $N = new $T(getResources(), $N)", getBitMapDrawableClassName(), "drawable", getBitMapDrawableClassName(), "editedBitmap")
 				.addStatement("setImageDrawable($N)", "drawable")
 				.build();
 
@@ -158,7 +158,7 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 				.addModifiers(Modifier.PRIVATE).returns(String.class)
 				.addParameter(profileImage)
 				.beginControlFlow("if ($N != null)", profileImage)
-				.addStatement("$T $N = $T($N)", builderClassName, "linkBuilder", builderClassName, profileImage)
+				.addStatement("$T $N = new $T($N)", builderClassName, "linkBuilder", builderClassName, profileImage)
 				.addStatement("$N.addQueryParam(\"width\", \"394\")", "linkBuilder")
 				.addStatement("$N.addQueryParam(\"height\", \"591\")", "linkBuilder")
 				.addStatement("return $N.build()", "linkBuilder")

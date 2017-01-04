@@ -74,7 +74,7 @@ public class ViewObjectVisitorImpl implements ViewObjectVisitor {
 	public void visitForSetText(MethodSpec.Builder builder, SingleViewObject singleViewObject) {
 		ViewAttribute viewAttribute = singleViewObject.getViewAttribute();
 		if (viewAttribute.getType() == AttributeType.PICTURE) {
-			builder.addStatement("$N.loadImage($N.$L, $T.dimen.picture_width, $T.dimen.picture_height)", singleViewObject.getViewName(),
+			builder.addStatement("$N.loadImage($N.$L(), $T.dimen.picture_width, $T.dimen.picture_height)", singleViewObject.getViewName(),
 					specificResourceName, viewAttribute.getGetter(), rClassName, rClassName);
 		} else if (viewAttribute.getType() == AttributeType.URL) {
 			builder.addStatement("$N.setText(getResources().getText($T.string.$N))", singleViewObject.getViewName(), rClassName,

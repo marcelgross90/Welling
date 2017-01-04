@@ -29,7 +29,7 @@ public class NewResourceFragment extends ResourceInputFragment {
 				.addStatement("$T $N = $N.serialize($N)", String.class, "resourceString", genson, "resource")
 				.addStatement("$T $N = new $T(getActivity(), new $T().url($N).post($N, $N))",
 						networkClientClassName, "client", networkClientClassName, networkRequestClassName, url, "resourceString", mediaType)
-				.addStatement("$N.sendRequest($N)", "client", getGetCallback())
+				.addStatement("$N.sendRequest($N())", "client", getGetCallback())
 				.endControlFlow()
 				.build();
 	}

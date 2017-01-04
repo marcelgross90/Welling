@@ -72,6 +72,9 @@ public class Link extends AbstractModelClass {
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.addAnnotation(AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unused").build())
 				.addModifiers(Modifier.PUBLIC).addMethod(standardConstructor).addMethod(constructor).addMethod(getHref)
+				.addField(hrefField)
+				.addField(relField)
+				.addField(typeField)
 				.addMethod(getHrefWithoutQueryParams).addMethod(setHref).addMethod(getRel).addMethod(setRel).addMethod(getType)
 				.addMethod(setType).addMethod(equals).addMethod(hashCode).addType(generateBuilder()).build();
 
@@ -79,14 +82,14 @@ public class Link extends AbstractModelClass {
 	}
 
 	private TypeSpec generateBuilder() {
-		ClassName thisBuilder = ClassName.get(this.packageName, "Builder");
+		ClassName thisBuilder = ClassName.get(this.packageName + "." + this.className, "Builder");
 
 		ParameterizedTypeName map = ParameterizedTypeName
 				.get(ClassName.get(Map.class), ClassName.get(String.class), ClassName.get(String.class));
 		FieldSpec baseUrl = FieldSpec.builder(String.class, "baseUrl").addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
 		FieldSpec generatedUrl = FieldSpec.builder(String.class, "generatedUrl").addModifiers(Modifier.PRIVATE).build();
 		FieldSpec queryParamsWithWildcards = FieldSpec.builder(map, "queryParamsWithWildcards")
-				.addModifiers(Modifier.PRIVATE, Modifier.FINAL).initializer(" = new $T()", ClassName.get(HashMap.class)).build();
+				.addModifiers(Modifier.PRIVATE, Modifier.FINAL).initializer("new $T()", ClassName.get(HashMap.class)).build();
 
 		MethodSpec splitQueryParams = MethodSpec.methodBuilder("splitQueryParams").addModifiers(Modifier.PRIVATE).returns(void.class)
 				.addParameter(ParameterSpec.builder(String.class, "queryParamsAsString").build())
@@ -97,7 +100,7 @@ public class Link extends AbstractModelClass {
 
 		MethodSpec constructorOne = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
 				.addParameter(ParameterSpec.builder(String.class, "orgUrl").build())
-				.addStatement("$T[] splitUrl = orgUlr.split(\"\\\\?\")", ClassName.get(String.class))
+				.addStatement("$T[] splitUrl = orgUrl.split(\"\\\\?\")", ClassName.get(String.class))
 				.addStatement("this.$N = splitUrl[0]", baseUrl).addStatement("this.$N = baseUrl", generatedUrl)
 				.addStatement("$N(splitUrl[1])", splitQueryParams).build();
 
@@ -108,7 +111,7 @@ public class Link extends AbstractModelClass {
 				.addParameter(ParameterSpec.builder(String.class, "key").build())
 				.addParameter(ParameterSpec.builder(String.class, "value").build())
 				.addStatement("$T queryTemplate = $N.get(key)", String.class, queryParamsWithWildcards)
-				.beginControlFlow("if (queryTemplate != null)").beginControlFlow("if(this.$N.contains(\"?\")", generatedUrl)
+				.beginControlFlow("if (queryTemplate != null)").beginControlFlow("if(this.$N.contains(\"?\"))", generatedUrl)
 				.addStatement("this.$N += \"&\" + queryTemplate + value", generatedUrl).endControlFlow().beginControlFlow("else")
 				.addStatement("this.$N += \"?\" + queryTemplate + value", generatedUrl).endControlFlow().endControlFlow()
 				.addStatement("return this").build();
@@ -116,7 +119,16 @@ public class Link extends AbstractModelClass {
 		MethodSpec build = MethodSpec.methodBuilder("build").addModifiers(Modifier.PUBLIC).returns(String.class)
 				.addStatement("return this.$N", generatedUrl).build();
 
-		return TypeSpec.classBuilder(thisBuilder).addModifiers(Modifier.PUBLIC, Modifier.STATIC).addMethod(constructorOne)
-				.addMethod(constructorTwo).addMethod(addQueryParam).addMethod(build).addMethod(splitQueryParams).build();
+		return TypeSpec.classBuilder(thisBuilder)
+				.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+				.addField(baseUrl)
+				.addField(generatedUrl)
+				.addField(queryParamsWithWildcards)
+				.addMethod(constructorOne)
+				.addMethod(constructorTwo)
+				.addMethod(addQueryParam)
+				.addMethod(build)
+				.addMethod(splitQueryParams)
+				.build();
 	}
 }

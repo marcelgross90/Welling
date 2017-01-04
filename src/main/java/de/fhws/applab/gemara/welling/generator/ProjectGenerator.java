@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.test.generators;
+package de.fhws.applab.gemara.welling.generator;
 
 import de.fhws.applab.gemara.welling.GeneratedFile;
 import de.fhws.applab.gemara.welling.gradle.BuildGradleProject;

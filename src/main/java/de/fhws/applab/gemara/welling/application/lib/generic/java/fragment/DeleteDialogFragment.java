@@ -28,7 +28,7 @@ public class DeleteDialogFragment extends AbstractModelClass {
 	public DeleteDialogFragment(String packageName) {
 		super(packageName + ".generic.fragment", "DeleteDialogFragment");
 		this.rClassName = ClassName.get(packageName, "R");
-		this.deleteDialogListenerClassName = ClassName.get(this.packageName, "DeleteDialogListener");
+		this.deleteDialogListenerClassName = ClassName.get(this.packageName + "." + this.className, "DeleteDialogListener");
 		this.networkClientClassName = ClassName.get(packageName + ".generic.network", "NetworkClient");
 		this.networkRequestClassName = ClassName.get(packageName + ".generic.network", "NetworkRequest");
 		this.networkCallBackClassName = ClassName.get(packageName + ".generic.network", "NetworkCallback");
@@ -59,8 +59,8 @@ public class DeleteDialogFragment extends AbstractModelClass {
 		MethodSpec delete = MethodSpec.methodBuilder("delete")
 				.addModifiers(Modifier.PRIVATE).returns(void.class)
 				.addParameter(ParameterSpec.builder(deleteDialogListenerClassName, "listener", Modifier.FINAL).build())
-				.addStatement("$T client = new $T(getActivity(), new $T().url($N).delete()", networkClientClassName, networkClientClassName, networkRequestClassName, url)
-				.addStatement("client.sentRequest($L)", networkCallback)
+				.addStatement("$T client = new $T(getActivity(), new $T().url($N).delete())", networkClientClassName, networkClientClassName, networkRequestClassName, url)
+				.addStatement("client.sendRequest($L)", networkCallback)
 				.build();
 
 

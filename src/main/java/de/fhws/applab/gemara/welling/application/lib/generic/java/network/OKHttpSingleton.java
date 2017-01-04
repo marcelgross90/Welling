@@ -34,8 +34,8 @@ public class OKHttpSingleton extends AbstractModelClass {
 	public JavaFile javaFile() {
 		MethodSpec getInstance = MethodSpec.methodBuilder("getInstance")
 				.addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(thisClass)
-				.addParameter(boolean.class, "cached")
 				.addParameter(getContextClass(), "context")
+				.addParameter(boolean.class, "cached")
 				.beginControlFlow("if ($N == null)", instance)
 				.addStatement("$N = new $T(context, cached)", instance, thisClass)
 				.endControlFlow()
@@ -49,14 +49,14 @@ public class OKHttpSingleton extends AbstractModelClass {
 				.build();
 
 		MethodSpec getClient = MethodSpec.methodBuilder("getClient")
-				.addModifiers(Modifier.PUBLIC).returns(thisClass)
+				.addModifiers(Modifier.PUBLIC).returns(okHttpClientClassName)
 				.addStatement("return $N", client)
 				.build();
 
 		MethodSpec constructor = MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PRIVATE)
-				.addParameter(boolean.class, "cached")
 				.addParameter(getContextClass(), "context")
+				.addParameter(boolean.class, "cached")
 				.beginControlFlow("if (cached)")
 				.addStatement("int cacheSize = (int) ((Runtime.getRuntime().maxMemory() / 1024) / 8)")
 				.addStatement("$T cache = new $T($N.getCacheDir(), cacheSize)", cacheClassName, cacheClassName, getContextParam())

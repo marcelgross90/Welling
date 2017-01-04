@@ -22,7 +22,7 @@ public class DateTimePickerFragment extends AbstractModelClass {
 
 	private final ClassName calendarClassName = ClassName.get(Calendar.class);
 	private final ClassName onDateTimeSetListenerClassName;
-	private final ClassName thisClass;
+	private final ClassName datePickerDialogClassName;
 
 
 	private final FieldSpec calendar = FieldSpec.builder(calendarClassName, "calendar", Modifier.PRIVATE, Modifier.FINAL).initializer("$T.getInstance()", calendarClassName).build();
@@ -35,8 +35,8 @@ public class DateTimePickerFragment extends AbstractModelClass {
 
 	public DateTimePickerFragment(String packageName) {
 		super(packageName + ".generic.fragment", "DateTimePickerFragment");
-		this.onDateTimeSetListenerClassName = ClassName.get(this.packageName, "OnDateTimeSetListener");
-		this.thisClass = ClassName.get(this.packageName, this.className);
+		this.onDateTimeSetListenerClassName = ClassName.get(this.packageName + "." + this.className, "OnDateTimeSetListener");
+		this.datePickerDialogClassName = getDatePickerDialogClassName();
 
 		this.listener = FieldSpec.builder(onDateTimeSetListenerClassName, "listener", Modifier.PRIVATE).build();
 	}
@@ -46,9 +46,13 @@ public class DateTimePickerFragment extends AbstractModelClass {
 		MethodSpec onCreate = getOnCreateFragment()
 				.addStatement("$N = ($T) getTargetFragment()", listener, onDateTimeSetListenerClassName).build();
 
-		MethodSpec onCreateDialog = getOnCreateDialog()
+		MethodSpec onCreateDialog = MethodSpec.methodBuilder("onCreateDialog")
+				.addAnnotation(Override.class)
+				.addAnnotation(getNonNullClassName())
+				.addParameter(getSavedInstanceStateParam())
+				.addModifiers(Modifier.PUBLIC).returns(getDialogClassName())
 				.addStatement("return new $T(getActivity(), this, $N.get($T.YEAR), $N.get($T.MONTH), $N.get($T.DAY_OF_MONTH))",
-						thisClass, calendar, calendarClassName,calendar, calendarClassName, calendar, calendarClassName )
+						datePickerDialogClassName, calendar, calendarClassName,calendar, calendarClassName, calendar, calendarClassName )
 				.build();
 
 		MethodSpec onDateSet = MethodSpec.methodBuilder("onDateSet")
@@ -59,7 +63,7 @@ public class DateTimePickerFragment extends AbstractModelClass {
 				.addParameter(ParameterSpec.builder(int.class, "month", Modifier.FINAL).build())
 				.addParameter(ParameterSpec.builder(int.class, "day", Modifier.FINAL).build())
 				.addStatement("this.$N = year", year)
-				.addStatement("this.$N = mont", month)
+				.addStatement("this.$N = month", month)
 				.addStatement("this.$N = day", day)
 				.addStatement("$T timePickerDialog = new $T(getContext(), this, $N.get($T.HOUR_OF_DAY), $N.get($T.MINUTE), $T.is24HourFormat(getActivity()))",
 						getTimePickerDialogClassName(), getTimePickerDialogClassName(), calendar, calendarClassName, calendar, calendarClassName, getDateFormatClassName())

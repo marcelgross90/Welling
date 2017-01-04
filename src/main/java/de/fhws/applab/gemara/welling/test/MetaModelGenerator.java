@@ -28,6 +28,8 @@ import java.util.Map;
 public class MetaModelGenerator {
 
 	private static final String packageName = "de.fhws.applab.gemara";
+	private static final String packageNameLib = "de.fhws.applab.gemara.lecturer_lib";
+
 
 	public static AndroidMetaModel generateMetaModel() throws InputException {
 		AndroidMetaModel model = new AndroidMetaModel(packageName, "Lecturer");
@@ -37,20 +39,64 @@ public class MetaModelGenerator {
 		model.setAppColor(new AppColor("#3F51B5", "#303F9F", "#FF4081", "#fff", "#8080FF"));
 		model.setAppRestAPI(appRestAPI);
 		model.setLibStyles(generateLibStyle());
-		model.setLibStrings(getStrings());
+		model.setAppStyles(generateAppStyle());
+		model.setLibStrings(getLibStrings());
+		model.setAppStrings(getAppStrings());
 		model.setAppDeclareStyleable(generateAppDeclareStyleable());
 		model.setLibManifest(generateLibManifest());
+		model.setAppManifest(generateAppManifest());
 		model.addAppResource(getLecturerResource());
 		return model;
 	}
 
 	private static AppAndroidManifest generateLibManifest() {
-		return new AppAndroidManifest("de.fhws.applab.gemara.lecturer_lib");
+		return new AppAndroidManifest(packageNameLib);
+	}
+
+	private static AppAndroidManifest generateAppManifest() {
+		AppAndroidManifest manifest = new AppAndroidManifest(packageName);
+		AppAndroidManifest.Application application = manifest.getApplication();
+		List<String> applicationAttributes = new ArrayList<>();
+		applicationAttributes.add("android:fullBackupContent=\"true\"");
+		applicationAttributes.add("android:icon=\"@mipmap/ic_launcher\"");
+		applicationAttributes.add("android:theme=\"@style/AppTheme\"");
+		application.addApplicationAttributes(applicationAttributes);
+
+		List<AppAndroidManifest.Activity> activities = new ArrayList<>();
+		AppAndroidManifest.Activity mainActivity = new AppAndroidManifest.Activity(".MainActivity");
+
+		List<AppAndroidManifest.IntentFilter> intentFilters = new ArrayList<>();
+
+		AppAndroidManifest.IntentFilter mainFilter = new AppAndroidManifest.IntentFilter();
+		mainFilter.setAction("android.intent.action.Main");
+		List<String> mainFilterCategories = new ArrayList<>();
+		mainFilterCategories.add("android.intent.category.LAUNCHER");
+		mainFilter.setCategories(mainFilterCategories);
+		intentFilters.add(mainFilter);
+
+		AppAndroidManifest.IntentFilter viewFilter = new AppAndroidManifest.IntentFilter();
+		viewFilter.setAction("android.intent.action.VIEW");
+		viewFilter.setData(new AppAndroidManifest.Data("www.fhws.de", "http"));
+		List<String> viewFilterCategories = new ArrayList<>();
+		viewFilterCategories.add("android.intent.category.DEFAULT");
+		viewFilterCategories.add("android.intent.category.BROWSABLE");
+		viewFilter.setCategories(viewFilterCategories);
+		intentFilters.add(viewFilter);
+
+		mainActivity.addIntentFilters(intentFilters);
+		activities.add(mainActivity);
+
+		application.addActivities(activities);
+
+		//todo finish manifest
+		manifest.setApplication(application);
+
+		return manifest;
 	}
 
 	private static Map<String, String> generateRestAPI() {
 		Map<String, String> api = new HashMap<>();
-		api.put("rel_type_get_all_lecturers", "getAllLecturers");
+		api.put("rel_type_get_all_primary_resource", "getAllLecturers");
 		api.put("rel_type_get_all_charges", "getAllCharges");
 		api.put("rel_type_get_one_charge_of_lecturer", "getOneChargeOfLecturer");
 		api.put("rel_type_create_new_lecturer", "createNewLecturer");
@@ -63,7 +109,25 @@ public class MetaModelGenerator {
 		return api;
 	}
 
-	private static AppString getStrings() {
+	private static AppString getAppStrings() {
+		Map<String, String> stringMap = new HashMap<>();
+		stringMap.put("app_name","Lecturers");
+
+		stringMap.put("lecturer_updated","Lecturer updated!");
+		stringMap.put("charge_updated","Charge updated!");
+		stringMap.put("lecturer_saved","Lecturer saved!");
+		stringMap.put("charge_saved","Charge saved!");
+
+		stringMap.put("load_lecturer_error","Could not load lecturers");
+		stringMap.put("load_charges_error","Could not load charges");
+		stringMap.put("lecturer_delete_error","Could not delete lecturer");
+		stringMap.put("charge_delete_error","Could not delete charge");
+		stringMap.put("delete","Delete");
+
+		return new AppString(stringMap);
+	}
+
+	private static AppString getLibStrings() {
 		Map<String, String> stringMap = new HashMap<>();
 		stringMap.put("app_name","lecturer_lib");
 		stringMap.put("welearn","welearn");
@@ -82,7 +146,7 @@ public class MetaModelGenerator {
 		stringMap.put("card_caption_room","Room");
 		stringMap.put("card_caption_address","Address");
 		stringMap.put("card_caption_charge","Charge");
-		stringMap.put("profile_picture","Profile picture");
+		stringMap.put("profile_image","Profile picture");
 		stringMap.put("show_charges","Show charges");
 		stringMap.put("title_missing","Title is missing");
 		stringMap.put("first_name_missing","Firstname is missing");
@@ -153,6 +217,29 @@ public class MetaModelGenerator {
 		return new AppStyle(styles);
 	}
 
+	private static AppStyle generateAppStyle() {
+		AppStyle.Style appTheme = new AppStyle.Style("AppTheme");
+		appTheme.setParent("Theme.AppCompat.Light.NoActionBar");
+		appTheme.setItem("colorPrimary", "@color/colorPrimary");
+		appTheme.setItem("colorPrimaryDark", "@color/colorPrimaryDark");
+		appTheme.setItem("colorAccent", "@color/colorAccent");
+
+
+		AppStyle.Style appBarOverlay = new AppStyle.Style("AppTheme.AppBarOverlay");
+		appBarOverlay.setParent("ThemeOverlay.AppCompat.Dark.ActionBar");
+
+		AppStyle.Style popupOverlay = new AppStyle.Style("AppTheme.PopupOverlay");
+		popupOverlay.setParent("ThemeOverlay.AppCompat.Light");
+
+		List<AppStyle.Style> styles = new ArrayList<>();
+		styles.add(appTheme);
+
+		styles.add(appBarOverlay);
+		styles.add(popupOverlay);
+
+		return new AppStyle(styles);
+	}
+
 	private static AppDeclareStyleable generateAppDeclareStyleable() {
 		List<AppDeclareStyleable.DeclareStyleable> declareStyleables = new ArrayList<>();
 		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("AttributeView"));
@@ -194,9 +281,9 @@ public class MetaModelGenerator {
 		attributes.add(new SimpleAttribute("roomNumber", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
 		attributes.add(new SimpleAttribute("address", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
 		attributes.add(new SimpleAttribute("urlWelearn", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
-		attributes.add(new LinkAttribute("profileImageUrl",packageName, Modifier.PRIVATE));
-		attributes.add(new LinkAttribute("self", packageName, Modifier.PRIVATE));
-		attributes.add(new LinkAttribute("chargeUrl", packageName, Modifier.PRIVATE));
+		attributes.add(new LinkAttribute("profileImageUrl",packageNameLib, Modifier.PRIVATE));
+		attributes.add(new LinkAttribute("self", packageNameLib, Modifier.PRIVATE));
+		attributes.add(new LinkAttribute("chargeUrl", packageNameLib, Modifier.PRIVATE));
 		return attributes;
 	}
 
@@ -237,7 +324,7 @@ public class MetaModelGenerator {
 		viewAttributes.add(new SingleViewObject(urlWelearn, "welearnView"));
 
 		ViewAttribute profileImageUrl = new ViewAttribute("profileImageUrl", AttributeType.PICTURE);
-		profileImageUrl.setDisplayedName("Profile-Image");
+		profileImageUrl.setDisplayedName("Profile_Image");
 		viewAttributes.add(new SingleViewObject(profileImageUrl, "imageView"));
 
 		AppCardView cardView = new AppCardView();

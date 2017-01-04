@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.test.generators;
+package de.fhws.applab.gemara.welling.generator;
 
 import de.fhws.applab.gemara.welling.AbstractModelClass;
 import de.fhws.applab.gemara.welling.GeneratedFile;
@@ -77,8 +77,8 @@ public class LibGenerator {
 	public List<AbstractModelClass> getJavaClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
-		classes.addAll(getGenericAndroidLibClasses());
-		classes.addAll(getSpecificAndroidLibClasses());
+		classes.addAll(getGenericAndroidClasses());
+		classes.addAll(getSpecificAndroidClasses());
 
 		return classes;
 	}
@@ -140,7 +140,7 @@ public class LibGenerator {
 	private List<GeneratedFile> getSpecificCardViewClasses() {
 		return model.getAppResources().stream()
 				.map(appResource -> new CardLayoutGenerator("view_" + appResource.getResourceName().toLowerCase() + "_card", resDir,
-						appResource, model.getPackageName())).collect(Collectors.toList());
+						appResource, model.getPackageNameLib())).collect(Collectors.toList());
 	}
 
 	private GeneratedFile getManifest() {
@@ -168,7 +168,7 @@ public class LibGenerator {
 		return classes;
 	}
 
-	public List<AbstractModelClass> getGenericAndroidLibClasses() {
+	public List<AbstractModelClass> getGenericAndroidClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
 		classes.addAll(getGenericActivities());
@@ -185,82 +185,82 @@ public class LibGenerator {
 
 	private List<AbstractModelClass> getGenericActivities() {
 		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new AbstractMainActivity(model.getPackageName()));
-		classes.add(new ResourceActivity(model.getPackageName()));
-		classes.add(new ResourceDetailActivity(model.getPackageName()));
+		classes.add(new AbstractMainActivity(model.getPackageNameLib()));
+		classes.add(new ResourceActivity(model.getPackageNameLib()));
+		classes.add(new ResourceDetailActivity(model.getPackageNameLib()));
 
 		return classes;
 	}
 
 	private List<AbstractModelClass> getGenericAdapter() {
 		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new ResourceListAdapter(model.getPackageName()));
+		classes.add(new ResourceListAdapter(model.getPackageNameLib()));
 
 		return classes;
 	}
 
 	private List<AbstractModelClass> getGenericCustomViews() {
 		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new AttributeInput(model.getPackageName()));
-		classes.add(new AttributeView(model.getPackageName()));
-		classes.add(new DateTimeView(model.getPackageName()));
-		classes.add(new ProfileImageView(model.getPackageName()));
-		classes.add(new ResourceCardView(model.getPackageName()));
-		classes.add(new ResourceDetailView(model.getPackageName()));
-		classes.add(new ResourceInputView(model.getPackageName()));
+		classes.add(new AttributeInput(model.getPackageNameLib()));
+		classes.add(new AttributeView(model.getPackageNameLib()));
+		classes.add(new DateTimeView(model.getPackageNameLib()));
+		classes.add(new ProfileImageView(model.getPackageNameLib()));
+		classes.add(new ResourceCardView(model.getPackageNameLib()));
+		classes.add(new ResourceDetailView(model.getPackageNameLib()));
+		classes.add(new ResourceInputView(model.getPackageNameLib()));
 
 		return classes;
 	}
 
 	private List<AbstractModelClass> getGenericFragments() {
 		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new DateTimePickerFragment(model.getPackageName()));
-		classes.add(new DeleteDialogFragment(model.getPackageName()));
-		classes.add(new DetailResourceFragment(model.getPackageName()));
-		classes.add(new EditResourceFragment(model.getPackageName()));
-		classes.add(new NewResourceFragment(model.getPackageName()));
-		classes.add(new ResourceListFragment(model.getPackageName()));
+		classes.add(new DateTimePickerFragment(model.getPackageNameLib()));
+		classes.add(new DeleteDialogFragment(model.getPackageNameLib()));
+		classes.add(new DetailResourceFragment(model.getPackageNameLib()));
+		classes.add(new EditResourceFragment(model.getPackageNameLib()));
+		classes.add(new NewResourceFragment(model.getPackageNameLib()));
+		classes.add(new ResourceListFragment(model.getPackageNameLib()));
 
 		return classes;
 	}
 
 	private List<AbstractModelClass> getGenericModels() {
 		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new Link(model.getPackageName()));
-		classes.add(new Resource(model.getPackageName()));
+		classes.add(new Link(model.getPackageNameLib()));
+		classes.add(new Resource(model.getPackageNameLib()));
 
 		return classes;
 	}
 
 	private List<AbstractModelClass> getGenericNetwork() {
 		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new HeaderParser(model.getPackageName()));
-		classes.add(new NetworkCallback(model.getPackageName()));
-		classes.add(new NetworkClient(model.getPackageName()));
-		classes.add(new NetworkRequest(model.getPackageName()));
-		classes.add(new NetworkResponse(model.getPackageName()));
-		classes.add(new OKHttpSingleton(model.getPackageName()));
+		classes.add(new HeaderParser(model.getPackageNameLib()));
+		classes.add(new NetworkCallback(model.getPackageNameLib()));
+		classes.add(new NetworkClient(model.getPackageNameLib()));
+		classes.add(new NetworkRequest(model.getPackageNameLib()));
+		classes.add(new NetworkResponse(model.getPackageNameLib()));
+		classes.add(new OKHttpSingleton(model.getPackageNameLib()));
 
 		return classes;
 	}
 
 	private List<AbstractModelClass> getGenericUtil() {
 		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new FragmentHandler(model.getPackageName()));
-		classes.add(new GensonBuilder(model.getPackageName()));
-		classes.add(new ScrollListener(model.getPackageName()));
+		classes.add(new FragmentHandler(model.getPackageNameLib()));
+		classes.add(new GensonBuilder(model.getPackageNameLib()));
+		classes.add(new ScrollListener(model.getPackageNameLib()));
 
 		return classes;
 	}
 
 	private List<AbstractModelClass> getGenericViewholder() {
 		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new ResourceViewHolder(model.getPackageName()));
+		classes.add(new ResourceViewHolder(model.getPackageNameLib()));
 
 		return classes;
 	}
 
-	private List<AbstractModelClass> getSpecificAndroidLibClasses() {
+	private List<AbstractModelClass> getSpecificAndroidClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
 		classes.addAll(getSpecificAdapter());
@@ -273,23 +273,23 @@ public class LibGenerator {
 
 	private List<AbstractModelClass> getSpecificAdapter() {
 		return model.getAppResources().stream()
-				.map(appResource -> new ListAdapterGenerator(model.getPackageName(), appResource.getResourceName())).collect(Collectors.toList());
+				.map(appResource -> new ListAdapterGenerator(model.getPackageNameLib(), appResource.getResourceName())).collect(Collectors.toList());
 	}
 
 	private List<AbstractModelClass> getSpecificCustomViews() {
 		return model.getAppResources().stream()
-				.map(appResource -> new ResourceCardViewGenerator(model.getPackageName(), appResource)).collect(Collectors.toList());
+				.map(appResource -> new ResourceCardViewGenerator(model.getPackageNameLib(), appResource)).collect(Collectors.toList());
 	}
 
 	private List<AbstractModelClass> getSpecificModels() {
 		return model.getAppResources().stream()
-				.map(appResource -> new ResourceGenerator(model.getPackageName(), appResource)).collect(Collectors.toList());
+				.map(appResource -> new ResourceGenerator(model.getPackageNameLib(), appResource)).collect(Collectors.toList());
 	}
 
 
 	private List<AbstractModelClass> getSpecificViewholder() {
 		return model.getAppResources().stream()
-				.map(appResource -> new ListViewHolderGenerator(model.getPackageName(), appResource)).collect(Collectors.toList());
+				.map(appResource -> new ListViewHolderGenerator(model.getPackageNameLib(), appResource)).collect(Collectors.toList());
 	}
 
 	private void copyDrawableFolders() {

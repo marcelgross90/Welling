@@ -22,7 +22,7 @@ public class HeaderParser extends AbstractModelClass {
 
 	public HeaderParser(String packageName) {
 		super(packageName + ".generic.network", "HeaderParser");
-		linkClassName = ClassName.get(packageName + "generic.model", "Link");
+		linkClassName = ClassName.get(packageName + ".generic.model", "Link");
 		linkMap = ParameterizedTypeName.get(ClassName.get(HashMap.class), ClassName.get(String.class), linkClassName);
 	}
 

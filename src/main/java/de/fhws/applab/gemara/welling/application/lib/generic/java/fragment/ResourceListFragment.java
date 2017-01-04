@@ -53,7 +53,7 @@ public class ResourceListFragment extends AbstractModelClass {
 		this.scrollListenerClassName = ClassName.get(packageName + ".generic.util", "ScrollListener");
 		this.onScrollListenerClassName = ClassName.get(packageName + ".generic.util.ScrollListener", "OnScrollListener");
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
-		this.fragmentHandlerClassName = ClassName.get(packageName + ".genieric.util", "FragmentHandler");
+		this.fragmentHandlerClassName = ClassName.get(packageName + ".generic.util", "FragmentHandler");
 		this.networkCallbackClassName = ClassName.get(packageName + ".generic.network", "NetworkCallback");
 		this.networkClientClassName = ClassName.get(packageName + ".generic.network", "NetworkClient");
 		this.networkRequestClassName = ClassName.get(packageName + ".generic.network", "NetworkRequest");
@@ -62,7 +62,7 @@ public class ResourceListFragment extends AbstractModelClass {
 		ClassName gensonBuilderClassName = ClassName.get(packageName + ".generic.util", "GensonBuilder");
 		ClassName linkClassName = ClassName.get(packageName + ".generic.model", "Link");
 
-		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL).initializer("new $T.getDateFormatter()",
+		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL).initializer("new $T().getDateFormatter()",
 				gensonBuilderClassName).build();
 		this.progressBar = FieldSpec.builder(progressBarClassName, "progressBar", Modifier.PRIVATE).build();
 		this.url = FieldSpec.builder(String.class, "url", Modifier.PRIVATE).build();
@@ -167,7 +167,7 @@ public class ResourceListFragment extends AbstractModelClass {
 				.returns(void.class)
 				.addParameter(getMenuClassName(), "menu")
 				.addParameter(getMenuInflaterClassName(), "inflater")
-				.addStatement("$N.inflate($T.menu.$N, $N", "inflater", rClassName, "list_menu", "menu")
+				.addStatement("$N.inflate($T.menu.$N, $N)", "inflater", rClassName, "list_menu", "menu")
 				.build();
 	}
 
@@ -185,7 +185,7 @@ public class ResourceListFragment extends AbstractModelClass {
 				.endControlFlow()
 				.addStatement("$T $N = $N()", getFragmentClassName(), "fragment", getGetFragment())
 				.addStatement("$N.setArguments($N)", "fragment", "bundle")
-				.addStatement("$T.replaceFragment(getFragmentManger(), $N)", fragmentHandlerClassName, "fragment")
+				.addStatement("$T.replaceFragment(getFragmentManager(), $N)", fragmentHandlerClassName, "fragment")
 				.endControlFlow()
 				.addStatement("return super.onOptionsItemSelected($N)", "item")
 				.build();
@@ -221,7 +221,7 @@ public class ResourceListFragment extends AbstractModelClass {
 				.addStatement("$N(true)", getShowProgressBar())
 				.addStatement("$T $N = new $T(getActivity(), new $T().url($N).acceptHeader($N))",
 						networkClientClassName, "client", networkClientClassName, networkRequestClassName, url, mediaType)
-				.addStatement("$N.sendRequest($N)", "client", getGetCallBack())
+				.addStatement("$N.sendRequest($N())", "client", getGetCallBack())
 				.build();
 	}
 

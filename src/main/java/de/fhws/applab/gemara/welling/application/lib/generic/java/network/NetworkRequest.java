@@ -28,6 +28,7 @@ public class NetworkRequest extends AbstractModelClass {
 	public JavaFile javaFile() {
 
 		MethodSpec constructor = MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
 				.addStatement("this.$N = new $T()", requestBuilderField, requestBuilderClassName)
 				.build();
 
@@ -46,10 +47,10 @@ public class NetworkRequest extends AbstractModelClass {
 				.addStatement("return this")
 				.build();
 
-		MethodSpec addHeaderShort = MethodSpec.methodBuilder("addHeader")
+		MethodSpec addHeaderShort = MethodSpec.methodBuilder("acceptHeader")
 				.addModifiers(Modifier.PUBLIC).returns(thisClass)
 				.addParameter(ParameterSpec.builder(String.class, "acceptHeader").build())
-				.addStatement("return $N.addHeader(\"Accept\", acceptHeader)", requestBuilderField)
+				.addStatement("return $N(\"Accept\", acceptHeader)", addHeader)
 				.build();
 
 		MethodSpec post = MethodSpec.methodBuilder("post")
@@ -57,7 +58,7 @@ public class NetworkRequest extends AbstractModelClass {
 				.addParameter(ParameterSpec.builder(String.class, "payload").build())
 				.addParameter(ParameterSpec.builder(String.class, "mediaType").build())
 				.addStatement("$T body = $T.create($T.parse(mediaType), payload)", requestBodyClassName, requestBodyClassName, mediaTypeClassName)
-				.addStatement("this.$N.requestBuilder.post(body)", requestBuilderField)
+				.addStatement("this.$N.post(body)", requestBuilderField)
 				.addStatement("return this")
 				.build();
 
@@ -66,23 +67,24 @@ public class NetworkRequest extends AbstractModelClass {
 				.addParameter(ParameterSpec.builder(String.class, "payload").build())
 				.addParameter(ParameterSpec.builder(String.class, "mediaType").build())
 				.addStatement("$T body = $T.create($T.parse(mediaType), payload)", requestBodyClassName, requestBodyClassName, mediaTypeClassName)
-				.addStatement("this.$N.requestBuilder.put(body)", requestBuilderField)
+				.addStatement("this.$N.put(body)", requestBuilderField)
 				.addStatement("return this")
 				.build();
 
 		MethodSpec delete = MethodSpec.methodBuilder("delete")
 				.addModifiers(Modifier.PUBLIC).returns(thisClass)
-				.addStatement("this.$N.requestBuilder.delete()", requestBuilderField)
+				.addStatement("this.$N.delete()", requestBuilderField)
 				.addStatement("return this")
 				.build();
 
 		MethodSpec buildRequest = MethodSpec.methodBuilder("buildRequest")
 				.addModifiers(Modifier.PUBLIC).returns(requestClassName)
-				.addStatement("return this.$N.requestBuilder.build()", requestBuilderField)
+				.addStatement("return this.$N.build()", requestBuilderField)
 				.build();
 
 
 		TypeSpec type = TypeSpec.classBuilder(this.className)
+				.addModifiers(Modifier.PUBLIC)
 				.addField(requestBuilderField)
 				.addMethod(constructor)
 				.addMethod(url)

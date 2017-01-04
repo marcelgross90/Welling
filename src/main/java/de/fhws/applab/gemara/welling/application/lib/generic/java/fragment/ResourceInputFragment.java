@@ -47,7 +47,7 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 		ClassName resourceInputViewClassName = ClassName.get(packageName + ".generic.customView", "ResourceInputView");
 		ClassName gensonBuilderClassName = ClassName.get(packageName + ".generic.util", "GensonBuilder");
 
-		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL).initializer("new $T.getDateFormatter()",
+		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL).initializer("new $T().getDateFormatter()",
 				gensonBuilderClassName).build();
 		this.inputView = FieldSpec.builder(resourceInputViewClassName, "inputView", Modifier.PROTECTED).build();
 		this.url = FieldSpec.builder(String.class, "url", Modifier.PRIVATE).build();
@@ -111,7 +111,7 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 				.addParameter(getSavedInstanceStateParam())
 				.addModifiers(Modifier.PUBLIC)
 				.returns(getViewClassName())
-				.addStatement("$T $N = $N.inflate($N, $N, false)", getViewClassName(), "view", "inflater", getGetLayout(), "container")
+				.addStatement("$T $N = $N.inflate($N(), $N, false)", getViewClassName(), "view", "inflater", getGetLayout(), "container")
 				.addStatement("$N($N)", getInitializeView(), "view")
 				.addStatement("return $N", "view")
 				.build();
@@ -124,7 +124,7 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 				.returns(void.class)
 				.addParameter(getMenuClassName(), "menu")
 				.addParameter(getMenuInflaterClassName(), "inflater")
-				.addStatement("$N.inflate($T.menu.$N, $N", "inflater", rClassName, "save_menu", "menu")
+				.addStatement("$N.inflate($T.menu.$N, $N)", "inflater", rClassName, "save_menu", "menu")
 				.build();
 	}
 

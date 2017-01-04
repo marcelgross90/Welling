@@ -206,7 +206,7 @@ public class AndroidSpecificClasses {
 	}
 
 	public static ClassName getActionbarClassname() {
-		return ClassName.get("android.support.v7.widget", "Actionbar");
+		return ClassName.get("android.support.v7.app", "ActionBar");
 	}
 
 	public static ClassName getGensonClassName() {

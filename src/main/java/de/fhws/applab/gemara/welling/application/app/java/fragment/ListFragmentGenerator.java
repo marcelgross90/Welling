@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.application.app.fragment;
+package de.fhws.applab.gemara.welling.application.app.java.fragment;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -14,6 +14,7 @@ import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.*;
 
@@ -40,30 +41,28 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	private final ParameterizedTypeName resourceList;
 	private final ParameterizedTypeName linkMap;
 
-	public ListFragmentGenerator(String packageName, AppResource appResource) {
+	public ListFragmentGenerator(String packageName, AppResource appResource, String appName) {
 		super(packageName + ".fragment", appResource.getResourceName() + "ListFragment");
 		this.resourceName = appResource.getResourceName();
 		this.appResource = appResource;
 
-		this.rClassName = ClassName.get(packageName, "R");
-		this.resourceListAdapterClassName = ClassName.get(packageName + "_lib.generic.adapter", "ResourceListAdapter");
-		this.specificResourceListAdapterClassName = ClassName.get(packageName + "_lib.specific.adapter", resourceName + "ListAdapter");
+		this.rClassName = ClassName.get(packageName + "." + appName.toLowerCase(), "R");
+		this.resourceListAdapterClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.adapter", "ResourceListAdapter");
+		this.specificResourceListAdapterClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.adapter", resourceName + "ListAdapter");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
-		this.networkCallBackClassName = ClassName.get(packageName + ".generic.network", "NetworkCallback");
-		this.networkResponseClassName = ClassName.get(packageName + ".generic.network", "NetworkResponse");
-		this.specificResourceClassName = ClassName.get(packageName + "_lib.specific.model", resourceName);
-		this.resourceClassName = ClassName.get(packageName + "_lib.generic.model", "Resource");
-		this.linkClassName = ClassName.get(packageName + "_lib.generic.model", "Link");
-		this.resourceListFragmentClassName = ClassName.get(packageName + "_lib.generic.fragment", "ResourceListFragment");
-		ClassName networkClientClassName = ClassName.get(packageName + ".generic.network", "NetworkClient");
-		ClassName networkRequestClassName = ClassName.get(packageName + ".generic.network", "NetworkRequest");
+		this.networkCallBackClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkCallback");
+		this.networkResponseClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkResponse");
+		this.specificResourceClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.model", resourceName);
+		this.resourceClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.model", "Resource");
+		this.linkClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.model", "Link");
+		this.resourceListFragmentClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.fragment", "ResourceListFragment");
 
 		this.specificResourceListAdapter = FieldSpec.builder(specificResourceListAdapterClassName, resourceName.toLowerCase() + "ListAdapter", Modifier.PRIVATE).build();
 
 		this.specificResourceList = ParameterizedTypeName.get(ClassName.get(List.class), specificResourceClassName);
 		this.resourceList = ParameterizedTypeName.get(ClassName.get(List.class), resourceClassName);
 		this.genericType = ParameterizedTypeName.get(getGenericTypeClassName(), specificResourceList);
-		this.linkMap = ParameterizedTypeName.get(ClassName.get(HashMap.class), ClassName.get(String.class), linkClassName);
+		this.linkMap = ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), linkClassName);
 	}
 
 	@Override
@@ -90,10 +89,10 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		method.addParameter(resourceClassName, "resource");
 		method.addParameter(getViewClassName(), "view");
 		if (!appResource.isContainsImage()) {
-			method.addCode("//not needed here");
+			method.addCode("//not needed here\n");
 		} else {
 			//todo
-			method.addCode("//not implemented yet");
+			method.addCode("//not implemented yet\n");
 		}
 
 		return method.build();
@@ -106,7 +105,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		method.addAnnotation(Override.class);
 		method.addParameter(resourceClassName, "resource");
 		if (appResource.isContainsImage()) {
-			method.addCode("//not needed here");
+			method.addCode("//not needed here\n");
 		} else {
 			//todo
 		}
@@ -141,7 +140,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 				.addParameter(networkResponseClassName, "response")
 				.addStatement("final $T $N = $N.deserialize($N.getResponseReader(), new $T(){})", specificResourceList,
 						resourceName.toLowerCase() + "s", "genson", "response", genericType)
-				.addStatement("final $T $N = new $T()", resourceList, "resources", ClassName.get(ArrayList.class))
+				.addStatement("final $T $N = new $T<>()", resourceList, "resources", ClassName.get(ArrayList.class))
 				.beginControlFlow("for ($T $N : $N)", specificResourceClassName, resourceName.toLowerCase(),
 						resourceName.toLowerCase() + "s")
 				.addStatement("$N.add($N)", "resources", resourceName.toLowerCase())

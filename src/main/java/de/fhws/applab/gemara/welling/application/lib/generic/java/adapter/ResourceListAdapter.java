@@ -35,8 +35,8 @@ public class ResourceListAdapter extends AbstractModelClass {
 	public ResourceListAdapter(String packageName) {
 		super(packageName + ".generic.adapter", "ResourceListAdapter");
 		this.thisClass = ClassName.get(this.packageName, this.className);
-		this.thisOnResourceClickListener = ClassName.get(this.packageName, "OnResourceClickListener");
-		this.resourceViewHolderClassName = ClassName.get(packageName + ".generic.viewHolder", "ResourceViewHolder");
+		this.thisOnResourceClickListener = ClassName.get(this.packageName + "." + this.className, "OnResourceClickListener");
+		this.resourceViewHolderClassName = ClassName.get(packageName + ".generic.viewholder", "ResourceViewHolder");
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
 		this.resourceListType = ParameterizedTypeName.get(ClassName.get(List.class), this.resourceClassName);
 		this.onResourceClickListener = FieldSpec.builder(thisOnResourceClickListener, "onResourceClickListener")
@@ -56,7 +56,7 @@ public class ResourceListAdapter extends AbstractModelClass {
 		MethodSpec addResource = MethodSpec.methodBuilder("addResource").addModifiers(Modifier.PUBLIC).returns(void.class)
 				.addParameter(ParameterSpec.builder(resourceListType, "resources").build())
 				.beginControlFlow("for ($T resource : resources)", resourceClassName)
-				.beginControlFlow("if (!this.$N.contains(resource))", resourceList).addStatement("this$N.add(resource)", resourceList)
+				.beginControlFlow("if (!this.$N.contains(resource))", resourceList).addStatement("this.$N.add(resource)", resourceList)
 				.endControlFlow().endControlFlow().addStatement("notifyDataSetChanged()").build();
 
 		MethodSpec getLayout = MethodSpec.methodBuilder("getLayout").addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED).returns(int.class)
@@ -70,7 +70,7 @@ public class ResourceListAdapter extends AbstractModelClass {
 				.returns(TypeVariableName.get("T")).addAnnotation(Override.class)
 				.addParameter(ParameterSpec.builder(getViewGroupClassName(), "parent").build())
 				.addParameter(ParameterSpec.builder(int.class, "viewType").build())
-				.addStatement("$T moduleCard = $T.from(parent.getContext()).inflate($N, parent, false)", getViewClassName(),
+				.addStatement("$T moduleCard = $T.from(parent.getContext()).inflate($N(), parent, false)", getViewClassName(),
 						getLayoutInflaterClassName(), getLayout)
 				.addStatement("return $N(moduleCard, $N)", getViewHolder, onResourceClickListener).build();
 

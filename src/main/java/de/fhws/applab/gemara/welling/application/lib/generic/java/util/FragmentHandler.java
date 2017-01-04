@@ -27,7 +27,7 @@ public class FragmentHandler extends AbstractModelClass {
 				.addCode("fm.beginTransaction()\n"
 						+ ".replace(\n"
 						+ "$T.id.content_container, \n"
-						+ "fragment, fragment.getClass(),getName())\n"
+						+ "fragment, fragment.getClass().getName())\n"
 						+ ".addToBackStack(null)\n"
 						+ ".commit();", rClassName)
 				.build();

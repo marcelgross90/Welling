@@ -14,7 +14,7 @@ public class SettingsGradle extends GeneratedFile {
 
 	@Override
 	public void generate() {
-		appendln("include: ':app', ':" + this.libName + "'");
+		appendln("include ':app', ':" + this.libName + "'");
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class ResourceDetailView extends de.fhws.applab.gemara.welling.applicatio
 				.addStatement("$T $N = $N.getTheme().obtainStyledAttributes(attributeSet, $N(), $N, 0)",
 						getTypedArrayClassName(), "typedArray", getContextParam(), getGetStyleable(), defStyleAttr)
 				.beginControlFlow("try")
-				.addStatement("$N", getInitializeView())
+				.addStatement("$N()", getInitializeView())
 				.endControlFlow()
 				.beginControlFlow("finally")
 				.addStatement("$N.recycle()", "typedArray")

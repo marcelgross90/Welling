@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.test.generators;
+package de.fhws.applab.gemara.welling.generator;
 
 import java.io.File;
 import java.io.FileInputStream;

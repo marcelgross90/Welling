@@ -53,7 +53,7 @@ public class NetworkResponse extends AbstractModelClass {
 
 		MethodSpec getHeader = MethodSpec.methodBuilder("getHeader")
 				.addModifiers(Modifier.PUBLIC).returns(map)
-				.addStatement("return $N", readerField)
+				.addStatement("return $N", headerField)
 				.build();
 
 		MethodSpec getLinkHeader = MethodSpec.methodBuilder("getLinkHeader")

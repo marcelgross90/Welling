@@ -68,7 +68,7 @@ public class ResourceActivity extends AbstractActivityClass {
 
 	private MethodSpec getOnSupportNavigateUp() {
 		return MethodSpec.methodBuilder("onSupportNavigateUp")
-				.addModifiers(Modifier.PUBLIC).returns(Boolean.class)
+				.addModifiers(Modifier.PUBLIC).returns(boolean.class)
 				.addAnnotation(Override.class)
 				.addStatement("onBackPressed()")
 				.addStatement("return false")
@@ -77,7 +77,7 @@ public class ResourceActivity extends AbstractActivityClass {
 
 	private MethodSpec getOnCreate() {
 		return LifecycleMethods.getOnCreate()
-				.addStatement("setContentView($T.layout.activity_main", rClassName)
+				.addStatement("setContentView($T.layout.activity_main)", rClassName)
 				.addStatement("$N = getSupportFragmentManager()", fragmentManager)
 				.addStatement("$N()", getSetUpToolbar())
 				.addStatement("$T $N = getIntent()", getIntentClassName(), "intent")

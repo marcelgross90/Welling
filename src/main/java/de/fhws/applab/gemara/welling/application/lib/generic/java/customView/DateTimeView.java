@@ -44,7 +44,7 @@ public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.
 				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.AttributeInput, $N, 0)",
 				getTypedArrayClassName(), getContextParam(), rClass, defStyleAttr)
 				.beginControlFlow("try")
-				.addStatement("$T $N = $T.getInstance())", calendar, "calendar", calendar)
+				.addStatement("$T $N = $T.getInstance()", calendar, "calendar", calendar)
 				.addStatement("$T $N = $N.get($T.DAY_OF_MONTH) + \".\" + $N.get($T.MONTH) + \".\" + $N.get($T.YEAR) + \" \" + $N.get($T.HOUR_OF_DAY) + \":\" + $N.get($T.MINUTE)",
 						String.class, "date", "calendar", calendar, "calendar", calendar, "calendar", calendar, "calendar", calendar, "calendar", calendar)
 				.addStatement("setText($N)", "date")
@@ -70,7 +70,7 @@ public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.
 				.addParameter(date)
 				.addStatement("$T simpleDateFormat = new $T(\"dd.MM.yyyy HH:mm\", $T.GERMANY)",
 						simpleDateFormat, simpleDateFormat, ClassName.get(Locale.class))
-				.addStatement("setText(simpleDateFormat.format($N)", date)
+				.addStatement("setText(simpleDateFormat.format($N))", date)
 				.build();
 	}
 }

@@ -67,7 +67,7 @@ public class NetworkClient extends AbstractModelClass {
 				.addStatement("$T.d(\"Request failure\", response.toString())", getLogClass())
 				.addStatement("callback.onFailure()")
 				.endControlFlow()
-				.addStatement("callback.onSuccess( new $T(response.body().charStream(), response.headers().toMultimap())", networkResponseClassName)
+				.addStatement("callback.onSuccess( new $T(response.body().charStream(), response.headers().toMultimap()))", networkResponseClassName)
 				.build();
 
 		TypeSpec callBackClass = TypeSpec.anonymousClassBuilder("")
@@ -79,7 +79,7 @@ public class NetworkClient extends AbstractModelClass {
 		MethodSpec sendRequest = MethodSpec.methodBuilder("sendRequest")
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(ParameterSpec.builder(networkCallbackClassName, "callback").addModifiers(Modifier.FINAL).build())
-				.addCode("$N.newCallback($N.buildRequest()).enqueue($L);\n", clientField, requestField, callBackClass)
+				.addCode("$N.newCall($N.buildRequest()).enqueue($L);\n", clientField, requestField, callBackClass)
 				.build();
 
 		TypeSpec type = TypeSpec.classBuilder(this.className)

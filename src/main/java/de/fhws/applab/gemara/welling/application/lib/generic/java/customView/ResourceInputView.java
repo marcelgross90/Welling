@@ -48,7 +48,7 @@ public class ResourceInputView extends de.fhws.applab.gemara.welling.application
 				.addStatement("$T $N = $N.getTheme().obtainStyledAttributes(attributeSet, $N(), $N, 0)",
 						getTypedArrayClassName(), "typedArray", getContextParam(), getGetStyleable(), defStyleAttr)
 				.beginControlFlow("try")
-				.addStatement("$N", getInitializeView())
+				.addStatement("$N()", getInitializeView())
 				.endControlFlow()
 				.beginControlFlow("finally")
 				.addStatement("$N.recycle()", "typedArray")
@@ -94,14 +94,14 @@ public class ResourceInputView extends de.fhws.applab.gemara.welling.application
 
 	private MethodSpec getSetResource() {
 		return MethodSpec.methodBuilder("setResource")
-				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(void.class)
+				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT).returns(void.class)
 				.addParameter(resourceClassName, "resource")
 				.build();
 	}
 
 	private MethodSpec getGetResource() {
 		return MethodSpec.methodBuilder("getResource")
-				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(resourceClassName)
+				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT).returns(resourceClassName)
 				.build();
 	}
 

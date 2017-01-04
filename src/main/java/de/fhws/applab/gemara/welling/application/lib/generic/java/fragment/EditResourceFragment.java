@@ -38,7 +38,7 @@ public class EditResourceFragment extends ResourceInputFragment {
 				.addStatement("$T $N = $N.serialize($N)", String.class, "resourceString", genson, "resource")
 				.addStatement("$T $N = new $T(getActivity(), new $T().url($N.getHref()).put($N, $N.getType()))",
 						networkClientClassName, "client", networkClientClassName, networkRequestClassName, resourceEditLink, "resourceString", resourceEditLink)
-				.addStatement("$N.sendRequest($N)", "client", getGetSaveCallBack())
+				.addStatement("$N.sendRequest($N())", "client", getGetSaveCallBack())
 				.endControlFlow()
 				.build();
 	}
@@ -79,7 +79,7 @@ public class EditResourceFragment extends ResourceInputFragment {
 				.addModifiers(Modifier.PRIVATE)
 				.returns(void.class)
 				.addStatement("$T $N = new $T(getActivity(), new $T().url($N).acceptHeader($N))", networkClientClassName, "client", networkClientClassName, networkRequestClassName, url, mediaType)
-				.addStatement("$N.sendRequest($N)", "client", getGetLoadCallBack())
+				.addStatement("$N.sendRequest($N())", "client", getGetLoadCallBack())
 				.build();
 	}
 }

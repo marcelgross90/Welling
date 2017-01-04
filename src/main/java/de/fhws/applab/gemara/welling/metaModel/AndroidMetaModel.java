@@ -6,18 +6,27 @@ import java.util.List;
 public class AndroidMetaModel {
 
 	private String packageName;
+	private String packageNameLib;
 	private String applicationName;
 	private AppColor appColor;
 	private AppRestAPI appRestAPI;
 	private AppStyle libStyles;
+	private AppStyle appStyles;
 	private AppString libStrings;
+	private AppString appStrings;
 	private AppDeclareStyleable appDeclareStyleable;
 	private AppAndroidManifest libManifest;
+	private AppAndroidManifest appManifest;
 	private final List<AppResource> appResources = new ArrayList<>();
 
 	public AndroidMetaModel(String packageName, String applicationName) {
 		this.packageName = packageName;
 		this.applicationName = applicationName;
+		this.packageNameLib = packageName + "." + applicationName.toLowerCase() + "_lib";
+	}
+
+	public String getPackageNameLib() {
+		return packageNameLib;
 	}
 
 	public String getPackageName() {
@@ -60,12 +69,28 @@ public class AndroidMetaModel {
 		this.libStyles = libStyles;
 	}
 
+	public AppStyle getAppStyles() {
+		return appStyles;
+	}
+
+	public void setAppStyles(AppStyle appStyles) {
+		this.appStyles = appStyles;
+	}
+
 	public AppString getLibStrings() {
 		return libStrings;
 	}
 
 	public void setLibStrings(AppString libStrings) {
 		this.libStrings = libStrings;
+	}
+
+	public AppString getAppStrings() {
+		return appStrings;
+	}
+
+	public void setAppStrings(AppString appStrings) {
+		this.appStrings = appStrings;
 	}
 
 	public AppDeclareStyleable getAppDeclareStyleable() {
@@ -82,6 +107,14 @@ public class AndroidMetaModel {
 
 	public void setLibManifest(AppAndroidManifest libManifest) {
 		this.libManifest = libManifest;
+	}
+
+	public AppAndroidManifest getAppManifest() {
+		return appManifest;
+	}
+
+	public void setAppManifest(AppAndroidManifest appManifest) {
+		this.appManifest = appManifest;
 	}
 
 	public List<AppResource> getAppResources() {
