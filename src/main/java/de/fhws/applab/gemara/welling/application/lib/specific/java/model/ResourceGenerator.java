@@ -18,7 +18,7 @@ public class ResourceGenerator extends AbstractModelClass {
 	private final List<Attribute> attributes = new ArrayList<>();
 
 	public ResourceGenerator(String packageName, AppResource appResource) {
-		super(packageName, appResource.getResourceName());
+		super(packageName + ".specific.model", appResource.getResourceName());
 		this.attributes.addAll(appResource.getAttributes());
 	}
 

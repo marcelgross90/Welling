@@ -17,6 +17,9 @@ import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.Res
 import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.DateTimePickerFragment;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.DeleteDialogFragment;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.DetailResourceFragment;
+import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.EditResourceFragment;
+import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.NewResourceFragment;
+import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.ResourceListFragment;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.model.Link;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.model.Resource;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.network.HeaderParser;
@@ -42,6 +45,10 @@ import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Dimens;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.RestApi;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Strings;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Styles;
+import de.fhws.applab.gemara.welling.application.lib.specific.java.adapter.ListAdapterGenerator;
+import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.ResourceCardViewGenerator;
+import de.fhws.applab.gemara.welling.application.lib.specific.java.model.ResourceGenerator;
+import de.fhws.applab.gemara.welling.application.lib.specific.java.viewholder.ListViewHolderGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.CardLayoutGenerator;
 import de.fhws.applab.gemara.welling.gradle.lib.BuildGradleLib;
 import de.fhws.applab.gemara.welling.gradle.lib.LibProguardRules;
@@ -71,6 +78,7 @@ public class LibGenerator {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
 		classes.addAll(getGenericAndroidLibClasses());
+		classes.addAll(getSpecificAndroidLibClasses());
 
 		return classes;
 	}
@@ -209,7 +217,9 @@ public class LibGenerator {
 		classes.add(new DateTimePickerFragment(model.getPackageName()));
 		classes.add(new DeleteDialogFragment(model.getPackageName()));
 		classes.add(new DetailResourceFragment(model.getPackageName()));
-		//todo Abstract fragments not implemented yet
+		classes.add(new EditResourceFragment(model.getPackageName()));
+		classes.add(new NewResourceFragment(model.getPackageName()));
+		classes.add(new ResourceListFragment(model.getPackageName()));
 
 		return classes;
 	}
@@ -248,6 +258,38 @@ public class LibGenerator {
 		classes.add(new ResourceViewHolder(model.getPackageName()));
 
 		return classes;
+	}
+
+	private List<AbstractModelClass> getSpecificAndroidLibClasses() {
+		List<AbstractModelClass> classes = new ArrayList<>();
+
+		classes.addAll(getSpecificAdapter());
+		classes.addAll(getSpecificCustomViews());
+		classes.addAll(getSpecificModels());
+		classes.addAll(getSpecificViewholder());
+
+		return classes;
+	}
+
+	private List<AbstractModelClass> getSpecificAdapter() {
+		return model.getAppResources().stream()
+				.map(appResource -> new ListAdapterGenerator(model.getPackageName(), appResource.getResourceName())).collect(Collectors.toList());
+	}
+
+	private List<AbstractModelClass> getSpecificCustomViews() {
+		return model.getAppResources().stream()
+				.map(appResource -> new ResourceCardViewGenerator(model.getPackageName(), appResource)).collect(Collectors.toList());
+	}
+
+	private List<AbstractModelClass> getSpecificModels() {
+		return model.getAppResources().stream()
+				.map(appResource -> new ResourceGenerator(model.getPackageName(), appResource)).collect(Collectors.toList());
+	}
+
+
+	private List<AbstractModelClass> getSpecificViewholder() {
+		return model.getAppResources().stream()
+				.map(appResource -> new ListViewHolderGenerator(model.getPackageName(), appResource)).collect(Collectors.toList());
 	}
 
 	private void copyDrawableFolders() {
