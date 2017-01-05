@@ -28,11 +28,11 @@ import java.util.Map;
 public class MetaModelGenerator {
 
 	private static final String packageName = "de.fhws.applab.gemara";
-	private static final String packageNameLib = "de.fhws.applab.gemara.lecturer_lib";
+	private static final String packageNameLib = "de.fhws.applab.gemara.lecturergen_lib";
 
 
 	public static AndroidMetaModel generateMetaModel() throws InputException {
-		AndroidMetaModel model = new AndroidMetaModel(packageName, "Lecturer");
+		AndroidMetaModel model = new AndroidMetaModel(packageName, "LecturerGen");
 		AppRestAPI appRestAPI = new AppRestAPI("https://apistaging.fiw.fhws.de/mig/api/");
 		appRestAPI.setRestApi(generateRestAPI());
 
@@ -68,7 +68,7 @@ public class MetaModelGenerator {
 		List<AppAndroidManifest.IntentFilter> intentFilters = new ArrayList<>();
 
 		AppAndroidManifest.IntentFilter mainFilter = new AppAndroidManifest.IntentFilter();
-		mainFilter.setAction("android.intent.action.Main");
+		mainFilter.setAction("android.intent.action.MAIN");
 		List<String> mainFilterCategories = new ArrayList<>();
 		mainFilterCategories.add("android.intent.category.LAUNCHER");
 		mainFilter.setCategories(mainFilterCategories);
@@ -111,7 +111,7 @@ public class MetaModelGenerator {
 
 	private static AppString getAppStrings() {
 		Map<String, String> stringMap = new HashMap<>();
-		stringMap.put("app_name","Lecturers");
+		stringMap.put("app_name","LecturersGen");
 
 		stringMap.put("lecturer_updated","Lecturer updated!");
 		stringMap.put("charge_updated","Charge updated!");
