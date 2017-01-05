@@ -32,7 +32,7 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 
 	public ResourceDetailActivity(String packageName) {
 		super(packageName + ".generic.activity", "ResourceDetailActivity");
-		this.rClassName = ClassName.get(this.packageName, "R");
+		this.rClassName = ClassName.get(packageName, "R");
 		this.deleteDialogListenerClassName = ClassName.get(packageName + ".generic.fragment.DeleteDialogFragment", "DeleteDialogListener");
 		this.networkCallbackClassName = ClassName.get(packageName + ".generic.network", "NetworkCallback");
 		this.networkClientClassName = ClassName.get(packageName + ".generic.network", "NetworkClient");
@@ -237,7 +237,7 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 				.addStatement("$T $N = new $T()", deleteDialogFragmentClassName, "deleteDialogFragment", deleteDialogFragmentClassName)
 				.addStatement("$N.setArguments($N)", "deleteDialogFragment", "bundle")
 				.addStatement("$N.show(getSupportFragmentManager(), null)", "deleteDialogFragment")
-				.addStatement("return true;")
+				.addStatement("return true")
 				.endControlFlow()
 				.beginControlFlow("else")
 				.addStatement("return super.onOptionsItemSelected($N)", item)

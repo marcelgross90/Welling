@@ -61,7 +61,7 @@ public class ViewObjectXMLVisitorImpl implements ViewObjectXMLVisitor {
 	}
 
 	private List<AbstractLayoutGenerator.View> _visitForCardSubView(String viewName, String packageName) {
-		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View(packageName + "_lib.generic.customView.AttributeView");
+		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View(packageName + ".generic.customView.AttributeView");
 
 		List<String> viewAttributes = new ArrayList<>();
 		viewAttributes.add("android:layout_width=\"wrap_content\"");

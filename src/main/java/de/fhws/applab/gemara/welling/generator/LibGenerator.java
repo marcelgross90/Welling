@@ -33,6 +33,7 @@ import de.fhws.applab.gemara.welling.application.lib.generic.java.util.GensonBui
 import de.fhws.applab.gemara.welling.application.lib.generic.java.util.ScrollListener;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.viewholder.ResourceViewHolder;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.ActivityMain;
+import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.CustomCardViewLayoutGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.FragmentResourceList;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.TextinputAttribute;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.Toolbar;
@@ -133,7 +134,7 @@ public class LibGenerator {
 	private List<GeneratedFile> getSpecificLayoutClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
 		classes.addAll(getSpecificCardViewClasses());
-
+		classes.addAll(getCustomCardViewLayoutClasses());
 		return classes;
 	}
 
@@ -141,6 +142,11 @@ public class LibGenerator {
 		return model.getAppResources().stream()
 				.map(appResource -> new CardLayoutGenerator("view_" + appResource.getResourceName().toLowerCase() + "_card", resDir,
 						appResource, model.getPackageNameLib())).collect(Collectors.toList());
+	}
+
+	private List<GeneratedFile> getCustomCardViewLayoutClasses() {
+		return model.getAppResources().stream()
+				.map(appResource -> new CustomCardViewLayoutGenerator(resDir, model.getPackageNameLib(), appResource)).collect(Collectors.toList());
 	}
 
 	private GeneratedFile getManifest() {

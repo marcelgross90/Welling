@@ -30,6 +30,7 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 		viewAttributes.add("xmlns:app=\"http://schemas.android.com/apk/res-auto\"");
 		viewAttributes.add("style=\"@style/cardView\"");
 		viewAttributes.add("app:cardPreventCornerOverlap=\"false\"");
+		viewAttributes.add("android:id=\"@+id/card_" + appResource.getResourceName().toLowerCase() + "\"");
 		View cardView = new View("android.support.v7.widget.CardView");
 		cardView.setViewAttributes(viewAttributes);
 		cardView.addSubView(getRelativeLayout());

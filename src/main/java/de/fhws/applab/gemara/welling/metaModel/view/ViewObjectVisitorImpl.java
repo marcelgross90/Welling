@@ -63,10 +63,10 @@ public class ViewObjectVisitorImpl implements ViewObjectVisitor {
 	private void _visitForFindViewById(MethodSpec.Builder builder, String viewName, ViewAttribute viewAttribute) {
 		if (viewAttribute.getType() == AttributeType.PICTURE) {
 			builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, profileImageViewClassName, rClassName,
-					viewAttribute.getResourceName());
+					"profileImg");
 		} else {
 			builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, attributeViewClassName, rClassName,
-					viewAttribute.getResourceName());
+					viewName);
 		}
 	}
 

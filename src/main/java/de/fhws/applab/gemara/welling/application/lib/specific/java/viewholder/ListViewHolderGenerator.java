@@ -75,7 +75,7 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		constructor.addParameter(clickListenerParam);
 		constructor.addStatement("super($N)", itemViewParam);
 		constructor.addStatement("this.$N = $N", onResourceClickListener, clickListenerParam);
-		constructor.addStatement("$N = ($T) $N.findViewById($T.id.$N)", cardView, resourceCardView, itemViewParam, rClassName, this.resourceName.toLowerCase() + "_card");
+		constructor.addStatement("$N = ($T) $N.findViewById($T.id.$N)", cardView, resourceCardView, itemViewParam, rClassName, "card_" + this.resourceName.toLowerCase());
 
 		if (appResource.isContainsImage()) {
 			constructor.addStatement("$N = ($T) $N.findViewById($T.id.profileImg)", profileImg, profileImgClassName, itemViewParam, rClassName);

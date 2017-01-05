@@ -46,7 +46,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		this.resourceName = appResource.getResourceName();
 		this.appResource = appResource;
 
-		this.rClassName = ClassName.get(packageName + "." + appName.toLowerCase(), "R");
+		this.rClassName = ClassName.get(packageName, "R");
 		this.resourceListAdapterClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.adapter", "ResourceListAdapter");
 		this.specificResourceListAdapterClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.adapter", resourceName + "ListAdapter");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
