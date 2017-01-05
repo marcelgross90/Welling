@@ -1,8 +1,8 @@
 package de.fhws.applab.gemara.welling.generator;
 
-import de.fhws.applab.gemara.welling.GeneratedFile;
-import de.fhws.applab.gemara.welling.gradle.BuildGradleProject;
-import de.fhws.applab.gemara.welling.gradle.SettingsGradle;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
+import de.fhws.applab.gemara.welling.application.gradle.BuildGradleProject;
+import de.fhws.applab.gemara.welling.application.gradle.SettingsGradle;
 
 import java.util.ArrayList;
 import java.util.List;

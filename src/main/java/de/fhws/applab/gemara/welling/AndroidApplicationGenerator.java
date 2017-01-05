@@ -3,6 +3,8 @@ package de.fhws.applab.gemara.welling;
 import de.fhws.applab.gemara.welling.generator.AppGenerator;
 import de.fhws.applab.gemara.welling.generator.LibGenerator;
 import de.fhws.applab.gemara.welling.generator.ProjectGenerator;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
 
 import java.io.File;
@@ -84,7 +86,7 @@ public class AndroidApplicationGenerator {
 	}
 
 	private void writeGeneratedFiles(List<GeneratedFile> files) {
-		files.forEach(de.fhws.applab.gemara.welling.GeneratedFile::generateAndWrite);
+		files.forEach(GeneratedFile::generateAndWrite);
 	}
 
 }

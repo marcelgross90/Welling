@@ -5,23 +5,23 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import de.fhws.applab.gemara.welling.AbstractModelClass;
-import de.fhws.applab.gemara.welling.androidMethods.LifecycleMethods;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
+import de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods;
 
 import javax.lang.model.element.Modifier;
 
 import java.util.List;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getBundleClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getFragmentClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getGensonClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getLayoutInflaterClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getMenuClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getMenuInflaterClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getMenuItemClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getSavedInstanceStateParam;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getViewClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getViewGroupClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBundleClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getGensonClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getLayoutInflaterClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getMenuClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getMenuInflaterClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getMenuItemClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getSavedInstanceStateParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewGroupClassName;
 
 public abstract class ResourceInputFragment extends AbstractModelClass {
 

@@ -2,7 +2,7 @@ package de.fhws.applab.gemara.welling.application.lib.generic.java.model;
 
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
-import de.fhws.applab.gemara.welling.AbstractModelClass;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
 

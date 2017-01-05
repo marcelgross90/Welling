@@ -7,7 +7,7 @@ import com.squareup.javapoet.MethodSpec;
 import javax.lang.model.element.Modifier;
 import java.util.List;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getViewClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
 
 public class ViewObjectVisitorImpl implements ViewObjectVisitor {
 

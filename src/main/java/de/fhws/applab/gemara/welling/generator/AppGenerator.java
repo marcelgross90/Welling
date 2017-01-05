@@ -1,7 +1,7 @@
 package de.fhws.applab.gemara.welling.generator;
 
-import de.fhws.applab.gemara.welling.AbstractModelClass;
-import de.fhws.applab.gemara.welling.GeneratedFile;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.application.app.java.MainActivity;
 import de.fhws.applab.gemara.welling.application.app.java.fragment.ListFragmentGenerator;
 import de.fhws.applab.gemara.welling.application.app.res.anim.FadeIn;
@@ -10,8 +10,8 @@ import de.fhws.applab.gemara.welling.application.lib.generic.ManifestGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Colors;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Strings;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Styles;
-import de.fhws.applab.gemara.welling.gradle.app.AppProguardRules;
-import de.fhws.applab.gemara.welling.gradle.app.BuildGradleApp;
+import de.fhws.applab.gemara.welling.application.gradle.app.AppProguardRules;
+import de.fhws.applab.gemara.welling.application.gradle.app.BuildGradleApp;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
 
 import java.util.ArrayList;

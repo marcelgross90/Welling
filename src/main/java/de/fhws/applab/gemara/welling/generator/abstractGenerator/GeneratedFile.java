@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling;
+package de.fhws.applab.gemara.welling.generator.abstractGenerator;
 
 /**
  * Delegates all methods to the dalston GeneratedFile.

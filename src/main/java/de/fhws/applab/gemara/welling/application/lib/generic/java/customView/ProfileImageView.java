@@ -10,17 +10,17 @@ import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getAttributeSetParam;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getBitMapClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getBitMapDrawableClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getContextClass;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getContextParam;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getDrawableClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getImageViewClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getLoadedFromClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getPicassoClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getTargetClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getTypedArrayClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getAttributeSetParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBitMapClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBitMapDrawableClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextClass;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getDrawableClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getImageViewClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getLoadedFromClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getPicassoClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTargetClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTypedArrayClassName;
 
 public class ProfileImageView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 

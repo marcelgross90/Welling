@@ -1,6 +1,6 @@
-package de.fhws.applab.gemara.welling.gradle.lib;
+package de.fhws.applab.gemara.welling.application.gradle.lib;
 
-import de.fhws.applab.gemara.welling.gradle.ProguardRules;
+import de.fhws.applab.gemara.welling.application.gradle.ProguardRules;
 
 public class LibProguardRules extends ProguardRules {
 

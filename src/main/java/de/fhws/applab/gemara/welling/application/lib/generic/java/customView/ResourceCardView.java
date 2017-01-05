@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getCardViewClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getContextClass;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getContextParam;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getLayoutInflaterClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getTypedArrayClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getCardViewClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextClass;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getLayoutInflaterClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTypedArrayClassName;
 
 
 public class ResourceCardView extends CustomView {

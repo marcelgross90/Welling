@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling;
+package de.fhws.applab.gemara.welling.generator.abstractGenerator;
 
 import com.squareup.javapoet.JavaFile;
 

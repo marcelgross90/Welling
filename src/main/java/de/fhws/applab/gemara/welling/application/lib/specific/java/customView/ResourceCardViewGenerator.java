@@ -5,7 +5,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import de.fhws.applab.gemara.welling.AbstractModelClass;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
 import de.fhws.applab.gemara.welling.metaModel.view.AppCardView;
 import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
@@ -16,7 +16,7 @@ import javax.lang.model.element.Modifier;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
 public class ResourceCardViewGenerator extends AbstractModelClass {
 

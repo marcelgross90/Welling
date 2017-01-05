@@ -7,8 +7,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
-import de.fhws.applab.gemara.welling.AbstractActivityClass;
-import de.fhws.applab.gemara.welling.androidMethods.LifecycleMethods;
+import de.fhws.applab.gemara.welling.application.androidSpecifics.AbstractActivityClass;
+import de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
 public class AbstractMainActivity extends AbstractActivityClass {
 

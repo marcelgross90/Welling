@@ -1,15 +1,16 @@
-package de.fhws.applab.gemara.welling;
+package de.fhws.applab.gemara.welling.application.androidSpecifics;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
 import java.util.List;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
 public abstract class AbstractActivityClass extends AbstractModelClass {
 

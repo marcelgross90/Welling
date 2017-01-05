@@ -1,10 +1,10 @@
-package de.fhws.applab.gemara.welling.androidMethods;
+package de.fhws.applab.gemara.welling.application.androidSpecifics;
 
 import com.squareup.javapoet.MethodSpec;
 
 import javax.lang.model.element.Modifier;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
 public class LifecycleMethods {
 

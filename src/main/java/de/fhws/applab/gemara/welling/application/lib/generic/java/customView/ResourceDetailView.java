@@ -7,7 +7,7 @@ import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
 public class ResourceDetailView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 

@@ -1,6 +1,6 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.values;
 
-import de.fhws.applab.gemara.welling.GeneratedFile;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 
 public abstract class ValueGenerator extends GeneratedFile {
 

@@ -1,6 +1,6 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.layout;
 
-import de.fhws.applab.gemara.welling.GeneratedFile;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 
 import java.util.ArrayList;
 import java.util.List;

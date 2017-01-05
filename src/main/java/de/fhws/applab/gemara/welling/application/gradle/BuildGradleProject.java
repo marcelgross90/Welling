@@ -1,6 +1,6 @@
-package de.fhws.applab.gemara.welling.gradle;
+package de.fhws.applab.gemara.welling.application.gradle;
 
-import de.fhws.applab.gemara.welling.GeneratedFile;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 
 /**
  * Do NOT touch this class.

@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
 public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 

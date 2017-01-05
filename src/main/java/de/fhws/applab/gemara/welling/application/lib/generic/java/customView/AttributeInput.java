@@ -9,13 +9,13 @@ import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getContextClass;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getContextParam;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getEditTextClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getInputTypeClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getLayoutInflaterClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getTextInputLayoutClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getTypedArrayClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextClass;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getEditTextClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getInputTypeClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getLayoutInflaterClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTextInputLayoutClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTypedArrayClassName;
 
 public class AttributeInput extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 

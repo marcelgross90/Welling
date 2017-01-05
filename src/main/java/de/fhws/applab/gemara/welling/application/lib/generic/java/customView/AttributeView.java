@@ -7,9 +7,9 @@ import javax.lang.model.element.Modifier;
 import java.util.Collections;
 import java.util.List;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getContextParam;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getTextViewClassName;
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.getTypedArrayClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTextViewClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTypedArrayClassName;
 
 public class AttributeView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 

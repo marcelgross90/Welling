@@ -6,7 +6,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
-import de.fhws.applab.gemara.welling.AbstractModelClass;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
 import java.text.ParseException;
@@ -15,8 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static de.fhws.applab.gemara.welling.androidConstants.AndroidSpecificClasses.*;
-import static de.fhws.applab.gemara.welling.androidMethods.LifecycleMethods.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods.*;
 
 public class DateTimePickerFragment extends AbstractModelClass {
 

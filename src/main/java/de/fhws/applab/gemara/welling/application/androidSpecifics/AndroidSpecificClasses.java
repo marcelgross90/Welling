@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.androidConstants;
+package de.fhws.applab.gemara.welling.application.androidSpecifics;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;

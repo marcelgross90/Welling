@@ -1,7 +1,7 @@
 package de.fhws.applab.gemara.welling.generator;
 
-import de.fhws.applab.gemara.welling.AbstractModelClass;
-import de.fhws.applab.gemara.welling.GeneratedFile;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.application.lib.generic.ManifestGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.activity.AbstractMainActivity;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.activity.ResourceActivity;
@@ -51,8 +51,8 @@ import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.Re
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.ResourceGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.viewholder.ListViewHolderGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.CardLayoutGenerator;
-import de.fhws.applab.gemara.welling.gradle.lib.BuildGradleLib;
-import de.fhws.applab.gemara.welling.gradle.lib.LibProguardRules;
+import de.fhws.applab.gemara.welling.application.gradle.lib.BuildGradleLib;
+import de.fhws.applab.gemara.welling.application.gradle.lib.LibProguardRules;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
 
 import java.util.ArrayList;
