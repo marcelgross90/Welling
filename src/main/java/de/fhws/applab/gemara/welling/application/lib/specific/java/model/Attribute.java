@@ -10,16 +10,22 @@ import java.util.List;
 
 public abstract class Attribute {
 
+	public enum DataType {
+		INT, STRING, LINK
+	}
+
 	protected abstract void addReturnValue(MethodSpec.Builder builder);
 	protected abstract void addParameter(MethodSpec.Builder builder);
 	protected abstract void addField(TypeSpec.Builder builder);
 
 	protected final String name;
 	protected final Modifier[] modifiers;
+	protected final DataType dataType;
 
-	public Attribute(String name, Modifier... modifiers) {
+	public Attribute(String name, DataType dataType, Modifier... modifiers) {
 		this.name = name;
 		this.modifiers = modifiers;
+		this.dataType = dataType;
 	}
 
 	public String getName() {
@@ -37,6 +43,10 @@ public abstract class Attribute {
 		getterSetter.add(createSetter());
 
 		return getterSetter;
+	}
+
+	public DataType getDataType() {
+		return dataType;
 	}
 
 	private MethodSpec createGetter() {

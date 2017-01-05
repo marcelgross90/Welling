@@ -113,7 +113,11 @@ public class ViewObjectVisitorImpl implements ViewObjectVisitor {
 
 	public void _visitForHideViews(MethodSpec.Builder builder, ViewAttribute viewAttribute, String viewName) {
 		if (viewAttribute.getType() != AttributeType.PICTURE) {
-			builder.beginControlFlow("if ($N.$L().trim().isEmpty())", specificResourceName, viewAttribute.getGetter());
+			if (viewAttribute.getType() == AttributeType.URL) {
+				builder.beginControlFlow("if ($N.$L() == null)", specificResourceName, viewAttribute.getGetter());
+			} else {
+				builder.beginControlFlow("if ($N.$L().trim().isEmpty())", specificResourceName, viewAttribute.getGetter());
+			}
 			builder.addStatement("$N.setVisibility($T.GONE)", viewName, viewClassName);
 			builder.endControlFlow();
 			builder.beginControlFlow("else");

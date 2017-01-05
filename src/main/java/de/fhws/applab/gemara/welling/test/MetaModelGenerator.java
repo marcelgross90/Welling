@@ -280,7 +280,7 @@ public class MetaModelGenerator {
 		attributes.add(new SimpleAttribute("phone", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
 		attributes.add(new SimpleAttribute("roomNumber", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
 		attributes.add(new SimpleAttribute("address", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
-		attributes.add(new SimpleAttribute("urlWelearn", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
+		attributes.add(new LinkAttribute("homepage", packageNameLib, Modifier.PRIVATE));
 		attributes.add(new LinkAttribute("profileImageUrl",packageNameLib, Modifier.PRIVATE));
 		attributes.add(new LinkAttribute("self", packageNameLib, Modifier.PRIVATE));
 		attributes.add(new LinkAttribute("chargeUrl", packageNameLib, Modifier.PRIVATE));
@@ -319,7 +319,7 @@ public class MetaModelGenerator {
 		address.setDisplayedName("Address");
 		viewAttributes.add(new SingleViewObject(address, "addressView"));
 
-		ViewAttribute urlWelearn = new ViewAttribute("urlWelearn", AttributeType.URL);
+		ViewAttribute urlWelearn = new ViewAttribute("homepage", AttributeType.URL);
 		urlWelearn.setDisplayedName("welearn");
 		viewAttributes.add(new SingleViewObject(urlWelearn, "welearnView"));
 

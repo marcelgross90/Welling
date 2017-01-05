@@ -12,7 +12,7 @@ public class LinkAttribute extends Attribute {
 	private final ClassName linkClassName;
 
 	public LinkAttribute(String name, String packageName, Modifier... modifiers) {
-		super(name, modifiers);
+		super(name, DataType.LINK, modifiers);
 		linkClassName = ClassName.get(packageName + ".generic.model", "Link");
 	}
 

@@ -8,14 +8,10 @@ import javax.lang.model.element.Modifier;
 
 public class SimpleAttribute extends Attribute {
 
-	public enum DataType {
-		INT, STRING
-	}
-
 	private final DataType type;
 
 	public SimpleAttribute(String name, DataType type, Modifier... modifiers) {
-		super(name, modifiers);
+		super(name, type, modifiers);
 		this.type = type;
 	}
 

@@ -130,7 +130,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 						.addModifiers(Modifier.PUBLIC)
 						.returns(void.class)
 						.addStatement("setHasOptionsMenu($N != null)", "createNewResourceLink")
-						.addStatement("showProgressBar(true)")
+						.addStatement("showProgressBar(false)")
 						.addStatement("$N().addResource($N)", getGetAdapter(), "resources")
 						.build()).build();
 
