@@ -152,7 +152,7 @@ public class AbstractMainActivity extends AbstractActivityClass {
 								.returns(void.class)
 								.addParameter(ParameterSpec.builder(networkResponseClassName, "response").build())
 								.addStatement("$T $N = $N.getLinkHeader()", stringLinkMap, "linkHeader", "response")
-								.addStatement("$T $N = $N.get(getResources().getString($T.string.rel_type_get_all_primary_resource))",
+								.addStatement("$T $N = $N.get(getResources().getString($T.string.rel_type_first_state))",
 										linkClassName, "allResourceLink", "linkHeader", rClassName)
 								.addStatement("$T $N = new $T()", getBundleClassName(), "bundle", getBundleClassName())
 								.addStatement("$N.putString($S, $N.getHrefWithoutQueryParams())", "bundle", "url", "allResourceLink")

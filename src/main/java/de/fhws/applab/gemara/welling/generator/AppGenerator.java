@@ -1,5 +1,6 @@
 package de.fhws.applab.gemara.welling.generator;
 
+import de.fhws.applab.gemara.welling.application.app.java.DetailActivityGenerator;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.application.app.java.MainActivity;
@@ -78,7 +79,7 @@ public class AppGenerator {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
 		classes.add(new MainActivity(model.getPackageName(), model.getAppResources().get(0), model.getApplicationName()));
-
+		classes.add(new DetailActivityGenerator(model.getPackageName(), model.getAppResources().get(0), model.getApplicationName()));
 		return classes;
 	}
 

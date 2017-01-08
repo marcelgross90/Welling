@@ -1,5 +1,6 @@
 package de.fhws.applab.gemara.welling.generator;
 
+import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.DetailViewGenerator;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.application.lib.generic.ManifestGenerator;
@@ -54,6 +55,7 @@ import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.CardLay
 import de.fhws.applab.gemara.welling.application.gradle.lib.BuildGradleLib;
 import de.fhws.applab.gemara.welling.application.gradle.lib.LibProguardRules;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
+import de.fhws.applab.gemara.welling.metaModel.AppResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -283,8 +285,13 @@ public class LibGenerator {
 	}
 
 	private List<AbstractModelClass> getSpecificCustomViews() {
-		return model.getAppResources().stream()
-				.map(appResource -> new ResourceCardViewGenerator(model.getPackageNameLib(), appResource)).collect(Collectors.toList());
+		List<AbstractModelClass> classes = new ArrayList<>();
+		for (AppResource appResource : model.getAppResources()) {
+			classes.add(new ResourceCardViewGenerator(model.getPackageNameLib(), appResource));
+			classes.add(new DetailViewGenerator(model.getPackageNameLib(), appResource));
+		}
+
+		return classes;
 	}
 
 	private List<AbstractModelClass> getSpecificModels() {
