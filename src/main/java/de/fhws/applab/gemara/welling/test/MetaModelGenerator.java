@@ -13,6 +13,8 @@ import de.fhws.applab.gemara.welling.metaModel.AppString;
 import de.fhws.applab.gemara.welling.metaModel.AppStyle;
 import de.fhws.applab.gemara.welling.metaModel.InputException;
 import de.fhws.applab.gemara.welling.metaModel.view.AppCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.AppDetailCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.AppDetailViewGroup;
 import de.fhws.applab.gemara.welling.metaModel.view.AttributeType;
 import de.fhws.applab.gemara.welling.metaModel.view.GroupedViewObject;
 import de.fhws.applab.gemara.welling.metaModel.view.SingleViewObject;
@@ -278,6 +280,7 @@ public class MetaModelGenerator {
 		appResource.setAttributes(getLecturerAttributes());
 		appResource.setContainsImage(true);
 		appResource.setAppCardView(getLecturerAppCardView());
+		appResource.setAppDetailCardView(getLecturerDetailCardView());
 
 		return appResource;
 	}
@@ -343,5 +346,48 @@ public class MetaModelGenerator {
 		cardView.setViewAttributes(viewAttributes);
 
 		return cardView;
+	}
+
+	private static AppDetailCardView getLecturerDetailCardView() {
+		List<AppDetailViewGroup> lecturerViewGroups = new ArrayList<>();
+
+		List<ViewObject> officeViewAttributes = new ArrayList<>();
+		ViewAttribute roomNumber = new ViewAttribute("roomNumber", AttributeType.TEXT);
+		roomNumber.setDisplayedName("Room");
+		officeViewAttributes.add(new SingleViewObject(roomNumber, "roomView"));
+
+		ViewAttribute address = new ViewAttribute("address", AttributeType.LOCATION);
+		address.setDisplayedName("Address");
+		officeViewAttributes.add(new SingleViewObject(address, "addressView"));
+
+		AppDetailViewGroup office = new AppDetailViewGroup("Office");
+		office.setViewAttributes(officeViewAttributes);
+
+		lecturerViewGroups.add(office);
+
+
+
+		List<ViewObject> viewAttributes = new ArrayList<>();
+
+		ViewAttribute email = new ViewAttribute("email", AttributeType.MAIL);
+		email.setDisplayedName("EMail");
+		viewAttributes.add(new SingleViewObject(email, "mailView"));
+
+		ViewAttribute phone = new ViewAttribute("phone", AttributeType.PHONE_NUMBER);
+		phone.setDisplayedName("PhoneNumber");
+		viewAttributes.add(new SingleViewObject(phone, "phoneView"));
+
+		ViewAttribute urlWelearn = new ViewAttribute("homepage", AttributeType.URL);
+		urlWelearn.setDisplayedName("welearn");
+		viewAttributes.add(new SingleViewObject(urlWelearn, "welearnView"));
+
+		AppDetailViewGroup contact = new AppDetailViewGroup("Contact");
+		contact.setViewAttributes(viewAttributes);
+
+
+		AppDetailCardView detailCardView = new AppDetailCardView();
+		detailCardView.setGroups(lecturerViewGroups);
+
+		return detailCardView;
 	}
 }

@@ -26,4 +26,5 @@ public abstract class ViewObject<T> {
 	public abstract void addFillResourceStatements(MethodSpec.Builder builder, ViewObjectVisitor visitor);
 	public abstract void addHideUnnecessaryViewStatements(MethodSpec.Builder builder, ViewObjectVisitor visitor);
 	public abstract List<AbstractLayoutGenerator.View> addCardViewSubView(String packageName, ViewObjectXMLVisitor visitor);
+	public abstract List<AbstractLayoutGenerator.View> addDetailCardViewSubView(String packageName, ViewObjectXMLVisitor visitor);
 }

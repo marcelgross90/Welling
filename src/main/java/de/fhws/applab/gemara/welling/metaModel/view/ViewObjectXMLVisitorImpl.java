@@ -3,6 +3,7 @@ package de.fhws.applab.gemara.welling.metaModel.view;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ViewObjectXMLVisitorImpl implements ViewObjectXMLVisitor {
@@ -61,17 +62,61 @@ public class ViewObjectXMLVisitorImpl implements ViewObjectXMLVisitor {
 	}
 
 	private List<AbstractLayoutGenerator.View> _visitForCardSubView(String viewName, String packageName) {
+		AbstractLayoutGenerator.View view = getAttributeView(viewName, packageName);
+
+		List<AbstractLayoutGenerator.View> views = new ArrayList<>();
+		views.add(view);
+		return views;
+	}
+
+	//todo add linearlayout
+
+	@Override
+	public List<AbstractLayoutGenerator.View> visitForDetailCardSubView(SingleViewObject singleViewObject, String packageName) {
+		if (singleViewObject.getViewAttribute().getType() == AttributeType.PICTURE) {
+			return Collections.emptyList();
+		}
+		return _visitForDetailCardSubView(singleViewObject.getViewName(), packageName);
+	}
+
+	@Override
+	public List<AbstractLayoutGenerator.View> visitForDetailCardSubView(GroupedViewObject groupedViewObject, String packageName) {
+		return _visitForDetailCardSubView(groupedViewObject.getViewName(), packageName);
+	}
+
+	private List<AbstractLayoutGenerator.View> _visitForDetailCardSubView(String viewName, String packageName) {
+		AbstractLayoutGenerator.View view = getAttributeView("tv" + viewName + "Value", packageName);
+		view.addViewAttribute("android:layout_weight=\"1\"");
+
+		List<AbstractLayoutGenerator.View> views = new ArrayList<>();
+		views.add(getDescriptionView("tv" + viewName + "Caption"));
+		views.add(view);
+		return views;
+	}
+
+	private AbstractLayoutGenerator.View getDescriptionView(String viewName) {
+		List<String> viewAttributes = new ArrayList<>();
+		viewAttributes.add("android:layout_width=\"match_parent\"");
+		viewAttributes.add("android:layout_height=\"wrap_content\"");
+		viewAttributes.add("android:id=\"@+id/" + viewName + "\"");
+		viewAttributes.add("android:layout_weight=\"2\"");
+
+		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View("TextView");
+		view.setViewAttributes(viewAttributes);
+
+		return view;
+	}
+
+	private AbstractLayoutGenerator.View getAttributeView(String viewName, String packageName) {
 		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View(packageName + ".generic.customView.AttributeView");
 
 		List<String> viewAttributes = new ArrayList<>();
-		viewAttributes.add("android:layout_width=\"wrap_content\"");
+		viewAttributes.add("android:layout_width=\"match_parent\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
 		viewAttributes.add("android:id=\"@+id/" + viewName + "\"");
 
 		view.setViewAttributes(viewAttributes);
 
-		List<AbstractLayoutGenerator.View> views = new ArrayList<>();
-		views.add(view);
-		return views;
+		return view;
 	}
 }

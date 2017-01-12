@@ -41,4 +41,9 @@ public class SingleViewObject extends ViewObject<ViewAttribute> {
 	public List<AbstractLayoutGenerator.View> addCardViewSubView(String packageName, ViewObjectXMLVisitor visitor) {
 		return visitor.visitForCardSubView(this, packageName);
 	}
+
+	@Override
+	public List<AbstractLayoutGenerator.View> addDetailCardViewSubView(String packageName, ViewObjectXMLVisitor visitor) {
+		return visitor.visitForDetailCardSubView(this, packageName);
+	}
 }
