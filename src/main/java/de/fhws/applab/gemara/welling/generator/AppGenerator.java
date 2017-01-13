@@ -1,6 +1,7 @@
 package de.fhws.applab.gemara.welling.generator;
 
 import de.fhws.applab.gemara.welling.application.app.java.DetailActivityGenerator;
+import de.fhws.applab.gemara.welling.application.app.res.layout.ActivityDetailViewGenerator;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.application.app.java.MainActivity;
@@ -14,6 +15,7 @@ import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Styles;
 import de.fhws.applab.gemara.welling.application.gradle.app.AppProguardRules;
 import de.fhws.applab.gemara.welling.application.gradle.app.BuildGradleApp;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
+import de.fhws.applab.gemara.welling.metaModel.AppResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,8 +108,9 @@ public class AppGenerator {
 
 	private List<GeneratedFile> getLayoutClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
-
-		//todo
+		for (AppResource appResource : model.getAppResources()) {
+			classes.add(new ActivityDetailViewGenerator(resDir, appResource.getResourceName(), model.getPackageNameLib()));
+		}
 
 		return classes;
 	}

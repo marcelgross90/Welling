@@ -77,6 +77,7 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(context)
 				.addStatement("super($N)", context)
+				.addStatement("$N($N, $N, $N)", getInit(), context, "null", "0")
 				.build();
 	}
 
@@ -86,6 +87,7 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 				.addParameter(context)
 				.addParameter(attrs)
 				.addStatement("super($N, $N)", context, attrs)
+				.addStatement("$N($N, $N, $N)", getInit(), context, attrs, "0")
 				.build();
 	}
 
@@ -96,6 +98,7 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 				.addParameter(attrs)
 				.addParameter(defStyleAttr)
 				.addStatement("super($N, $N, $N)", context, attrs, defStyleAttr)
+				.addStatement("$N($N, $N, $N)", getInit(), context, attrs, defStyleAttr)
 				.build();
 	}
 
@@ -117,7 +120,7 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 		builder.beginControlFlow("try");
 
 		for (ViewObject viewObject : appResource.getAppDetailCardView().getViewAttributes()) {
-			viewObject.addInitializeViewStatements(builder, visitor);
+			viewObject.addInitializeDetailViewStatements(builder, visitor);
 		}
 
 		builder.endControlFlow();

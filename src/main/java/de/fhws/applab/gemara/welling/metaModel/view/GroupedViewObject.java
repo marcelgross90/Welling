@@ -3,6 +3,7 @@ package de.fhws.applab.gemara.welling.metaModel.view;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
+import de.fhws.applab.gemara.welling.metaModel.AppResource;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class GroupedViewObject extends ViewObject<List<ViewAttribute>> {
 
 	@Override
 	public List<ViewAttribute> getViewAttribute() {
-		return this.viewObject;
+		return this.viewAttribute;
 	}
 
 	@Override
@@ -25,6 +26,11 @@ public class GroupedViewObject extends ViewObject<List<ViewAttribute>> {
 	@Override
 	public void addInitializeViewStatements(MethodSpec.Builder builder, ViewObjectVisitor visitor) {
 		visitor.visitForFindViewById(builder, this);
+	}
+
+	@Override
+	public void addInitializeDetailViewStatements(MethodSpec.Builder builder, ViewObjectVisitor visitor) {
+		visitor.visitForDetailFindViewById(builder, this);
 	}
 
 	@Override
@@ -43,7 +49,12 @@ public class GroupedViewObject extends ViewObject<List<ViewAttribute>> {
 	}
 
 	@Override
-	public List<AbstractLayoutGenerator.View> addDetailCardViewSubView(String packageName, ViewObjectXMLVisitor visitor) {
+	public AbstractLayoutGenerator.View addDetailCardViewSubView(String packageName, ViewObjectXMLVisitor visitor) {
 		return visitor.visitForDetailCardSubView(this, packageName);
+	}
+
+	@Override
+	public String getTitleForMethodSpec(TitleVisitor visitor, AppResource appResource) {
+		return visitor.visitForTitle(this, appResource);
 	}
 }

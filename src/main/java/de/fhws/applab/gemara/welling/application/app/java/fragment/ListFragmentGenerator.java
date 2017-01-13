@@ -8,6 +8,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
+import de.fhws.applab.gemara.welling.metaModel.view.TitleVisitorImpl;
 
 import javax.lang.model.element.Modifier;
 
@@ -25,6 +26,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	private final ClassName rClassName;
 	private final ClassName resourceListAdapterClassName;
 	private final ClassName specificResourceListAdapterClassName;
+	private final ClassName specificResourceDetailActivityClassName;
 	private final ClassName thisClassName;
 	private final ClassName networkCallBackClassName;
 	private final ClassName networkResponseClassName;
@@ -48,6 +50,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		this.rClassName = ClassName.get(packageName, "R");
 		this.resourceListAdapterClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.adapter", "ResourceListAdapter");
 		this.specificResourceListAdapterClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.adapter", resourceName + "ListAdapter");
+		this.specificResourceDetailActivityClassName = ClassName.get(packageName, resourceName + "DetailActivity");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
 		this.networkCallBackClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkCallback");
 		this.networkResponseClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkResponse");
@@ -81,6 +84,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getOnResourceClickWithView() {
+		TitleVisitorImpl visitor =  new TitleVisitorImpl();
 		MethodSpec.Builder method = MethodSpec.methodBuilder("onResourceClickWithView");
 		method.addModifiers(Modifier.PUBLIC);
 		method.returns(void.class);
@@ -90,8 +94,21 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		if (!appResource.isContainsImage()) {
 			method.addCode("//not needed here\n");
 		} else {
-			//todo
-			method.addCode("//not implemented yet\n");
+			method.addStatement("$T $N = ($T) $N", specificResourceClassName, resourceName.toLowerCase(), specificResourceClassName, "resource");
+			method.addStatement("$T $N = new $T(getActivity(), $T.class)", getIntentClassName(), "intent", getIntentClassName(), specificResourceDetailActivityClassName);
+			method.addStatement("$N.putExtra($S, $N.getSelf().getHref())", "intent", "selfUrl", resourceName.toLowerCase());
+			method.addStatement("$N.putExtra($S, $N.getSelf().getType())", "intent", "mediaType", resourceName.toLowerCase());
+			method.addStatement("$N.putExtra($S, $N)", "intent", "fullName", appResource.getAppDetailCardView().getTitle().getTitleForMethodSpec(visitor, appResource));
+
+			method.beginControlFlow("if ($T.VERSION.SDK_INT >= $T.VERSION_CODES.LOLLIPOP)", getBuildClassName(), getBuildClassName());
+			method.addStatement("$T $N = $T.makeSceneTransitionAnimation(getActivity(), $N, $S)", getActivityOptionsClassName(), "options", getActivityOptionsClassName(), "view", "pic");
+			method.addStatement("getActivity().startActivity($N, $N.toBundle())", "intent", "options");
+			method.endControlFlow();
+			method.beginControlFlow("else");
+			method.addStatement("getActivity().startActivity($N)", "intent");
+			method.addStatement("getActivity().overridePendingTransition($T.anim.$N, $T.anim.$N)", rClassName, "fade_out", rClassName, "fade_in");
+			method.endControlFlow();
+
 		}
 
 		return method.build();

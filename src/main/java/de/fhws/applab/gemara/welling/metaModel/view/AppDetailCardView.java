@@ -5,10 +5,12 @@ import java.util.List;
 
 public class AppDetailCardView extends AbstractAppCardView {
 
+	private final ViewObject title;
 	private List<AppDetailViewGroup> groups = new ArrayList<>();
 
-	public AppDetailCardView() {
+	public AppDetailCardView(ViewObject title) {
 		super();
+		this.title = title;
 	}
 
 	public List<AppDetailViewGroup> getGroups() {
@@ -21,4 +23,9 @@ public class AppDetailCardView extends AbstractAppCardView {
 			setViewAttributes(group.getViewAttributes());
 		}
 	}
+
+	public ViewObject getTitle() {
+		return title;
+	}
+
 }

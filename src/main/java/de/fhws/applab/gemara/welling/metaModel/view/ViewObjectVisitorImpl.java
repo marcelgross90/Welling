@@ -3,6 +3,7 @@ package de.fhws.applab.gemara.welling.metaModel.view;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import de.fhws.applab.gemara.welling.metaModel.AppResource;
 
 import javax.lang.model.element.Modifier;
 import java.util.List;
@@ -46,6 +47,28 @@ public class ViewObjectVisitorImpl implements ViewObjectVisitor {
 
 	private FieldSpec _visitForAddField(String viewName) {
 		return FieldSpec.builder(attributeViewClassName, viewName, Modifier.PRIVATE).build();
+	}
+
+	@Override
+	public void visitForDetailFindViewById(MethodSpec.Builder builder, SingleViewObject singleViewObject) {
+		_visitForDetailFindViewById(builder, singleViewObject.getViewName(), singleViewObject.getViewAttribute());
+	}
+
+	@Override
+	public void visitForDetailFindViewById(MethodSpec.Builder builder, GroupedViewObject groupedViewObject) {
+		for (ViewAttribute viewAttribute : groupedViewObject.getViewAttribute()) {
+			_visitForDetailFindViewById(builder, groupedViewObject.getViewName(), viewAttribute);
+		}
+	}
+
+	private void _visitForDetailFindViewById(MethodSpec.Builder builder, String viewName, ViewAttribute viewAttribute) {
+		if (viewAttribute.getType() == AttributeType.PICTURE) {
+			builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, profileImageViewClassName, rClassName,
+					"profileImg");
+		} else {
+			builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, attributeViewClassName, rClassName,
+					"tv" + getInputWithCapitalStart(viewAttribute.getResourceName()) + "Value");
+		}
 	}
 
 	@Override
@@ -124,5 +147,9 @@ public class ViewObjectVisitorImpl implements ViewObjectVisitor {
 			builder.addStatement("$N.setVisibility($T.VISIBLE)", viewName, viewClassName);
 			builder.endControlFlow();
 		}
+	}
+
+	private String getInputWithCapitalStart(String input) {
+		return Character.toUpperCase(input.charAt(0)) + input.substring(1);
 	}
 }

@@ -69,37 +69,47 @@ public class ViewObjectXMLVisitorImpl implements ViewObjectXMLVisitor {
 		return views;
 	}
 
-	//todo add linearlayout
-
 	@Override
-	public List<AbstractLayoutGenerator.View> visitForDetailCardSubView(SingleViewObject singleViewObject, String packageName) {
+	public AbstractLayoutGenerator.View visitForDetailCardSubView(SingleViewObject singleViewObject, String packageName) {
 		if (singleViewObject.getViewAttribute().getType() == AttributeType.PICTURE) {
-			return Collections.emptyList();
+			return null;
 		}
-		return _visitForDetailCardSubView(singleViewObject.getViewName(), packageName);
+	//	return _visitForDetailCardSubView(singleViewObject.getViewName(), packageName);
+		return _visitForDetailCardSubView(singleViewObject.getViewAttribute().getResourceName(), packageName, singleViewObject.getViewAttribute().getDisplayedName().toLowerCase());
 	}
 
 	@Override
-	public List<AbstractLayoutGenerator.View> visitForDetailCardSubView(GroupedViewObject groupedViewObject, String packageName) {
-		return _visitForDetailCardSubView(groupedViewObject.getViewName(), packageName);
+	public AbstractLayoutGenerator.View visitForDetailCardSubView(GroupedViewObject groupedViewObject, String packageName) {
+		return _visitForDetailCardSubView(groupedViewObject.getViewName(), packageName, groupedViewObject.getViewName().toLowerCase());
 	}
 
-	private List<AbstractLayoutGenerator.View> _visitForDetailCardSubView(String viewName, String packageName) {
-		AbstractLayoutGenerator.View view = getAttributeView("tv" + viewName + "Value", packageName);
+	private AbstractLayoutGenerator.View _visitForDetailCardSubView(String viewName, String packageName, String stringName) {
+		AbstractLayoutGenerator.View view = getAttributeView("tv" + getInputWithCapitalStart(viewName) + "Value", packageName);
 		view.addViewAttribute("android:layout_weight=\"1\"");
 
-		List<AbstractLayoutGenerator.View> views = new ArrayList<>();
-		views.add(getDescriptionView("tv" + viewName + "Caption"));
-		views.add(view);
-		return views;
+		AbstractLayoutGenerator.View linearLayout = new AbstractLayoutGenerator.View("LinearLayout");
+		List<String> viewAttributes = new ArrayList<>();
+		viewAttributes.add("android:layout_width=\"match_parent\"");
+		viewAttributes.add("android:layout_height=\"wrap_content\"");
+		viewAttributes.add("android:layout_marginTop=\"@dimen/spacing_medium\"");
+		viewAttributes.add("android:layout_marginLeft=\"@dimen/spacing_medium\"");
+		viewAttributes.add("android:layout_marginRight=\"@dimen/spacing_medium\"");
+		viewAttributes.add("android:orientation=\"horizontal\"");
+		linearLayout.setViewAttributes(viewAttributes);
+		linearLayout.addSubView(getDescriptionView("tv" + getInputWithCapitalStart(viewName) + "Caption", stringName));
+		linearLayout.addSubView(view);
+
+		return linearLayout;
 	}
 
-	private AbstractLayoutGenerator.View getDescriptionView(String viewName) {
+	private AbstractLayoutGenerator.View getDescriptionView(String viewName, String stringName) {
 		List<String> viewAttributes = new ArrayList<>();
 		viewAttributes.add("android:layout_width=\"match_parent\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
 		viewAttributes.add("android:id=\"@+id/" + viewName + "\"");
 		viewAttributes.add("android:layout_weight=\"2\"");
+		viewAttributes.add("android:text=\"@string/" + stringName + "\"");
+
 
 		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View("TextView");
 		view.setViewAttributes(viewAttributes);
@@ -118,5 +128,9 @@ public class ViewObjectXMLVisitorImpl implements ViewObjectXMLVisitor {
 		view.setViewAttributes(viewAttributes);
 
 		return view;
+	}
+
+	private String getInputWithCapitalStart(String input) {
+		return Character.toUpperCase(input.charAt(0)) + input.substring(1);
 	}
 }

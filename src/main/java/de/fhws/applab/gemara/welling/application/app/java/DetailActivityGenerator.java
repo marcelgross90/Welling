@@ -1,7 +1,6 @@
 package de.fhws.applab.gemara.welling.application.app.java;
 
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -9,6 +8,9 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
+import de.fhws.applab.gemara.welling.metaModel.view.AppDetailCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.TitleVisitorImpl;
+import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
 
 import javax.lang.model.element.Modifier;
 
@@ -134,14 +136,16 @@ public class DetailActivityGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getPrepareBundle() {
-		//todo find way to pass something other than "ActivityName"
+		AppDetailCardView appDetailCardView = appResource.getAppDetailCardView();
+		ViewObject title = appDetailCardView.getTitle();
+		TitleVisitorImpl visitor = new TitleVisitorImpl();
 		return MethodSpec.methodBuilder("prepareBundle")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(getBundleClassName())
 				.addStatement("$T $N = ($T) $N", specificResourceClassName, appResource.getResourceName().toLowerCase(), specificResourceClassName, "currentResource")
 				.addStatement("$T $N = new $T()", getBundleClassName(), "bundle", getBundleClassName())
-				.addStatement("$N.putString($S, $N)", "bundle", "name", "ActivityName")
+				.addStatement("$N.putString($S, $N)", "bundle", "name", title.getTitleForMethodSpec(visitor, appResource))
 				.addStatement("return $N", "bundle")
 				.build();
 
@@ -171,20 +175,20 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.addMethod(
 						MethodSpec.methodBuilder("onFailure")
 								.addAnnotation(Override.class)
-								.addModifiers(Modifier.PROTECTED)
+								.addModifiers(Modifier.PUBLIC)
 								.returns(void.class)
 								.build())
 				.addMethod(
 						MethodSpec.methodBuilder("onSuccess")
 								.addAnnotation(Override.class)
-								.addModifiers(Modifier.PROTECTED)
+								.addModifiers(Modifier.PUBLIC)
 								.returns(void.class)
 								.addParameter(response)
-						.addStatement("$N = $N.deserialize($N.getREsponseReader(), $T.class)", "currentResource", "genson", response, thisClassName)
+						.addStatement("$N = $N.deserialize($N.getResponseReader(), $T.class)", "currentResource", "genson", response, specificResourceClassName)
 						.addStatement("$T $N = $N.getLinkHeader()", stringLinkMap, "linkHeader", response)
 						.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "deleteLink", "linkHeader", thisClassName, rClassName, "rel_type_delete_" + appResource.getResourceName().toLowerCase())
 						.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "updateLink", "linkHeader", thisClassName, rClassName, "rel_type_update_" + appResource.getResourceName().toLowerCase())
-						.addStatement("runOnUiThred(new $L)", runnable)
+						.addStatement("runOnUiThread($L)", runnable)
 						.build())
 				.build();
 
@@ -192,7 +196,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(networkCallbackClassName)
-				.addStatement("return new $L", callback)
+				.addStatement("return $L", callback)
 				.build();
 	}
 
@@ -202,7 +206,9 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.returns(void.class)
 				.addParameter(specificResourceClassName, appResource.getResourceName().toLowerCase())
 				.addStatement("invalidateOptionsMenu()")
-				.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getResourceName().toLowerCase(), "this")
+						//todo add clickListener
+						//.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getResourceName().toLowerCase(), "this")
+				.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getResourceName().toLowerCase(), "null")
 				.build();
 	}
 

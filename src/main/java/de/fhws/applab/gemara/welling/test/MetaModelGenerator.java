@@ -68,6 +68,9 @@ public class MetaModelGenerator {
 
 		List<AppAndroidManifest.Activity> activities = new ArrayList<>();
 		AppAndroidManifest.Activity mainActivity = new AppAndroidManifest.Activity(".MainActivity");
+		AppAndroidManifest.Activity lecturerDetailActivity = new AppAndroidManifest.Activity(".LecturerDetailActivity");
+
+		activities.add(lecturerDetailActivity);
 
 		List<AppAndroidManifest.IntentFilter> intentFilters = new ArrayList<>();
 
@@ -143,7 +146,7 @@ public class MetaModelGenerator {
 		stringMap.put("first_name", "Firstname");
 		stringMap.put("last_name", "Lastname");
 		stringMap.put("email", "E-Mail");
-		stringMap.put("phone_number", "Phone Number");
+		stringMap.put("phonenumber", "Phone Number");
 		stringMap.put("address", "Address");
 		stringMap.put("room", "Room");
 
@@ -263,8 +266,7 @@ public class MetaModelGenerator {
 		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("ChargeCardView"));
 		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("ChargeDetailView"));
 		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("LecturerDetailView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("LecturerDetailContactCardView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("LecturerDetailOfficeCardView"));
+		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("LecturerDetailCardView"));
 		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("LecturerInputView"));
 		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("ChargeInputView"));
 		AppDeclareStyleable.DeclareStyleable attributeInput = new AppDeclareStyleable.DeclareStyleable("AttributeInput");
@@ -384,9 +386,21 @@ public class MetaModelGenerator {
 		AppDetailViewGroup contact = new AppDetailViewGroup("Contact");
 		contact.setViewAttributes(viewAttributes);
 
+		lecturerViewGroups.add(contact);
 
-		AppDetailCardView detailCardView = new AppDetailCardView();
+
+		ViewAttribute firstName = new ViewAttribute("firstName", AttributeType.TEXT);
+		firstName.setDisplayedName("Firstname");
+		ViewAttribute lastName = new ViewAttribute("lastName", AttributeType.TEXT);
+		lastName.setDisplayedName("Lastname");
+		List<ViewAttribute> combinedAttributes = new ArrayList<>();
+		combinedAttributes.add(firstName);
+		combinedAttributes.add(lastName);
+		GroupedViewObject titleView = new GroupedViewObject(combinedAttributes, "nameView");
+
+		AppDetailCardView detailCardView = new AppDetailCardView(titleView);
 		detailCardView.setGroups(lecturerViewGroups);
+
 
 		return detailCardView;
 	}

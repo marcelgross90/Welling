@@ -11,7 +11,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class ResourceDetailView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 
-	private final FieldSpec context = FieldSpec.builder(getContextClass(), "context", Modifier.PRIVATE, Modifier.FINAL).build();
+	private final FieldSpec context = FieldSpec.builder(getContextClass(), "context", Modifier.PROTECTED, Modifier.FINAL).build();
 
 	public ResourceDetailView(String packageName) {
 		super(packageName, "ResourceDetailView", getRelativeLayoutClassName());

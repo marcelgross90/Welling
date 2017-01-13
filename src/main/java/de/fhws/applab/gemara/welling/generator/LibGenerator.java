@@ -1,9 +1,11 @@
 package de.fhws.applab.gemara.welling.generator;
 
+import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.ViewResourceDetailActivityGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.adapter.DetailAdapterGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.DetailCardViewGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.DetailViewGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.viewholder.DetailViewHolderGenerator;
+import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.DetailCardLayoutGenerator;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.application.lib.generic.ManifestGenerator;
@@ -140,13 +142,31 @@ public class LibGenerator {
 		List<GeneratedFile> classes = new ArrayList<>();
 		classes.addAll(getSpecificCardViewClasses());
 		classes.addAll(getCustomCardViewLayoutClasses());
+		classes.addAll(getDetailViewClasses());
+		return classes;
+	}
+
+	private List<GeneratedFile> getDetailViewClasses() {
+		List<GeneratedFile> classes = new ArrayList<>();
+
+		for (AppResource appResource : model.getAppResources()) {
+			classes.add(new ViewResourceDetailActivityGenerator(resDir, appResource.getResourceName(), model.getPackageNameLib()));
+		}
+
 		return classes;
 	}
 
 	private List<GeneratedFile> getSpecificCardViewClasses() {
-		return model.getAppResources().stream()
-				.map(appResource -> new CardLayoutGenerator("view_" + appResource.getResourceName().toLowerCase() + "_card", resDir,
-						appResource, model.getPackageNameLib())).collect(Collectors.toList());
+		List<GeneratedFile> classes = new ArrayList<>();
+		for (AppResource appResource : model.getAppResources()) {
+			String resourceName = appResource.getResourceName();
+			classes.add(new CardLayoutGenerator("view_" + resourceName.toLowerCase() + "_card", resDir,
+					appResource, model.getPackageNameLib()));
+			classes.add(new DetailCardLayoutGenerator("view_" + resourceName.toLowerCase() + "_detail_card", resDir, model.getPackageNameLib(), appResource.getAppDetailCardView() ));
+
+		}
+
+		return classes;
 	}
 
 	private List<GeneratedFile> getCustomCardViewLayoutClasses() {

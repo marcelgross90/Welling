@@ -8,6 +8,6 @@ public interface ViewObjectXMLVisitor {
 
 	List<AbstractLayoutGenerator.View> visitForCardSubView(SingleViewObject singleViewObject, String packageName);
 	List<AbstractLayoutGenerator.View> visitForCardSubView(GroupedViewObject groupedViewObject, String packageName);
-	List<AbstractLayoutGenerator.View> visitForDetailCardSubView(SingleViewObject singleViewObject, String packageName);
-	List<AbstractLayoutGenerator.View> visitForDetailCardSubView(GroupedViewObject groupedViewObject, String packageName);
+	AbstractLayoutGenerator.View visitForDetailCardSubView(SingleViewObject singleViewObject, String packageName);
+	AbstractLayoutGenerator.View visitForDetailCardSubView(GroupedViewObject groupedViewObject, String packageName);
 }

@@ -1,19 +1,29 @@
 package de.fhws.applab.gemara.welling.application.lib.specific.res.layout;
 
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
+import de.fhws.applab.gemara.welling.metaModel.view.AppDetailCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.AppDetailViewGroup;
+import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.ViewObjectXMLVisitorImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 
-	public DetailCardLayoutGenerator(String fileName, String directoryName) {
+	private final AppDetailCardView appDetailCardView;
+	private final String packageName;
+
+	public DetailCardLayoutGenerator(String fileName, String directoryName, String packageName, AppDetailCardView appDetailCardView) {
 		super(fileName, directoryName);
+
+		this.appDetailCardView = appDetailCardView;
+		this.packageName = packageName;
 	}
 
 	@Override
 	protected View generateLayout() {
-		return null;
+		return getCardView();
 	}
 
 	private View getCardView() {
@@ -31,7 +41,16 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 	}
 
 	private View getLinearLayout() {
-		return null;
+		final ViewObjectXMLVisitorImpl visitor = new ViewObjectXMLVisitorImpl();
+
+		View linearLayout = getBaseLinearLayout();
+		for (AppDetailViewGroup appDetailViewGroup : appDetailCardView.getGroups()) {
+			linearLayout.addSubView(getGroupHeaderView(appDetailViewGroup.getViewName()));
+			for (ViewObject viewObject : appDetailViewGroup.getViewAttributes()) {
+				linearLayout.addSubView(viewObject.addDetailCardViewSubView(packageName, visitor));
+			}
+		}
+		return linearLayout;
 
 	}
 
@@ -43,6 +62,7 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 
 		View baseLinearLayout = new View("LinearLayout");
 		baseLinearLayout.setViewAttributes(viewAttributes);
+
 
 		return baseLinearLayout;
 
@@ -70,7 +90,7 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 		viewAttributes.add("android:layout_marginRight=\"@dimen/spacing_medium\"");
 		viewAttributes.add("android:layout_gravity=\"end\"");
 		viewAttributes.add("android:textSize=\"16sp\"");
-		viewAttributes.add("android:text=\"@string/" + header + "\"");
+		viewAttributes.add("android:text=\"@string/card_caption_" + header.toLowerCase() + "\"");
 
 		View textView = new View("TextView");
 		textView.setViewAttributes(viewAttributes);

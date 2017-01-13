@@ -35,7 +35,7 @@ public class DetailAdapterGenerator extends AbstractModelClass {
 		this.viewHolderClassName = getViewHolderClassName();
 		this.viewGroupClassName = getViewGroupClassName();
 		this.rClassName = ClassName.get(packageName, "R");
-		this.specificDetailViewHolderClassName = ClassName.get(packageName + ".specific.viewHolder", appResource.getResourceName() + "DetailViewHolder");
+		this.specificDetailViewHolderClassName = ClassName.get(packageName + ".specific.viewholder", appResource.getResourceName() + "DetailViewHolder");
 
 		this.listener = FieldSpec.builder(getViewOnClickListenerClassName(), "listener", Modifier.PRIVATE, Modifier.FINAL).build();
 		this.specificResource = FieldSpec.builder(specificResourceClassName, appResource.getResourceName().toLowerCase(), Modifier.PRIVATE).build();
