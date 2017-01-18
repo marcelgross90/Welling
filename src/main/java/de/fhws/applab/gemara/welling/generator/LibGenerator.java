@@ -1,5 +1,6 @@
 package de.fhws.applab.gemara.welling.generator;
 
+import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.InputViewsGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.ViewResourceDetailActivityGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.adapter.DetailAdapterGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.DetailCardViewGenerator;
@@ -326,6 +327,7 @@ public class LibGenerator {
 			classes.add(new ResourceCardViewGenerator(model.getPackageNameLib(), appResource));
 			classes.add(new DetailViewGenerator(model.getPackageNameLib(), appResource));
 			classes.add(new DetailCardViewGenerator(model.getPackageNameLib(), appResource));
+			classes.add(new InputViewsGenerator(model.getPackageNameLib(), appResource));
 		}
 
 		return classes;

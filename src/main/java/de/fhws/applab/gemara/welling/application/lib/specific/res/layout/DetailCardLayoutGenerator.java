@@ -1,10 +1,10 @@
 package de.fhws.applab.gemara.welling.application.lib.specific.res.layout;
 
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
-import de.fhws.applab.gemara.welling.metaModel.view.AppDetailCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.AppDetailViewGroup;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObjectXMLVisitorImpl;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppDetailCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppDetailViewGroup;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectXMLVisitorImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 
 		View linearLayout = getBaseLinearLayout();
 		for (AppDetailViewGroup appDetailViewGroup : appDetailCardView.getGroups()) {
-			linearLayout.addSubView(getGroupHeaderView(appDetailViewGroup.getViewName()));
+			linearLayout.addSubView(getGroupHeaderView(appDetailViewGroup.getHeadline()));
 			for (ViewObject viewObject : appDetailViewGroup.getViewAttributes()) {
 				linearLayout.addSubView(viewObject.addDetailCardViewSubView(packageName, visitor));
 			}

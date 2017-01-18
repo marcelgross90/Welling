@@ -12,14 +12,15 @@ import de.fhws.applab.gemara.welling.metaModel.AppRestAPI;
 import de.fhws.applab.gemara.welling.metaModel.AppString;
 import de.fhws.applab.gemara.welling.metaModel.AppStyle;
 import de.fhws.applab.gemara.welling.metaModel.InputException;
-import de.fhws.applab.gemara.welling.metaModel.view.AppCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.AppDetailCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.AppDetailViewGroup;
-import de.fhws.applab.gemara.welling.metaModel.view.AttributeType;
-import de.fhws.applab.gemara.welling.metaModel.view.GroupedViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.SingleViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewAttribute;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppDetailCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppDetailViewGroup;
+import de.fhws.applab.gemara.welling.metaModel.view.inputView.AppInputView;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.AttributeType;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.GroupedViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.SingleViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewAttribute;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
@@ -283,6 +284,7 @@ public class MetaModelGenerator {
 		appResource.setContainsImage(true);
 		appResource.setAppCardView(getLecturerAppCardView());
 		appResource.setAppDetailCardView(getLecturerDetailCardView());
+		appResource.setInputView(getLecturerInputView());
 
 		return appResource;
 	}
@@ -308,40 +310,40 @@ public class MetaModelGenerator {
 		List<ViewObject> viewAttributes = new ArrayList<>();
 
 		ViewAttribute title = new ViewAttribute("title", AttributeType.TEXT);
-		title.setDisplayedName("Title");
+		title.setLabel("Title");
 		viewAttributes.add(new SingleViewObject(title, "titleView"));
 
 		ViewAttribute firstName = new ViewAttribute("firstName", AttributeType.TEXT);
-		firstName.setDisplayedName("Firstname");
+		firstName.setLabel("Firstname");
 		ViewAttribute lastName = new ViewAttribute("lastName", AttributeType.TEXT);
-		lastName.setDisplayedName("Lastname");
+		lastName.setLabel("Lastname");
 		List<ViewAttribute> combinedAttributes = new ArrayList<>();
 		combinedAttributes.add(firstName);
 		combinedAttributes.add(lastName);
 		viewAttributes.add(new GroupedViewObject(combinedAttributes, "nameView"));
 
 		ViewAttribute email = new ViewAttribute("email", AttributeType.MAIL);
-		email.setDisplayedName("EMail");
+		email.setLabel("EMail");
 		viewAttributes.add(new SingleViewObject(email, "mailView"));
 
 		ViewAttribute phone = new ViewAttribute("phone", AttributeType.PHONE_NUMBER);
-		phone.setDisplayedName("PhoneNumber");
+		phone.setLabel("PhoneNumber");
 		viewAttributes.add(new SingleViewObject(phone, "phoneView"));
 
 		ViewAttribute roomNumber = new ViewAttribute("roomNumber", AttributeType.TEXT);
-		roomNumber.setDisplayedName("Room");
+		roomNumber.setLabel("Room");
 		viewAttributes.add(new SingleViewObject(roomNumber, "roomView"));
 
 		ViewAttribute address = new ViewAttribute("address", AttributeType.LOCATION);
-		address.setDisplayedName("Address");
+		address.setLabel("Address");
 		viewAttributes.add(new SingleViewObject(address, "addressView"));
 
 		ViewAttribute urlWelearn = new ViewAttribute("homepage", AttributeType.URL);
-		urlWelearn.setDisplayedName("welearn");
+		urlWelearn.setLabel("welearn");
 		viewAttributes.add(new SingleViewObject(urlWelearn, "welearnView"));
 
 		ViewAttribute profileImageUrl = new ViewAttribute("profileImageUrl", AttributeType.PICTURE);
-		profileImageUrl.setDisplayedName("Profile_Image");
+		profileImageUrl.setLabel("Profile_Image");
 		viewAttributes.add(new SingleViewObject(profileImageUrl, "imageView"));
 
 		AppCardView cardView = new AppCardView();
@@ -355,11 +357,11 @@ public class MetaModelGenerator {
 
 		List<ViewObject> officeViewAttributes = new ArrayList<>();
 		ViewAttribute roomNumber = new ViewAttribute("roomNumber", AttributeType.TEXT);
-		roomNumber.setDisplayedName("Room");
+		roomNumber.setLabel("Room");
 		officeViewAttributes.add(new SingleViewObject(roomNumber, "roomView"));
 
 		ViewAttribute address = new ViewAttribute("address", AttributeType.LOCATION);
-		address.setDisplayedName("Address");
+		address.setLabel("Address");
 		officeViewAttributes.add(new SingleViewObject(address, "addressView"));
 
 		AppDetailViewGroup office = new AppDetailViewGroup("Office");
@@ -372,15 +374,15 @@ public class MetaModelGenerator {
 		List<ViewObject> viewAttributes = new ArrayList<>();
 
 		ViewAttribute email = new ViewAttribute("email", AttributeType.MAIL);
-		email.setDisplayedName("EMail");
+		email.setLabel("EMail");
 		viewAttributes.add(new SingleViewObject(email, "mailView"));
 
 		ViewAttribute phone = new ViewAttribute("phone", AttributeType.PHONE_NUMBER);
-		phone.setDisplayedName("PhoneNumber");
+		phone.setLabel("PhoneNumber");
 		viewAttributes.add(new SingleViewObject(phone, "phoneView"));
 
 		ViewAttribute urlWelearn = new ViewAttribute("homepage", AttributeType.URL);
-		urlWelearn.setDisplayedName("welearn");
+		urlWelearn.setLabel("welearn");
 		viewAttributes.add(new SingleViewObject(urlWelearn, "welearnView"));
 
 		AppDetailViewGroup contact = new AppDetailViewGroup("Contact");
@@ -390,9 +392,9 @@ public class MetaModelGenerator {
 
 
 		ViewAttribute firstName = new ViewAttribute("firstName", AttributeType.TEXT);
-		firstName.setDisplayedName("Firstname");
+		firstName.setLabel("Firstname");
 		ViewAttribute lastName = new ViewAttribute("lastName", AttributeType.TEXT);
-		lastName.setDisplayedName("Lastname");
+		lastName.setLabel("Lastname");
 		List<ViewAttribute> combinedAttributes = new ArrayList<>();
 		combinedAttributes.add(firstName);
 		combinedAttributes.add(lastName);
@@ -401,7 +403,47 @@ public class MetaModelGenerator {
 		AppDetailCardView detailCardView = new AppDetailCardView(titleView);
 		detailCardView.setGroups(lecturerViewGroups);
 
-
 		return detailCardView;
+	}
+
+	private static AppInputView getLecturerInputView() {
+		List<SingleViewObject> viewAttributes = new ArrayList<>();
+
+		ViewAttribute title = new ViewAttribute("title", AttributeType.TEXT);
+		title.setLabel("Title");
+		viewAttributes.add(new SingleViewObject(title, "titleInput"));
+
+		ViewAttribute firstName = new ViewAttribute("firstName", AttributeType.TEXT);
+		firstName.setLabel("Firstname");
+		viewAttributes.add(new SingleViewObject(firstName, "firstNameInput"));
+
+		ViewAttribute lastName = new ViewAttribute("lastName", AttributeType.TEXT);
+		lastName.setLabel("Lastname");
+		viewAttributes.add(new SingleViewObject(lastName, "lastNameInput"));
+
+		ViewAttribute email = new ViewAttribute("email", AttributeType.MAIL);
+		email.setLabel("EMail");
+		viewAttributes.add(new SingleViewObject(email, "mailInput"));
+
+		ViewAttribute phone = new ViewAttribute("phone", AttributeType.PHONE_NUMBER);
+		phone.setLabel("PhoneNumber");
+		viewAttributes.add(new SingleViewObject(phone, "phoneInput"));
+
+		ViewAttribute roomNumber = new ViewAttribute("roomNumber", AttributeType.TEXT);
+		roomNumber.setLabel("Room");
+		viewAttributes.add(new SingleViewObject(roomNumber, "roomInput"));
+
+		ViewAttribute address = new ViewAttribute("address", AttributeType.LOCATION);
+		address.setLabel("Address");
+		viewAttributes.add(new SingleViewObject(address, "addressInput"));
+
+		ViewAttribute urlWelearn = new ViewAttribute("homepage", AttributeType.URL);
+		urlWelearn.setLabel("welearn");
+		viewAttributes.add(new SingleViewObject(urlWelearn, "welearnInput"));
+
+		AppInputView appInputView = new AppInputView();
+		appInputView.setViewAttributes(viewAttributes);
+
+		return appInputView;
 	}
 }

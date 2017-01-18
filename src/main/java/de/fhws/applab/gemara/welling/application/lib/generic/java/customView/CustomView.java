@@ -21,7 +21,7 @@ public abstract class CustomView extends AbstractModelClass {
 	protected final ClassName rClass;
 
 	public CustomView(String packageName, String className, ClassName superClass) {
-		super(packageName + ".generic.customView", className);
+		super(packageName, className);
 		this.superClass = superClass;
 		this.rClass = ClassName.get(packageName, "R");
 	}
@@ -76,15 +76,17 @@ public abstract class CustomView extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
-		TypeSpec type = TypeSpec.classBuilder(this.className)
-				.addModifiers(addClassModifiers())
-				.superclass(this.superClass)
-				.addFields(addFields())
-				.addMethods(addConstructors())
-				.addMethod(getInitMethod())
-				.addMethods(addAdditionalMethods())
-				.build();
-		return JavaFile.builder(this.packageName, type).build();
+		TypeSpec.Builder type = TypeSpec.classBuilder(this.className);
+		type.addModifiers(addClassModifiers());
+		type.superclass(this.superClass);
+		type.addFields(addFields());
+		type.addMethods(addConstructors());
+		if (getInitMethod() != null) {
+			type.addMethod(getInitMethod());
+		}
+		type.addMethods(addAdditionalMethods());
+
+		return JavaFile.builder(this.packageName, type.build()).build();
 	}
 
 	public abstract Modifier[] addClassModifiers();

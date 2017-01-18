@@ -1,4 +1,6 @@
-package de.fhws.applab.gemara.welling.metaModel.view;
+package de.fhws.applab.gemara.welling.metaModel.view.cardViews;
+
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,14 +8,14 @@ import java.util.List;
 public class AppDetailViewGroup {
 
 	private  final List<ViewObject> viewAttributes = new ArrayList<>();
-	private final String viewName;
+	private final String headline;
 
-	public AppDetailViewGroup(String viewName) {
-		this.viewName = viewName;
+	public AppDetailViewGroup(String headline) {
+		this.headline = headline;
 	}
 
-	public String getViewName() {
-		return viewName;
+	public String getHeadline() {
+		return headline;
 	}
 
 	public void setViewAttributes(List<ViewObject> viewAttributes) {

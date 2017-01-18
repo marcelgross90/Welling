@@ -14,7 +14,7 @@ public class ResourceDetailView extends de.fhws.applab.gemara.welling.applicatio
 	private final FieldSpec context = FieldSpec.builder(getContextClass(), "context", Modifier.PROTECTED, Modifier.FINAL).build();
 
 	public ResourceDetailView(String packageName) {
-		super(packageName, "ResourceDetailView", getRelativeLayoutClassName());
+		super(packageName + ".generic.customView", "ResourceDetailView", getRelativeLayoutClassName());
 	}
 
 	@Override

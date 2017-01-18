@@ -1,7 +1,9 @@
 package de.fhws.applab.gemara.welling.generator;
 
 import de.fhws.applab.gemara.welling.application.app.java.DetailActivityGenerator;
+import de.fhws.applab.gemara.welling.application.app.java.fragment.NewSpecificResourceFragment;
 import de.fhws.applab.gemara.welling.application.app.res.layout.ActivityDetailViewGenerator;
+import de.fhws.applab.gemara.welling.application.app.res.layout.NewResourceFragmentViewGenerator;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.application.app.java.MainActivity;
@@ -72,9 +74,15 @@ public class AppGenerator {
 	}
 
 	private List<AbstractModelClass> getFragments() {
-		return model.getAppResources().stream()
-				.map(appResource -> new ListFragmentGenerator(model.getPackageName(), appResource, model.getApplicationName())).collect(Collectors.toList());
 
+		List<AbstractModelClass> classes = new ArrayList<>();
+
+		for (AppResource appResource : model.getAppResources()) {
+			classes.add(new ListFragmentGenerator(model.getPackageName(), appResource, model.getApplicationName()));
+			classes.add(new NewSpecificResourceFragment(model.getPackageName(), appResource, model.getApplicationName()));
+		}
+
+		return classes;
 	}
 
 	private List<AbstractModelClass> getActivities() {
@@ -110,6 +118,7 @@ public class AppGenerator {
 		List<GeneratedFile> classes = new ArrayList<>();
 		for (AppResource appResource : model.getAppResources()) {
 			classes.add(new ActivityDetailViewGenerator(resDir, appResource.getResourceName(), model.getPackageNameLib()));
+			classes.add(new NewResourceFragmentViewGenerator(resDir, appResource.getResourceName(), model.getPackageNameLib()));
 		}
 
 		return classes;

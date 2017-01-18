@@ -8,8 +8,8 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObjectVisitorImpl;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectVisitorImpl;
 
 import javax.lang.model.element.Modifier;
 
@@ -21,7 +21,6 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextClass;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getLayoutInflaterClassName;
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getMenuClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTypedArrayClassName;
 
 public class DetailCardViewGenerator extends AbstractModelClass {

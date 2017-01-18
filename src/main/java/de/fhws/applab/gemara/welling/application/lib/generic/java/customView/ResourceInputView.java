@@ -18,7 +18,7 @@ public class ResourceInputView extends de.fhws.applab.gemara.welling.application
 	private final FieldSpec context = FieldSpec.builder(getContextClass(), "context", Modifier.PRIVATE, Modifier.FINAL).build();
 
 	public ResourceInputView(String packageName) {
-		super(packageName, "ResourceInputView", getScrollViewClassName());
+		super(packageName + ".generic.customView", "ResourceInputView", getScrollViewClassName());
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
 	}
 

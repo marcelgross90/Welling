@@ -1,9 +1,11 @@
-package de.fhws.applab.gemara.welling.metaModel.view;
+package de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors;
 
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.AttributeType;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.GroupedViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.SingleViewObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ViewObjectXMLVisitorImpl implements ViewObjectXMLVisitor {
@@ -23,7 +25,7 @@ public class ViewObjectXMLVisitorImpl implements ViewObjectXMLVisitor {
 		viewAttributes.add("android:layout_width=\"wrap_content\"");
 		viewAttributes.add("android:layout_height=\"@dimen/picture_height\"");
 		viewAttributes.add("android:id=\"@+id/profileImg\"");
-		viewAttributes.add("android:contentDescription=\"@string/" + singleViewObject.getViewAttribute().getDisplayedName().toLowerCase() + "\"");
+		viewAttributes.add("android:contentDescription=\"@string/" + singleViewObject.getViewAttribute().getLabel().toLowerCase() + "\"");
 		viewAttributes.add("android:layout_alignParentLeft=\"true\"");
 		viewAttributes.add("android:layout_alignParentStart=\"true\"");
 		viewAttributes.add("android:layout_alignParentTop=\"true\"");
@@ -74,8 +76,8 @@ public class ViewObjectXMLVisitorImpl implements ViewObjectXMLVisitor {
 		if (singleViewObject.getViewAttribute().getType() == AttributeType.PICTURE) {
 			return null;
 		}
-	//	return _visitForDetailCardSubView(singleViewObject.getViewName(), packageName);
-		return _visitForDetailCardSubView(singleViewObject.getViewAttribute().getResourceName(), packageName, singleViewObject.getViewAttribute().getDisplayedName().toLowerCase());
+	//	return _visitForDetailCardSubView(singleViewObject.getHeadline(), packageName);
+		return _visitForDetailCardSubView(singleViewObject.getViewAttribute().getAttributeName(), packageName, singleViewObject.getViewAttribute().getLabel().toLowerCase());
 	}
 
 	@Override

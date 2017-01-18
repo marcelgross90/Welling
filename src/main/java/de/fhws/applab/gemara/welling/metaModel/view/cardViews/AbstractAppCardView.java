@@ -1,4 +1,6 @@
-package de.fhws.applab.gemara.welling.metaModel.view;
+package de.fhws.applab.gemara.welling.metaModel.view.cardViews;
+
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,12 @@
-package de.fhws.applab.gemara.welling.metaModel.view;
+package de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.AttributeType;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewAttribute;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.GroupedViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.SingleViewObject;
 
 import javax.lang.model.element.Modifier;
 import java.util.List;
@@ -67,7 +70,7 @@ public class ViewObjectVisitorImpl implements ViewObjectVisitor {
 					"profileImg");
 		} else {
 			builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, attributeViewClassName, rClassName,
-					"tv" + getInputWithCapitalStart(viewAttribute.getResourceName()) + "Value");
+					"tv" + getInputWithCapitalStart(viewAttribute.getAttributeName()) + "Value");
 		}
 	}
 
@@ -101,7 +104,7 @@ public class ViewObjectVisitorImpl implements ViewObjectVisitor {
 					specificResourceName, viewAttribute.getGetter(), rClassName, rClassName);
 		} else if (viewAttribute.getType() == AttributeType.URL) {
 			builder.addStatement("$N.setText(getResources().getText($T.string.$N))", singleViewObject.getViewName(), rClassName,
-					viewAttribute.getDisplayedName());
+					viewAttribute.getLabel());
 		} else {
 			builder.addStatement("$N.setText($N.$L())", singleViewObject.getViewName(), specificResourceName, viewAttribute.getGetter());
 		}

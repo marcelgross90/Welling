@@ -1,9 +1,12 @@
-package de.fhws.applab.gemara.welling.metaModel.view;
+package de.fhws.applab.gemara.welling.metaModel.view.viewObject;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.visitor.TitleVisitor;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectVisitor;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectXMLVisitor;
 
 import java.util.List;
 

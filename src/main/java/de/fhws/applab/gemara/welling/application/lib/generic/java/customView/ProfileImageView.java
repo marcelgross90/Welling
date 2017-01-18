@@ -30,7 +30,7 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 	private final ParameterSpec profileImage;
 
 	public ProfileImageView(String packageName) {
-		super(packageName, "ProfileImageView", getImageViewClassName());
+		super(packageName + ".generic.customView", "ProfileImageView", getImageViewClassName());
 		ClassName linkClassName = ClassName.get(packageName + ".generic.model", "Link");
 		this.builderClassName = ClassName.get(packageName + ".generic.model.Link", "Builder");
 		this.profileImage = ParameterSpec.builder(linkClassName, "profileImage").build();

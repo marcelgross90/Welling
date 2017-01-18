@@ -2,8 +2,8 @@ package de.fhws.applab.gemara.welling.application.lib.specific.res.layout;
 
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObjectXMLVisitorImpl;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectXMLVisitorImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 		viewAttributes.add("xmlns:app=\"http://schemas.android.com/apk/res-auto\"");
 		viewAttributes.add("style=\"@style/cardView\"");
 		viewAttributes.add("app:cardPreventCornerOverlap=\"false\"");
-		//viewAttributes.add("android:id=\"@+id/card_" + appResource.getResourceName().toLowerCase() + "\"");
+		//viewAttributes.add("android:id=\"@+id/card_" + appResource.getAttributeName().toLowerCase() + "\"");
 		View cardView = new View("android.support.v7.widget.CardView");
 		cardView.setViewAttributes(viewAttributes);
 		cardView.addSubView(getRelativeLayout());

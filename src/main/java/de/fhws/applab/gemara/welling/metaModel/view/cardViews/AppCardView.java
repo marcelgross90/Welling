@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.metaModel.view;
+package de.fhws.applab.gemara.welling.metaModel.view.cardViews;
 
 public class AppCardView extends AbstractAppCardView {
 

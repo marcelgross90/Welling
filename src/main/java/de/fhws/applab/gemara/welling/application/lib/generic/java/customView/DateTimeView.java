@@ -19,7 +19,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 
 	public DateTimeView(String packageName) {
-		super(packageName, "DateTimeView", getTextViewClassName());
+		super(packageName + ".generic.customView", "DateTimeView", getTextViewClassName());
 	}
 
 	@Override

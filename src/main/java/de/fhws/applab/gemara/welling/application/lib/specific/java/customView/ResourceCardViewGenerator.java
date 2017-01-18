@@ -7,9 +7,9 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.AppCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObjectVisitorImpl;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectVisitorImpl;
 
 import javax.lang.model.element.Modifier;
 

@@ -1,8 +1,9 @@
-package de.fhws.applab.gemara.welling.metaModel.view;
+package de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.GroupedViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.SingleViewObject;
 
 public interface ViewObjectVisitor {
 

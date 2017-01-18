@@ -8,9 +8,9 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.AppDetailCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.TitleVisitorImpl;
-import de.fhws.applab.gemara.welling.metaModel.view.ViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppDetailCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.visitor.TitleVisitorImpl;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
 
 import javax.lang.model.element.Modifier;
 
@@ -131,7 +131,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.addModifiers(Modifier.PROTECTED)
 				.returns(getIntentClassName())
 				.addStatement("return null")
-				//.addStatement("return new $T($T.this, $T.class)", getIntentClassName(), thisClassName, appResource.getResourceName() + "Activity")
+				//.addStatement("return new $T($T.this, $T.class)", getIntentClassName(), thisClassName, appResource.getAttributeName() + "Activity")
 				.build();
 	}
 
@@ -207,7 +207,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.addParameter(specificResourceClassName, appResource.getResourceName().toLowerCase())
 				.addStatement("invalidateOptionsMenu()")
 						//todo add clickListener
-						//.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getResourceName().toLowerCase(), "this")
+						//.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getAttributeName().toLowerCase(), "this")
 				.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getResourceName().toLowerCase(), "null")
 				.build();
 	}

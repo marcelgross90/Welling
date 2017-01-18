@@ -1,6 +1,8 @@
-package de.fhws.applab.gemara.welling.metaModel.view;
+package de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors;
 
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.GroupedViewObject;
+import de.fhws.applab.gemara.welling.metaModel.view.viewObject.SingleViewObject;
 
 import java.util.List;
 

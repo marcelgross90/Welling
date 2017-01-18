@@ -1,8 +1,9 @@
 package de.fhws.applab.gemara.welling.metaModel;
 
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.Attribute;
-import de.fhws.applab.gemara.welling.metaModel.view.AppCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.AppDetailCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppDetailCardView;
+import de.fhws.applab.gemara.welling.metaModel.view.inputView.AppInputView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class AppResource {
 	private final List<Attribute> attributes = new ArrayList<>();
 	private AppCardView appCardView;
 	private AppDetailCardView appDetailCardView;
+	private AppInputView inputView;
 
 	public AppResource(String resourceName) {
 		this.resourceName = resourceName;
@@ -53,5 +55,13 @@ public class AppResource {
 
 	public void setAppDetailCardView(AppDetailCardView appDetailCardView) {
 		this.appDetailCardView = appDetailCardView;
+	}
+
+	public AppInputView getInputView() {
+		return inputView;
+	}
+
+	public void setInputView(AppInputView inputView) {
+		this.inputView = inputView;
 	}
 }

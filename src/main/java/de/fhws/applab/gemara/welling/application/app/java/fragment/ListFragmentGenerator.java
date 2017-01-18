@@ -8,7 +8,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.TitleVisitorImpl;
+import de.fhws.applab.gemara.welling.metaModel.view.cardViews.visitor.TitleVisitorImpl;
 
 import javax.lang.model.element.Modifier;
 
