@@ -34,6 +34,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	private final ClassName resourceClassName;
 	private final ClassName linkClassName;
 	private final ClassName resourceListFragmentClassName;
+	private final ClassName newResourceFragmentClassName;
 
 	private final FieldSpec specificResourceListAdapter;
 
@@ -58,6 +59,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		this.resourceClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.model", "Resource");
 		this.linkClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.model", "Link");
 		this.resourceListFragmentClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.fragment", "ResourceListFragment");
+		this.newResourceFragmentClassName = ClassName.get(this.packageName, "New" + resourceName + "Fragment");
 
 		this.specificResourceListAdapter = FieldSpec.builder(specificResourceListAdapterClassName, resourceName.toLowerCase() + "ListAdapter", Modifier.PRIVATE).build();
 
@@ -209,13 +211,11 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getGetFragment() {
-		//todo add statement for new resource
 		return MethodSpec.methodBuilder("getFragment")
 				.addModifiers(Modifier.PROTECTED)
 				.returns(getFragmentClassName())
 				.addAnnotation(Override.class)
-				/*.addStatement("return new $T()", newLecturerFragmentClassName)*/
-				.addStatement("return null")
+				.addStatement("return new $T()", newResourceFragmentClassName)
 				.build();
 	}
 }

@@ -1,5 +1,6 @@
 package de.fhws.applab.gemara.welling.test;
 
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.Attribute;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.LinkAttribute;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute;
@@ -164,10 +165,10 @@ public class MetaModelGenerator {
 		stringMap.put("show_charges", "Show charges");
 
 		stringMap.put("title_missing", "Title is missing");
-		stringMap.put("first_name_missing", "Firstname is missing");
-		stringMap.put("last_name_missing", "Lastname is missing");
+		stringMap.put("firstname_missing", "Firstname is missing");
+		stringMap.put("lastname_missing", "Lastname is missing");
 		stringMap.put("email_missing", "Email is missing");
-		stringMap.put("phone_number_missing", "Phonenumber is missing");
+		stringMap.put("phonenumber_missing", "Phonenumber is missing");
 		stringMap.put("address_missing", "Address is missing");
 		stringMap.put("room_missing", "Roomnumber is missing");
 		stringMap.put("welearn_missing", "Welearn-Address is missing");
