@@ -1,23 +1,23 @@
 package de.fhws.applab.gemara.welling.application.lib.specific.res.layout;
 
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
-import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppDetailCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppDetailViewGroup;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectXMLVisitorImpl;
+import de.fhws.applab.gemara.welling.visitors.cardView.DetailCardSubViewVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 
-	private final AppDetailCardView appDetailCardView;
+	private final DetailView detailView;
 	private final String packageName;
 
-	public DetailCardLayoutGenerator(String fileName, String directoryName, String packageName, AppDetailCardView appDetailCardView) {
+	public DetailCardLayoutGenerator(String fileName, String directoryName, String packageName, DetailView detailView) {
 		super(fileName, directoryName);
 
-		this.appDetailCardView = appDetailCardView;
+		this.detailView = detailView;
 		this.packageName = packageName;
 	}
 
@@ -41,17 +41,17 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 	}
 
 	private View getLinearLayout() {
-		final ViewObjectXMLVisitorImpl visitor = new ViewObjectXMLVisitorImpl();
-
 		View linearLayout = getBaseLinearLayout();
-		for (AppDetailViewGroup appDetailViewGroup : appDetailCardView.getGroups()) {
-			linearLayout.addSubView(getGroupHeaderView(appDetailViewGroup.getHeadline()));
-			for (ViewObject viewObject : appDetailViewGroup.getViewAttributes()) {
-				linearLayout.addSubView(viewObject.addDetailCardViewSubView(packageName, visitor));
+
+		DetailCardSubViewVisitor viewVisitor = new DetailCardSubViewVisitor(packageName);
+		for (Category category : detailView.getCategories()) {
+			linearLayout.addSubView(getGroupHeaderView(category.getName()));
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				resourceViewAttribute.accept(viewVisitor);
+				linearLayout.addSubView(viewVisitor.getView());
 			}
 		}
 		return linearLayout;
-
 	}
 
 
@@ -65,7 +65,6 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 
 
 		return baseLinearLayout;
-
 	}
 
 	private View getGroupHeaderView(String header) {

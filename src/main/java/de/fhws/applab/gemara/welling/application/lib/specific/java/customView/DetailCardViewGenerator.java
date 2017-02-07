@@ -6,15 +6,19 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectVisitorImpl;
+import de.fhws.applab.gemara.welling.visitors.cardView.FieldVisitor;
+import de.fhws.applab.gemara.welling.visitors.cardView.HideViewsVisitor;
+import de.fhws.applab.gemara.welling.visitors.cardView.InitializeViewVisitor;
+import de.fhws.applab.gemara.welling.visitors.cardView.SetTextVisitor;
 
 import javax.lang.model.element.Modifier;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getAttributeSetClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getCardViewClassName;
@@ -25,27 +29,26 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class DetailCardViewGenerator extends AbstractModelClass {
 
-	private final AppResource appResource;
+	private final DetailView detailView;
 
 	private final ClassName rClassName;
 	private final ClassName specificResourceClassName;
-
-	private final ViewObjectVisitorImpl visitor;
+	private final ClassName attributeViewClassName;
+	private final ClassName profileImageViewClassName;
 
 	private final ParameterSpec context = getContextParam();
 	private final ParameterSpec attrs = ParameterSpec.builder(getAttributeSetClassName(), "attrs").build();
 	private final ParameterSpec defStyleAttr = ParameterSpec.builder(int.class, "defStyleAttr").build();
 
-	public DetailCardViewGenerator(String packageName, AppResource appResource) {
-		super(packageName + ".specific.customView", appResource.getResourceName() + "DetailCardView");
-		this.appResource = appResource;
+
+	public DetailCardViewGenerator(String packageName, DetailView detailView) {
+		super(packageName + ".specific.customView", detailView.getResourceName() + "DetailCardView");
+		this.detailView = detailView;
 
 		this.rClassName = ClassName.get(packageName, "R");
-		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", appResource.getResourceName());
-		ClassName attributeViewClassName = ClassName.get(packageName + ".generic.customView", "AttributeView");
-		ClassName profileImageViewClassName = ClassName.get(packageName + ".generic.customView", "ProfileImageView");
-
-		this.visitor = new ViewObjectVisitorImpl(profileImageViewClassName, rClassName, attributeViewClassName, appResource.getResourceName().toLowerCase());
+		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", detailView.getResourceName());
+		this.attributeViewClassName = ClassName.get(packageName + ".generic.customView", "AttributeView");
+		this.profileImageViewClassName = ClassName.get(packageName + ".generic.customView", "ProfileImageView");
 
 	}
 
@@ -66,8 +69,15 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 	}
 
 	private List<FieldSpec> getFields() {
-		return appResource.getAppDetailCardView().getViewAttributes().stream().map(viewObject -> viewObject.addField(visitor))
-				.collect(Collectors.toList());
+		FieldVisitor fieldVisitor = new FieldVisitor(attributeViewClassName, profileImageViewClassName);
+		List<FieldSpec> fieldSpecs = new ArrayList<>();
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				resourceViewAttribute.accept(fieldVisitor);
+				fieldSpecs.add(fieldVisitor.getFieldSpec());
+			}
+		}
+		return fieldSpecs;
 
 	}
 
@@ -114,12 +124,15 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 		builder.addParameter(defStyleAttr);
 
 		builder.addStatement("$T $N = ($T) $N.getSystemService($T.LAYOUT_INFLATER_SERVICE)", getLayoutInflaterClassName(), "inflater", getLayoutInflaterClassName(), context, getContextClass());
-		builder.addStatement("this.addView($N.inflate($T.layout.$N, this, false))", "inflater", rClassName, "view_" + appResource.getResourceName().toLowerCase() + "_detail_card");
-		builder.addStatement("$T $N = $N.getTheme().obtainStyledAttributes($N, $T.styleable.$N, $N, 0)", getTypedArrayClassName(), "typedArray", context, attrs, rClassName, appResource.getResourceName() + "DetailCardView", defStyleAttr);
+		builder.addStatement("this.addView($N.inflate($T.layout.$N, this, false))", "inflater", rClassName, "view_" + detailView.getResourceName().toLowerCase() + "_detail_card");
+		builder.addStatement("$T $N = $N.getTheme().obtainStyledAttributes($N, $T.styleable.$N, $N, 0)", getTypedArrayClassName(), "typedArray", context, attrs, rClassName, detailView.getResourceName() + "DetailCardView", defStyleAttr);
 		builder.beginControlFlow("try");
 
-		for (ViewObject viewObject : appResource.getAppDetailCardView().getViewAttributes()) {
-			viewObject.addInitializeDetailViewStatements(builder, visitor);
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				InitializeViewVisitor viewVisitor = new InitializeViewVisitor(builder, attributeViewClassName, profileImageViewClassName, rClassName);
+				resourceViewAttribute.accept(viewVisitor);
+			}
 		}
 
 		builder.endControlFlow();
@@ -131,7 +144,8 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getSetUpView() {
-		ParameterSpec specificResource = ParameterSpec.builder(specificResourceClassName, appResource.getResourceName().toLowerCase()).build();
+		ParameterSpec specificResource = ParameterSpec.builder(specificResourceClassName,
+				detailView.getResourceName().toLowerCase()).build();
 
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("setUpView");
 		builder.addModifiers(Modifier.PUBLIC);
@@ -139,22 +153,28 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 		builder.addParameter(specificResource);
 		builder.addStatement("$N($N)", getHideUnnecessaryViews(), specificResource);
 
-		for (ViewObject viewObject : appResource.getAppDetailCardView().getViewAttributes()) {
-			viewObject.addFillResourceStatements(builder, visitor);
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				SetTextVisitor visitor = new SetTextVisitor(builder, rClassName, detailView.getResourceName());
+				resourceViewAttribute.accept(visitor);
+			}
 		}
 
 		return builder.build();
 	}
 
 	private MethodSpec getHideUnnecessaryViews() {
-		String specificResourceName = appResource.getResourceName().toLowerCase();
+		String specificResourceName = detailView.getResourceName().toLowerCase();
 		MethodSpec.Builder method = MethodSpec.methodBuilder("hideUnnecessaryViews");
 		method.addModifiers(Modifier.PRIVATE);
 		method.returns(void.class);
 		method.addParameter(specificResourceClassName, specificResourceName);
 
-		for (ViewObject viewObject : appResource.getAppDetailCardView().getViewAttributes()) {
-			viewObject.addHideUnnecessaryViewStatements(method, visitor);
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				HideViewsVisitor viewsVisitor = new HideViewsVisitor(method, detailView.getResourceName());
+				resourceViewAttribute.accept(viewsVisitor);
+			}
 		}
 
 		return method.build();

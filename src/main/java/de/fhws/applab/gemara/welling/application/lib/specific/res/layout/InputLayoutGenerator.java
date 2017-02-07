@@ -13,8 +13,8 @@ public class InputLayoutGenerator extends AbstractLayoutGenerator {
 	private final InputView inputView;
 	private final String packageName;
 
-	public InputLayoutGenerator(String fileName, String directoryName, String packageName, InputView inputView) {
-		super(fileName, directoryName);
+	public InputLayoutGenerator(String directoryName, String packageName, InputView inputView) {
+		super("view_" + inputView.getResourceName().toLowerCase() + "_input" , directoryName);
 		this.inputView = inputView;
 		this.packageName = packageName;
 	}
@@ -55,18 +55,16 @@ public class InputLayoutGenerator extends AbstractLayoutGenerator {
 		List<View> attributeInputViews = new ArrayList<>();
 
 		for (InputViewAttribute inputViewAttribute : inputView.getInputViewAttributes()) {
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE ||
+					inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE) {
+				continue;
+			}
 			List<String> viewAttributes = new ArrayList<>();
 			viewAttributes.add("android:id=\"@+id/" + inputViewAttribute.getAttributeName() + "\"");
 			viewAttributes.add("android:layout_width=\"match_parent\"");
 			viewAttributes.add("android:layout_height=\"wrap_content\"");
-			viewAttributes.add("custom:hintText=\"@string/" + inputViewAttribute.getHintText().toLowerCase() + "\"");
-			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.TEXT) {
-				viewAttributes.add("custom:inputType=\"text\"");
-			} else if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.MAIL) {
-				viewAttributes.add("custom:inputType=\"mail\"");
-			} else if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PHONE_NUMBER) {
-				viewAttributes.add("custom:inputType=\"phone\"");
-			}
+			viewAttributes.add("custom:hintText=\"@string/" + inputViewAttribute.getAttributeName() + "\"");
+			viewAttributes.add(getInputType(inputViewAttribute.getAttributeType()));
 
 			View inputView = new View(packageName + ".AttributeInput");
 			inputView.setViewAttributes(viewAttributes);
@@ -75,5 +73,16 @@ public class InputLayoutGenerator extends AbstractLayoutGenerator {
 		}
 
 		return attributeInputViews;
+	}
+
+	private String getInputType(ViewAttribute.AttributeType attributeType) {
+		if (attributeType == ViewAttribute.AttributeType.TEXT) {
+			return "custom:inputType=\"text\"";
+		} else if (attributeType == ViewAttribute.AttributeType.MAIL) {
+			return "custom:inputType=\"mail\"";
+		} else if (attributeType == ViewAttribute.AttributeType.PHONE_NUMBER) {
+			return "custom:inputType=\"phone\"";
+		}
+		return "";
 	}
 }

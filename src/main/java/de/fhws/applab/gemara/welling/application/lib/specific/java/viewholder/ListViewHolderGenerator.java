@@ -6,8 +6,10 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
+import de.fhws.applab.gemara.welling.visitors.cardView.ContainsImageVisitor;
 
 import javax.lang.model.element.Modifier;
 
@@ -15,7 +17,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class ListViewHolderGenerator extends AbstractModelClass {
 
-	private final AppResource appResource;
+	private final CardView cardView;
 	private final String resourceName;
 
 	private final ClassName rClassName;
@@ -26,14 +28,14 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 	private final ClassName resourceClassName;
 	private final ClassName resourceTypeClassName;
 
-	private final FieldSpec cardView;
+	private final FieldSpec cardViewField;
 	private final FieldSpec onResourceClickListener;
 	private final FieldSpec profileImg;
 
-	public ListViewHolderGenerator(String packageName, AppResource appResource) {
-		super(packageName + ".specific.viewholder", appResource.getResourceName() + "ListViewHolder");
-		this.appResource = appResource;
-		this.resourceName = appResource.getResourceName();
+	public ListViewHolderGenerator(String packageName, CardView cardView) {
+		super(packageName + ".specific.viewholder", cardView.getResourceName() + "ListViewHolder");
+		this.cardView = cardView;
+		this.resourceName = cardView.getResourceName();
 
 		this.rClassName = ClassName.get(packageName, "R");
 		this.resourceViewHolderClassName = ClassName.get(packageName + ".generic.viewholder", "ResourceViewHolder");
@@ -42,7 +44,7 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		this.profileImgClassName = ClassName.get(packageName + ".generic.customView", "ProfileImageView");
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
 		this.resourceTypeClassName = ClassName.get(packageName + ".specific.model", resourceName);
-		this.cardView = FieldSpec.builder(resourceCardView, "cardView", Modifier.PRIVATE, Modifier.FINAL).build();
+		this.cardViewField = FieldSpec.builder(resourceCardView, "cardViewField", Modifier.PRIVATE, Modifier.FINAL).build();
 		this.onResourceClickListener = FieldSpec.builder(onResourceClickListenerClassName, "onResourceClickListener", Modifier.PRIVATE, Modifier.FINAL).build();
 
 		this.profileImg = FieldSpec.builder(profileImgClassName, "profileImg", Modifier.PRIVATE, Modifier.FINAL).build();
@@ -54,10 +56,18 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		TypeSpec.Builder type = TypeSpec.classBuilder(this.className);
 		type.addModifiers(Modifier.PUBLIC);
 		type.superclass(resourceViewHolderClassName);
-		type.addField(cardView);
+		type.addField(cardViewField);
 		type.addField(onResourceClickListener);
-
-		if (appResource.isContainsImage()) {
+		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		boolean containsImage = false;
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(visitor);
+			containsImage = visitor.isContainsImage();
+			if (containsImage) {
+				break;
+			}
+		}
+		if (containsImage) {
 			type.addField(profileImg);
 		}
 		type.addMethod(getConstructor());
@@ -75,9 +85,18 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		constructor.addParameter(clickListenerParam);
 		constructor.addStatement("super($N)", itemViewParam);
 		constructor.addStatement("this.$N = $N", onResourceClickListener, clickListenerParam);
-		constructor.addStatement("$N = ($T) $N.findViewById($T.id.$N)", cardView, resourceCardView, itemViewParam, rClassName, this.resourceName.toLowerCase() + "_card");
+		constructor.addStatement("$N = ($T) $N.findViewById($T.id.$N)", cardViewField, resourceCardView, itemViewParam, rClassName, this.resourceName.toLowerCase() + "_card");
 
-		if (appResource.isContainsImage()) {
+		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		boolean containsImage = false;
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(visitor);
+			containsImage = visitor.isContainsImage();
+			if (containsImage) {
+				break;
+			}
+		}
+		if (containsImage) {
 			constructor.addStatement("$N = ($T) $N.findViewById($T.id.profileImg)", profileImg, profileImgClassName, itemViewParam, rClassName);
 		}
 
@@ -91,8 +110,8 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 				.addAnnotation(Override.class)
 				.addParameter(resource)
 				.addStatement("final $T $N = ($T) $N", resourceTypeClassName, resourceName.toLowerCase(), resourceTypeClassName, resource)
-				.addStatement("$N.setOnClickListener($L);", cardView, getOnClick())
-				.addStatement("$N.setUpView($N)", cardView, resourceName.toLowerCase())
+				.addStatement("$N.setOnClickListener($L);", cardViewField, getOnClick())
+				.addStatement("$N.setUpView($N)", cardViewField, resourceName.toLowerCase())
 				.build();
 	}
 

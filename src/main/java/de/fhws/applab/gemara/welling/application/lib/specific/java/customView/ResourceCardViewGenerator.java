@@ -5,43 +5,45 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectVisitorImpl;
+import de.fhws.applab.gemara.welling.visitors.cardView.FieldVisitor;
+import de.fhws.applab.gemara.welling.visitors.cardView.HideViewsVisitor;
+import de.fhws.applab.gemara.welling.visitors.cardView.InitializeViewVisitor;
+import de.fhws.applab.gemara.welling.visitors.cardView.SetTextVisitor;
 
 import javax.lang.model.element.Modifier;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
 public class ResourceCardViewGenerator extends AbstractModelClass {
 
-	private final AppCardView cardView;
-	private final AppResource appResource;
-	private final ViewObjectVisitorImpl visitor;
+	private final CardView cardView;
+	private final FieldVisitor visitor;
 
 	private final ClassName rClassName;
 	private final ClassName resourceClassName;
 	private final ClassName specificResourceClassName;
 	private final ClassName resourceCardViewClassName;
+	private final ClassName attributeViewClassName;
+	private final ClassName profileImageViewClassName;
 
-	public ResourceCardViewGenerator(String packageName, AppResource resource) {
-		super(packageName + ".specific.customView", resource.getResourceName() + "CardView");
-		this.cardView = resource.getAppCardView();
-		this.appResource = resource;
+	public ResourceCardViewGenerator(String packageName, CardView cardView) {
+		super(packageName + ".specific.customView", cardView.getResourceName() + "CardView");
+		this.cardView = cardView;
 
 		this.rClassName = ClassName.get(packageName, "R");
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
-		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", resource.getResourceName());
+		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", cardView.getResourceName());
 		this.resourceCardViewClassName = ClassName.get(packageName + ".generic.customView", "ResourceCardView");
-		ClassName attributeViewClassName = ClassName.get(packageName + ".generic.customView", "AttributeView");
-		ClassName profileImageViewClassName = ClassName.get(packageName + ".generic.customView", "ProfileImageView");
+		this.attributeViewClassName = ClassName.get(packageName + ".generic.customView", "AttributeView");
+		this.profileImageViewClassName = ClassName.get(packageName + ".generic.customView", "ProfileImageView");
 
-		this.visitor = new ViewObjectVisitorImpl(profileImageViewClassName, rClassName, attributeViewClassName, appResource.getResourceName().toLowerCase());
+		this.visitor = new FieldVisitor(attributeViewClassName, profileImageViewClassName);
 	}
 
 	@Override
@@ -63,9 +65,12 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 	}
 
 	private List<FieldSpec> getFields() {
-		return cardView.getViewAttributes().stream().map(viewObject -> viewObject.addField(visitor))
-				.collect(Collectors.toList());
-
+		List<FieldSpec> fieldSpecs = new ArrayList<>();
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(visitor);
+			fieldSpecs.add(visitor.getFieldSpec());
+		}
+		return fieldSpecs;
 	}
 
 	private MethodSpec getConstructorOne() {
@@ -106,7 +111,7 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 				.addModifiers(Modifier.PROTECTED)
 				.addAnnotation(Override.class)
 				.returns(int.class)
-				.addStatement("return $T.layout.$N", rClassName, "view_" + appResource.getResourceName().toLowerCase() + "_card")
+				.addStatement("return $T.layout.$N", rClassName, "view_" + cardView.getResourceName().toLowerCase() + "_card")
 				.build();
 	}
 
@@ -116,19 +121,17 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 		method.addModifiers(Modifier.PROTECTED);
 		method.returns(void.class);
 
-
-		for (ViewObject viewObject : cardView.getViewAttributes()) {
-			viewObject.addInitializeViewStatements(method, visitor);
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			InitializeViewVisitor visitor = new InitializeViewVisitor(method, attributeViewClassName, profileImageViewClassName, rClassName);
+			resourceViewAttribute.accept(visitor);
 
 		}
 
 		return method.build();
 	}
 
-
-
 	private MethodSpec getSetupView() {
-		String specificResourceName = appResource.getResourceName().toLowerCase();
+		String specificResourceName = cardView.getResourceName().toLowerCase();
 		MethodSpec.Builder method = MethodSpec.methodBuilder("setUpView");
 		method.addAnnotation(Override.class);
 		method.addModifiers(Modifier.PUBLIC);
@@ -137,22 +140,24 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 		method.addStatement("$T $N = ($T) $N", specificResourceClassName, specificResourceName, specificResourceClassName, "resource");
 		method.addStatement("$N($N)", getHideUnnecessaryViews(), specificResourceName);
 
-		for (ViewObject viewObject : cardView.getViewAttributes()) {
-			viewObject.addFillResourceStatements(method, visitor);
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			SetTextVisitor visitor = new SetTextVisitor(method, rClassName, specificResourceName);
+			resourceViewAttribute.accept(visitor);
 		}
 
 		return method.build();
 	}
 
 	private MethodSpec getHideUnnecessaryViews() {
-		String specificResourceName = appResource.getResourceName().toLowerCase();
+		String specificResourceName = cardView.getResourceName().toLowerCase();
 		MethodSpec.Builder method = MethodSpec.methodBuilder("hideUnnecessaryViews");
 		method.addModifiers(Modifier.PRIVATE);
 		method.returns(void.class);
 		method.addParameter(specificResourceClassName, specificResourceName);
 
-		for (ViewObject viewObject : cardView.getViewAttributes()) {
-			viewObject.addHideUnnecessaryViewStatements(method, visitor);
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			HideViewsVisitor visitor = new HideViewsVisitor(method, specificResourceName);
+			resourceViewAttribute.accept(visitor);
 		}
 
 		return method.build();

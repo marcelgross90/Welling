@@ -6,9 +6,9 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.cardViews.visitor.TitleVisitorImpl;
+import de.fhws.applab.gemara.welling.visitors.cardView.TitleVisitor;
 
 import javax.lang.model.element.Modifier;
 
@@ -21,7 +21,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 public class ListFragmentGenerator extends AbstractModelClass {
 
 	private final String resourceName;
-	private final AppResource appResource;
+	private final DetailView detailView;
 
 	private final ClassName rClassName;
 	private final ClassName resourceListAdapterClassName;
@@ -43,10 +43,10 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	private final ParameterizedTypeName resourceList;
 	private final ParameterizedTypeName linkMap;
 
-	public ListFragmentGenerator(String packageName, AppResource appResource, String appName) {
-		super(packageName + ".fragment", appResource.getResourceName() + "ListFragment");
-		this.resourceName = appResource.getResourceName();
-		this.appResource = appResource;
+	public ListFragmentGenerator(String packageName, DetailView detailView, String appName) {
+		super(packageName + ".fragment", detailView.getResourceName() + "ListFragment");
+		this.resourceName = detailView.getResourceName();
+		this.detailView = detailView;
 
 		this.rClassName = ClassName.get(packageName, "R");
 		this.resourceListAdapterClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.adapter", "ResourceListAdapter");
@@ -86,21 +86,23 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getOnResourceClickWithView() {
-		TitleVisitorImpl visitor =  new TitleVisitorImpl();
+		TitleVisitor titleVisitor = new TitleVisitor(detailView.getResourceName());
+		detailView.getTitle().accept(titleVisitor);
+
 		MethodSpec.Builder method = MethodSpec.methodBuilder("onResourceClickWithView");
 		method.addModifiers(Modifier.PUBLIC);
 		method.returns(void.class);
 		method.addAnnotation(Override.class);
 		method.addParameter(resourceClassName, "resource");
 		method.addParameter(getViewClassName(), "view");
-		if (!appResource.isContainsImage()) {
+		if (detailView.getImage() == null) {
 			method.addCode("//not needed here\n");
 		} else {
 			method.addStatement("$T $N = ($T) $N", specificResourceClassName, resourceName.toLowerCase(), specificResourceClassName, "resource");
 			method.addStatement("$T $N = new $T(getActivity(), $T.class)", getIntentClassName(), "intent", getIntentClassName(), specificResourceDetailActivityClassName);
 			method.addStatement("$N.putExtra($S, $N.getSelf().getHref())", "intent", "selfUrl", resourceName.toLowerCase());
 			method.addStatement("$N.putExtra($S, $N.getSelf().getType())", "intent", "mediaType", resourceName.toLowerCase());
-			method.addStatement("$N.putExtra($S, $N)", "intent", "fullName", appResource.getAppDetailCardView().getTitle().getTitleForMethodSpec(visitor, appResource));
+			method.addStatement("$N.putExtra($S, $N)", "intent", "fullName", titleVisitor.getTitle());
 
 			method.beginControlFlow("if ($T.VERSION.SDK_INT >= $T.VERSION_CODES.LOLLIPOP)", getBuildClassName(), getBuildClassName());
 			method.addStatement("$T $N = $T.makeSceneTransitionAnimation(getActivity(), $N, $S)", getActivityOptionsClassName(), "options", getActivityOptionsClassName(), "view", "pic");
@@ -122,7 +124,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		method.returns(void.class);
 		method.addAnnotation(Override.class);
 		method.addParameter(resourceClassName, "resource");
-		if (appResource.isContainsImage()) {
+		if (detailView.getImage() != null) {
 			method.addCode("//not needed here\n");
 		} else {
 			//todo

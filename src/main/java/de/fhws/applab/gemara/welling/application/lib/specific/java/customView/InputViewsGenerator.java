@@ -3,12 +3,11 @@ package de.fhws.applab.gemara.welling.application.lib.specific.java.customView;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputViewAttribute;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.inputView.AppInputView;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.AttributeType;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.SingleViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectVisitorImpl;
+import de.fhws.applab.gemara.welling.application.util.GetterSetterGenerator;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
@@ -19,8 +18,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class InputViewsGenerator extends CustomView {
 
-	private final AppInputView appInputView;
-	private final AppResource appResource;
+	private final InputView inputView;
 
 	private final ClassName rClassName;
 	private final ClassName attributeInputClassName;
@@ -28,55 +26,42 @@ public class InputViewsGenerator extends CustomView {
 	private final ClassName specificResourceClassName;
 	private final ClassName linkClassName;
 
+	public InputViewsGenerator(String packageName, InputView inputView) {
+		super(packageName + ".specific.customView", inputView.getResourceName() + "InputView",
+				ClassName.get(packageName + ".generic.customView", "ResourceInputView"));
 
-	public InputViewsGenerator(String packageName, AppResource appResource) {
-		super(packageName + ".specific.customView", appResource.getResourceName() + "InputView", ClassName.get(packageName + ".generic.customView", "ResourceInputView"));
-
-		this.appInputView = appResource.getInputView();
-		this.appResource = appResource;
+		this.inputView = inputView;
 
 		this.rClassName = ClassName.get(packageName, "R");
 		this.attributeInputClassName = ClassName.get(packageName + ".generic.customView", "AttributeInput");
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
 		this.linkClassName = ClassName.get(packageName + ".generic.model", "Link");
-		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", appResource.getResourceName());
-
+		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", inputView.getResourceName());
 	}
 
 	@Override
 	public Modifier[] addClassModifiers() {
-		return new Modifier[]{Modifier.PUBLIC};
+		return new Modifier[] { Modifier.PUBLIC };
 	}
 
 	@Override
 	protected MethodSpec getConstructorOne() {
-		return MethodSpec.constructorBuilder()
-				.addModifiers(Modifier.PUBLIC)
-				.addParameter(getContextParam())
-				.addStatement("super($N)", getContextParam())
-				.build();
+		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
+				.addStatement("super($N)", getContextParam()).build();
 	}
 
 	@Override
 	protected MethodSpec getConstructorTwo() {
-		return MethodSpec.constructorBuilder()
-				.addModifiers(Modifier.PUBLIC)
-				.addParameter(getContextParam())
-				.addParameter(getAttributeSetParam())
-				.addStatement("super($N, $N)", getContextParam(), getAttributeSetParam())
-				.build();
+		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
+				.addParameter(getAttributeSetParam()).addStatement("super($N, $N)", getContextParam(), getAttributeSetParam()).build();
 	}
 
 	@Override
 	protected MethodSpec getConstructorThree() {
 
-		return MethodSpec.constructorBuilder()
-				.addModifiers(Modifier.PUBLIC)
-				.addParameter(getContextParam())
-				.addParameter(getAttributeSetParam())
-				.addParameter(defStyleAttr)
-				.addStatement("super($N, $N, $N)", getContextParam(), getAttributeSetParam(), defStyleAttr)
-				.build();
+		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
+				.addParameter(getAttributeSetParam()).addParameter(defStyleAttr)
+				.addStatement("super($N, $N, $N)", getContextParam(), getAttributeSetParam(), defStyleAttr).build();
 	}
 
 	@Override
@@ -87,15 +72,19 @@ public class InputViewsGenerator extends CustomView {
 	@Override
 	public List<FieldSpec> addFields() {
 		List<FieldSpec> fields = new ArrayList<>();
-		for (SingleViewObject singleViewObject : appInputView.getViewAttributes()) {
-			if (singleViewObject.getViewAttribute().getType() == AttributeType.DATE) {
-				//todo add field for date
-			} else {
-				fields.add(FieldSpec.builder(attributeInputClassName, singleViewObject.getViewName(), Modifier.PRIVATE).build());
+
+		for (InputViewAttribute inputViewAttribute : inputView.getInputViewAttributes()) {
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE
+					|| inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE) {
+				continue;
 			}
 
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.DATE) {
+				//todo add field for date
+			} else {
+				fields.add(FieldSpec.builder(attributeInputClassName, inputViewAttribute.getAttributeName(), Modifier.PRIVATE).build());
+			}
 		}
-
 		return fields;
 	}
 
@@ -117,59 +106,79 @@ public class InputViewsGenerator extends CustomView {
 	}
 
 	private MethodSpec getSetResource() {
-		String resourceName = appResource.getResourceName().toLowerCase();
+		String resourceName = inputView.getResourceName().toLowerCase();
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("setResource");
 		builder.addModifiers(Modifier.PUBLIC);
 		builder.addAnnotation(Override.class);
 		builder.returns(void.class);
 		builder.addParameter(resourceClassName, "resource");
-		builder.addStatement("$T $N = ($T) $N", specificResourceClassName, resourceName,
-				specificResourceClassName, "resource");
+		builder.addStatement("$T $N = ($T) $N", specificResourceClassName, resourceName, specificResourceClassName, "resource");
 
-		for (SingleViewObject singleViewObject : appInputView.getViewAttributes()) {
-			if (singleViewObject.getViewAttribute().getType() == AttributeType.URL) {
-				builder.addStatement("$N.setText($N.$N().getHref())", singleViewObject.getViewName(), resourceName, singleViewObject.getViewAttribute().getGetter());
+		for (InputViewAttribute inputViewAttribute : inputView.getInputViewAttributes()) {
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE
+					|| inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE) {
+				continue;
+			}
+
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.URL) {
+				builder.addStatement("$N.setText($N.$N().getHref())", inputViewAttribute.getAttributeName(), resourceName,
+						GetterSetterGenerator.getGetter(inputViewAttribute.getAttributeName()));
 			} else {
-				builder.addStatement("$N.setText($N.$N())", singleViewObject.getViewName(), resourceName, singleViewObject.getViewAttribute().getGetter());
+				builder.addStatement("$N.setText($N.$N())", inputViewAttribute.getAttributeName(), resourceName,
+						GetterSetterGenerator.getGetter(inputViewAttribute.getAttributeName()));
 			}
 		}
 
 		return builder.build();
 	}
 
-	private  MethodSpec getGetResource() {
+	private MethodSpec getGetResource() {
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("getResource");
 		builder.addModifiers(Modifier.PUBLIC);
 		builder.addAnnotation(Override.class);
 		builder.returns(resourceClassName);
 		builder.addStatement("$T $N = $N", boolean.class, "error", "false");
 
-		for (SingleViewObject singleViewObject : appInputView.getViewAttributes()) {
-			String stringName = singleViewObject.getViewAttribute().getLabel().toLowerCase();
-			String viewName = singleViewObject.getViewName();
+		for (InputViewAttribute inputViewAttribute : inputView.getInputViewAttributes()) {
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE
+					|| inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE) {
+				continue;
+			}
+
+			String stringName = inputViewAttribute.getAttributeName().toLowerCase();
+			String viewName = inputViewAttribute.getAttributeName();
 			builder.addStatement("$T $N = $N.getText()", String.class, stringName + "String", viewName);
 			builder.beginControlFlow("if ($N.isEmpty())", stringName + "String");
-			builder.addStatement("$N.setError($N.getString($T.string.$N))", viewName, "context", rClassName, stringName + "_missing");
+			builder.addStatement("$N.setError($N.getString($T.string.$N))", viewName, "context", rClassName, viewName + "_missing");
 			builder.addStatement("$N = $N", "error", "true");
 			builder.endControlFlow();
 		}
 
 		builder.beginControlFlow("if (!$N)", "error");
 		builder.addStatement("$T $N = new $T()", specificResourceClassName, "current", specificResourceClassName);
-		for (SingleViewObject singleViewObject : appInputView.getViewAttributes()) {
-			String stringName = singleViewObject.getViewAttribute().getLabel().toLowerCase() + "String";
 
-			if (singleViewObject.getViewAttribute().getType() == AttributeType.URL) {
-				builder.addStatement("$T $N = new $T($N, $S, $S)", linkClassName, singleViewObject.getViewName() + "Url", linkClassName, stringName, singleViewObject.getViewAttribute().getLabel().toLowerCase(), "text/html");
-				builder.addStatement("$N.$N($N)", "current", singleViewObject.getViewAttribute().getSetter(), singleViewObject.getViewName() + "Url");
+		for (InputViewAttribute inputViewAttribute : inputView.getInputViewAttributes()) {
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE
+					|| inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE) {
+				continue;
+			}
+
+			String stringName = inputViewAttribute.getAttributeName().toLowerCase() + "String";
+
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.URL) {
+				builder.addStatement("$T $N = new $T($N, $S, $S)", linkClassName, inputViewAttribute.getAttributeName() + "Url",
+						linkClassName, stringName, inputViewAttribute.getAttributeName().toLowerCase(), "text/html");
+				builder.addStatement("$N.$N($N)", "current", GetterSetterGenerator.getSetter(inputViewAttribute.getAttributeName()),
+						inputViewAttribute.getAttributeName() + "Url");
 			} else {
-				builder.addStatement("$N.$N($N)", "current", singleViewObject.getViewAttribute().getSetter(), stringName);
+				builder.addStatement("$N.$N($N)", "current", GetterSetterGenerator.getSetter(inputViewAttribute.getAttributeName()),
+						stringName);
 			}
 		}
+
 		builder.addStatement("return $N", "current");
 		builder.endControlFlow();
 		builder.addStatement("return null");
-
 
 		return builder.build();
 	}
@@ -180,26 +189,28 @@ public class InputViewsGenerator extends CustomView {
 		builder.addAnnotation(Override.class);
 		builder.returns(void.class);
 
-		for (SingleViewObject singleViewObject : appInputView.getViewAttributes()) {
-			String id = Character.toLowerCase(singleViewObject.getViewAttribute().getLabel().charAt(0)) + singleViewObject.getViewAttribute().getAttributeName().substring(1);
-			builder.addStatement("$N = ($T) findViewById($T.id.$N)", singleViewObject.getViewName(), attributeInputClassName, rClassName, id);
+		for (InputViewAttribute inputViewAttribute : inputView.getInputViewAttributes()) {
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE
+					|| inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE) {
+				continue;
+			}
+
+			String id = Character.toLowerCase(inputViewAttribute.getAttributeName().charAt(0)) + inputViewAttribute.getAttributeName()
+					.substring(1);
+			builder.addStatement("$N = ($T) findViewById($T.id.$N)", inputViewAttribute.getAttributeName(), attributeInputClassName,
+					rClassName, id);
 		}
 
 		return builder.build();
 	}
 
 	private MethodSpec getGetLayout() {
-		return MethodSpec.methodBuilder("getLayout")
-				.addModifiers(Modifier.PROTECTED)
-				.addAnnotation(Override.class)
-				.returns(int.class)
-				.addStatement("return $T.layout.$N", rClassName, "view_" + appResource.getResourceName().toLowerCase() + "_input")
-				.build();
+		return MethodSpec.methodBuilder("getLayout").addModifiers(Modifier.PROTECTED).addAnnotation(Override.class).returns(int.class)
+				.addStatement("return $T.layout.$N", rClassName, "view_" + inputView.getResourceName().toLowerCase() + "_input").build();
 	}
 
 	private MethodSpec getGetStyleable() {
 		return MethodSpec.methodBuilder("getStyleable").addModifiers(Modifier.PROTECTED).addAnnotation(Override.class).returns(int[].class)
-				.addStatement("return $T.styleable.$N", rClassName, appResource.getResourceName() + "InputView")
-				.build();
+				.addStatement("return $T.styleable.$N", rClassName, inputView.getResourceName() + "InputView").build();
 	}
 }

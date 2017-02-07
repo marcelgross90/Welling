@@ -1,9 +1,6 @@
 package de.fhws.applab.gemara.welling.metaModel;
 
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.Attribute;
-import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppDetailCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.inputView.AppInputView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +8,7 @@ import java.util.List;
 public class AppResource {
 
 	private final String resourceName;
-	private boolean containsImage;
 	private final List<Attribute> attributes = new ArrayList<>();
-	private AppCardView appCardView;
-	private AppDetailCardView appDetailCardView;
-	private AppInputView inputView;
 
 	public AppResource(String resourceName) {
 		this.resourceName = resourceName;
@@ -25,13 +18,6 @@ public class AppResource {
 		return resourceName;
 	}
 
-	public boolean isContainsImage() {
-		return containsImage;
-	}
-
-	public void setContainsImage(boolean containsImage) {
-		this.containsImage = containsImage;
-	}
 
 	public List<Attribute> getAttributes() {
 		return attributes;
@@ -41,27 +27,4 @@ public class AppResource {
 		this.attributes.addAll(attributes);
 	}
 
-	public AppCardView getAppCardView() {
-		return appCardView;
-	}
-
-	public void setAppCardView(AppCardView appCardView) {
-		this.appCardView = appCardView;
-	}
-
-	public AppDetailCardView getAppDetailCardView() {
-		return appDetailCardView;
-	}
-
-	public void setAppDetailCardView(AppDetailCardView appDetailCardView) {
-		this.appDetailCardView = appDetailCardView;
-	}
-
-	public AppInputView getInputView() {
-		return inputView;
-	}
-
-	public void setInputView(AppInputView inputView) {
-		this.inputView = inputView;
-	}
 }

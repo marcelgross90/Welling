@@ -1,21 +1,21 @@
 package de.fhws.applab.gemara.welling.application.lib.specific.res.layout;
 
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.visitors.ViewObjectXMLVisitorImpl;
+import de.fhws.applab.gemara.welling.visitors.cardView.CardAttributeVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CardLayoutGenerator extends AbstractLayoutGenerator {
 
-	private final AppResource appResource;
 	private final String packageName;
+	private final CardView cardView;
 
-	public CardLayoutGenerator(String fileName, String directoryName, AppResource appResource, String packageName) {
+	public CardLayoutGenerator(String fileName, String directoryName, CardView cardView, String packageName) {
 		super(fileName, directoryName);
-		this.appResource = appResource;
+		this.cardView = cardView;
 		this.packageName = packageName;
 	}
 
@@ -39,7 +39,6 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 	}
 
 	private View getRelativeLayout() {
-		ViewObjectXMLVisitorImpl visitor = new ViewObjectXMLVisitorImpl();
 		View relativeLayout = new View("RelativeLayout");
 		List<String> viewAttributes = getLayoutAttributes("match_parent", "match_parent");
 		viewAttributes.add("android:id=\"@+id/relativeLayout\"");
@@ -47,8 +46,11 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 		relativeLayout.setViewAttributes(viewAttributes);
 		List<View> attributeViews = new ArrayList<>();
 
-		for (ViewObject viewObject : appResource.getAppCardView().getViewAttributes()) {
-			List<View> views = viewObject.addCardViewSubView(packageName, visitor);
+
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			CardAttributeVisitor visitor = new CardAttributeVisitor(packageName);
+			resourceViewAttribute.accept(visitor);
+			List<View> views =  visitor.getViews();
 			if (views.size() == 2) {
 				views.forEach(relativeLayout::addSubView);
 			} else {

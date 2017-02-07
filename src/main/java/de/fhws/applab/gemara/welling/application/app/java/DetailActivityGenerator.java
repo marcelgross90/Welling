@@ -6,11 +6,9 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.metaModel.view.cardViews.AppDetailCardView;
-import de.fhws.applab.gemara.welling.metaModel.view.cardViews.visitor.TitleVisitorImpl;
-import de.fhws.applab.gemara.welling.metaModel.view.viewObject.ViewObject;
+import de.fhws.applab.gemara.welling.visitors.cardView.TitleVisitor;
 
 import javax.lang.model.element.Modifier;
 
@@ -20,7 +18,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class DetailActivityGenerator extends AbstractModelClass {
 
-	private final AppResource appResource;
+	private final DetailView detailView;
 
 	private final ClassName resourceDetailActivityClassName;
 	private final ClassName specificResourceDetailViewClassName;
@@ -32,17 +30,18 @@ public class DetailActivityGenerator extends AbstractModelClass {
 	private final ClassName networkResponseClassName;
 	private final ClassName linkClassName;
 
-	public DetailActivityGenerator(String packageName, AppResource appResource, String appName) {
-		super(packageName, appResource.getResourceName() + "DetailActivity");
+	public DetailActivityGenerator(String packageName, DetailView detailView, String appName) {
+		super(packageName, detailView.getResourceName() + "DetailActivity");
 
-		this.appResource = appResource;
+		this.detailView = detailView;
 
 		this.resourceDetailActivityClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.activity", "ResourceDetailActivity");
-		this.specificResourceDetailViewClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.customView", appResource.getResourceName() + "DetailView");
+		this.specificResourceDetailViewClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.customView", detailView.getResourceName() + "DetailView");
 		this.mainActivityClassName = ClassName.get(packageName, "MainActivity");
 		this.rClassName = ClassName.get(packageName, "R");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
-		this.specificResourceClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.model", appResource.getResourceName());
+		this.specificResourceClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.model",
+				detailView.getResourceName());
 		this.networkCallbackClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkCallback");
 		this.networkResponseClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkResponse");
 		this.linkClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.model", "Link");
@@ -82,7 +81,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(int.class)
-				.addStatement("return $T.string.$N", rClassName, appResource.getResourceName().toLowerCase() + "_delete_error")
+				.addStatement("return $T.string.$N", rClassName, detailView.getResourceName().toLowerCase() + "_delete_error")
 				.build();
 	}
 
@@ -91,7 +90,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(int.class)
-				.addStatement("return $T.layout.$N", rClassName, "activity_" + appResource.getResourceName().toLowerCase() + "_detail")
+				.addStatement("return $T.layout.$N", rClassName, "activity_" + detailView.getResourceName().toLowerCase() + "_detail")
 				.build();
 	}
 
@@ -136,16 +135,16 @@ public class DetailActivityGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getPrepareBundle() {
-		AppDetailCardView appDetailCardView = appResource.getAppDetailCardView();
-		ViewObject title = appDetailCardView.getTitle();
-		TitleVisitorImpl visitor = new TitleVisitorImpl();
+		TitleVisitor titleVisitor = new TitleVisitor(detailView.getResourceName());
+		detailView.getTitle().accept(titleVisitor);
+
 		return MethodSpec.methodBuilder("prepareBundle")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(getBundleClassName())
-				.addStatement("$T $N = ($T) $N", specificResourceClassName, appResource.getResourceName().toLowerCase(), specificResourceClassName, "currentResource")
+				.addStatement("$T $N = ($T) $N", specificResourceClassName, detailView.getResourceName().toLowerCase(), specificResourceClassName, "currentResource")
 				.addStatement("$T $N = new $T()", getBundleClassName(), "bundle", getBundleClassName())
-				.addStatement("$N.putString($S, $N)", "bundle", "name", title.getTitleForMethodSpec(visitor, appResource))
+				.addStatement("$N.putString($S, $N)", "bundle", "name", titleVisitor.getTitle())
 				.addStatement("return $N", "bundle")
 				.build();
 
@@ -186,8 +185,8 @@ public class DetailActivityGenerator extends AbstractModelClass {
 								.addParameter(response)
 						.addStatement("$N = $N.deserialize($N.getResponseReader(), $T.class)", "currentResource", "genson", response, specificResourceClassName)
 						.addStatement("$T $N = $N.getLinkHeader()", stringLinkMap, "linkHeader", response)
-						.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "deleteLink", "linkHeader", thisClassName, rClassName, "rel_type_delete_" + appResource.getResourceName().toLowerCase())
-						.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "updateLink", "linkHeader", thisClassName, rClassName, "rel_type_update_" + appResource.getResourceName().toLowerCase())
+						.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "deleteLink", "linkHeader", thisClassName, rClassName, "rel_type_delete_" + detailView.getResourceName().toLowerCase())
+						.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "updateLink", "linkHeader", thisClassName, rClassName, "rel_type_update_" + detailView.getResourceName().toLowerCase())
 						.addStatement("runOnUiThread($L)", runnable)
 						.build())
 				.build();
@@ -204,11 +203,11 @@ public class DetailActivityGenerator extends AbstractModelClass {
 		return MethodSpec.methodBuilder("setUp")
 				.addModifiers(Modifier.PRIVATE)
 				.returns(void.class)
-				.addParameter(specificResourceClassName, appResource.getResourceName().toLowerCase())
+				.addParameter(specificResourceClassName, detailView.getResourceName().toLowerCase())
 				.addStatement("invalidateOptionsMenu()")
 						//todo add clickListener
 						//.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getAttributeName().toLowerCase(), "this")
-				.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getResourceName().toLowerCase(), "null")
+				.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", detailView.getResourceName().toLowerCase(), "null")
 				.build();
 	}
 

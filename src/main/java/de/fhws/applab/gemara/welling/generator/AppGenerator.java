@@ -21,7 +21,6 @@ import de.fhws.applab.gemara.welling.metaModel.AppResource;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AppGenerator {
 
@@ -78,7 +77,8 @@ public class AppGenerator {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
 		for (AppResource appResource : model.getAppResources()) {
-			classes.add(new ListFragmentGenerator(model.getPackageName(), appResource, model.getApplicationName()));
+			//todo change detailView
+			classes.add(new ListFragmentGenerator(model.getPackageName(), de.fhws.applab.gemara.welling.test.modelGenerator.DetailViewGenerator.lecturer(), model.getApplicationName()));
 			classes.add(new NewSpecificResourceFragment(model.getPackageName(), appResource, model.getApplicationName()));
 		}
 
@@ -89,7 +89,8 @@ public class AppGenerator {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
 		classes.add(new MainActivity(model.getPackageName(), model.getAppResources().get(0), model.getApplicationName()));
-		classes.add(new DetailActivityGenerator(model.getPackageName(), model.getAppResources().get(0), model.getApplicationName()));
+		//todo change detailview
+		classes.add(new DetailActivityGenerator(model.getPackageName(), de.fhws.applab.gemara.welling.test.modelGenerator.DetailViewGenerator.lecturer(), model.getApplicationName()));
 		return classes;
 	}
 
