@@ -1,6 +1,7 @@
 package de.fhws.applab.gemara.welling.test;
 
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
+
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.Attribute;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.LinkAttribute;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute;

@@ -18,12 +18,10 @@ public abstract class CustomView extends AbstractModelClass {
 
 	protected final ParameterSpec defStyleAttr = ParameterSpec.builder(int.class, "defStyleAttr").build();
 	protected final ClassName superClass;
-	protected final ClassName rClass;
 
 	public CustomView(String packageName, String className, ClassName superClass) {
 		super(packageName, className);
 		this.superClass = superClass;
-		this.rClass = ClassName.get(packageName, "R");
 	}
 
 	protected MethodSpec getConstructorOne() {

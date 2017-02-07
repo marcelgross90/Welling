@@ -1,5 +1,6 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.java.customView;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 
@@ -13,8 +14,11 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class AttributeView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 
+	private final ClassName rClassName;
+
 	public AttributeView(String packageName) {
 		super(packageName + ".generic.customView", "AttributeView", getTextViewClassName());
+		this.rClassName = ClassName.get(packageName, "R");
 	}
 
 	@Override
@@ -36,7 +40,7 @@ public class AttributeView extends de.fhws.applab.gemara.welling.application.lib
 	public MethodSpec getInitMethod() {
 		return getInitMethodSignature()
 				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.AttributeInput, $N, 0)",
-						getTypedArrayClassName(), getContextParam(), rClass, defStyleAttr).addStatement("typedArray.recycle()").build();
+						getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr).addStatement("typedArray.recycle()").build();
 	}
 
 	@Override

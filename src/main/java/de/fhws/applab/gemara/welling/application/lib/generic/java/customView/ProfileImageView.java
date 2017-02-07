@@ -25,6 +25,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 public class ProfileImageView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 
 	private final ClassName builderClassName;
+	private final ClassName rClassName;
 	private final FieldSpec context = FieldSpec.builder(getContextClass(), "context", Modifier.PRIVATE, Modifier.FINAL).build();
 
 	private final ParameterSpec profileImage;
@@ -32,6 +33,7 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 	public ProfileImageView(String packageName) {
 		super(packageName + ".generic.customView", "ProfileImageView", getImageViewClassName());
 		ClassName linkClassName = ClassName.get(packageName + ".generic.model", "Link");
+		this.rClassName = ClassName.get(packageName, "R");
 		this.builderClassName = ClassName.get(packageName + ".generic.model.Link", "Builder");
 		this.profileImage = ParameterSpec.builder(linkClassName, "profileImage").build();
 	}
@@ -57,7 +59,7 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 	public MethodSpec getInitMethod() {
 		return getInitMethodSignature()
 				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.AttributeInput, $N, 0)",
-						getTypedArrayClassName(), getContextParam(), rClass, defStyleAttr).addStatement("typedArray.recycle()").build();
+						getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr).addStatement("typedArray.recycle()").build();
 	}
 
 	@Override
@@ -103,7 +105,7 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 				.addParameter(int.class, "height")
 				.addStatement("$T $N = $N($N)", String.class, "profileImageUrl", getGetValidUrl(), profileImage)
 				.addStatement("$T.with($N).load($N).resizeDimen($N, $N).error($T.drawable.user_picture).into(this)",
-						getPicassoClassName(), getContextParam(), "profileImageUrl", "width", "height", rClass)
+						getPicassoClassName(), getContextParam(), "profileImageUrl", "width", "height", rClassName)
 				.build();
 	}
 
@@ -114,7 +116,7 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 				.addStatement("$T $N = $N($N)", String.class, "profileImageUrl", getGetValidUrl(), profileImage)
 				.addStatement("$T $N = $L", getTargetClassName(), "target", getTargetImpl())
 				.addStatement("$T.with($N).load($N).error($T.drawable.user_picture).into($N)",
-						getPicassoClassName(), getContextParam(), "profileImageUrl", rClass, "target")
+						getPicassoClassName(), getContextParam(), "profileImageUrl", rClassName, "target")
 				.build();
 
 

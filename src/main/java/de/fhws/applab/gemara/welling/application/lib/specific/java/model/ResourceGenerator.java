@@ -56,12 +56,14 @@ public class ResourceGenerator extends AbstractModelClass {
 
 	private MethodSpec getStandardConstructor() {
 		return MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
 				.addCode("//for Genson\n")
 				.build();
 	}
 
 	private MethodSpec getConstructor() {
 		MethodSpec.Builder constructor = MethodSpec.constructorBuilder();
+		constructor.addModifiers(Modifier.PUBLIC);
 		for (Attribute attribute : this.attributes) {
 			attribute.addParameter(constructor);
 			constructor.addStatement("this.$N = $N", attribute.getName(), attribute.getName());

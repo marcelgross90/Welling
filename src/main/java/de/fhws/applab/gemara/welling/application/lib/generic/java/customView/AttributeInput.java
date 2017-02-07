@@ -20,9 +20,11 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 public class AttributeInput extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 
 	private final FieldSpec attribute = FieldSpec.builder(getEditTextClassName(), "attribute", Modifier.PRIVATE).build();
+	private final ClassName rClassName;
 
 	public AttributeInput(String packageName) {
 		super(packageName + ".generic.customView", "AttributeInput", getTextInputLayoutClassName());
+		rClassName = ClassName.get(packageName, "R");
 	}
 
 	@Override
@@ -47,14 +49,14 @@ public class AttributeInput extends de.fhws.applab.gemara.welling.application.li
 		return getInitMethodSignature()
 				.addStatement("$T inflater = ($T) $N.getSystemService($T.LAYOUT_INFLATER_SERVICE)", getLayoutInflaterClassName(),
 						getLayoutInflaterClassName(), getContextParam(), getContextClass())
-				.addStatement("this.addView(inflater.inflate($T.layout.textinput_attribute, this, false))", rClass)
+				.addStatement("this.addView(inflater.inflate($T.layout.textinput_attribute, this, false))", rClassName)
 				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.AttributeInput, $N, 0)",
-						getTypedArrayClassName(), getContextParam(), rClass, defStyleAttr)
+						getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr)
 				.beginControlFlow("try")
-				.addStatement("this.$N = ($T) findViewById($T.id.attribute_et)", attribute, getEditTextClassName(), rClass)
-				.addStatement("this.$N.setHint(typedArray.getResourceId($T.styleable.AttributeInput_hintText, 0))", attribute, rClass)
+				.addStatement("this.$N = ($T) findViewById($T.id.attribute_et)", attribute, getEditTextClassName(), rClassName)
+				.addStatement("this.$N.setHint(typedArray.getResourceId($T.styleable.AttributeInput_hintText, 0))", attribute, rClassName)
 				.addStatement("this.$N.setInputType($N(typedArray.getString($T.styleable.AttributeInput_inputType)))", attribute,
-						getParseTextToInputType(), rClass).endControlFlow().beginControlFlow("finally").addStatement("typedArray.recycle()").endControlFlow()
+						getParseTextToInputType(), rClassName).endControlFlow().beginControlFlow("finally").addStatement("typedArray.recycle()").endControlFlow()
 				.build();
 	}
 
@@ -80,12 +82,12 @@ public class AttributeInput extends de.fhws.applab.gemara.welling.application.li
 
 	private MethodSpec getSetText() {
 		ParameterSpec text = ParameterSpec.builder(String.class, "text").build();
-		return MethodSpec.methodBuilder("setText").addModifiers(Modifier.PRIVATE).returns(void.class).addParameter(text)
+		return MethodSpec.methodBuilder("setText").addModifiers(Modifier.PUBLIC).returns(void.class).addParameter(text)
 				.addStatement("this.$N.setText($N)", attribute, text).build();
 	}
 
 	private MethodSpec getGetText() {
-		return MethodSpec.methodBuilder("getText").addModifiers(Modifier.PRIVATE).returns(String.class)
+		return MethodSpec.methodBuilder("getText").addModifiers(Modifier.PUBLIC).returns(String.class)
 				.addStatement("return this.$N.getText().toString().trim()", attribute).build();
 	}
 

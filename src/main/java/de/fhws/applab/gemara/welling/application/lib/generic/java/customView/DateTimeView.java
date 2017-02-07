@@ -18,8 +18,11 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 
+	private final ClassName rClassName;
+
 	public DateTimeView(String packageName) {
 		super(packageName + ".generic.customView", "DateTimeView", getTextViewClassName());
+		this.rClassName = ClassName.get(packageName, "R");
 	}
 
 	@Override
@@ -42,7 +45,7 @@ public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.
 		ClassName calendar = ClassName.get(Calendar.class);
 		return getInitMethodSignature()
 				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.AttributeInput, $N, 0)",
-				getTypedArrayClassName(), getContextParam(), rClass, defStyleAttr)
+				getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr)
 				.beginControlFlow("try")
 				.addStatement("$T $N = $T.getInstance()", calendar, "calendar", calendar)
 				.addStatement("$T $N = $N.get($T.DAY_OF_MONTH) + \".\" + $N.get($T.MONTH) + \".\" + $N.get($T.YEAR) + \" \" + $N.get($T.HOUR_OF_DAY) + \":\" + $N.get($T.MINUTE)",

@@ -22,6 +22,7 @@ public class InputViewsGenerator extends CustomView {
 	private final AppInputView appInputView;
 	private final AppResource appResource;
 
+	private final ClassName rClassName;
 	private final ClassName attributeInputClassName;
 	private final ClassName resourceClassName;
 	private final ClassName specificResourceClassName;
@@ -34,6 +35,7 @@ public class InputViewsGenerator extends CustomView {
 		this.appInputView = appResource.getInputView();
 		this.appResource = appResource;
 
+		this.rClassName = ClassName.get(packageName, "R");
 		this.attributeInputClassName = ClassName.get(packageName + ".generic.customView", "AttributeInput");
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
 		this.linkClassName = ClassName.get(packageName + ".generic.model", "Link");
@@ -146,8 +148,8 @@ public class InputViewsGenerator extends CustomView {
 			String stringName = singleViewObject.getViewAttribute().getLabel().toLowerCase();
 			String viewName = singleViewObject.getViewName();
 			builder.addStatement("$T $N = $N.getText()", String.class, stringName + "String", viewName);
-			builder.beginControlFlow("if ($N.isEmpty())", stringName);
-			builder.addStatement("$N.setError($N.getString($T.string.$N))", viewName, "context", rClass, stringName + "_missing");
+			builder.beginControlFlow("if ($N.isEmpty())", stringName + "String");
+			builder.addStatement("$N.setError($N.getString($T.string.$N))", viewName, "context", rClassName, stringName + "_missing");
 			builder.addStatement("$N = $N", "error", "true");
 			builder.endControlFlow();
 		}
@@ -173,14 +175,14 @@ public class InputViewsGenerator extends CustomView {
 	}
 
 	private MethodSpec getInitializeViews() {
-		MethodSpec.Builder builder = MethodSpec.methodBuilder("initializeViews");
+		MethodSpec.Builder builder = MethodSpec.methodBuilder("initializeView");
 		builder.addModifiers(Modifier.PUBLIC);
 		builder.addAnnotation(Override.class);
 		builder.returns(void.class);
 
 		for (SingleViewObject singleViewObject : appInputView.getViewAttributes()) {
 			String id = Character.toLowerCase(singleViewObject.getViewAttribute().getLabel().charAt(0)) + singleViewObject.getViewAttribute().getAttributeName().substring(1);
-			builder.addStatement("$N = ($T) findViewById($T.id.$N)", singleViewObject.getViewName(), attributeInputClassName, rClass, id);
+			builder.addStatement("$N = ($T) findViewById($T.id.$N)", singleViewObject.getViewName(), attributeInputClassName, rClassName, id);
 		}
 
 		return builder.build();
@@ -191,13 +193,13 @@ public class InputViewsGenerator extends CustomView {
 				.addModifiers(Modifier.PROTECTED)
 				.addAnnotation(Override.class)
 				.returns(int.class)
-				.addStatement("return $T.layout.$N", rClass, "view_" + appResource.getResourceName().toLowerCase() + "_input")
+				.addStatement("return $T.layout.$N", rClassName, "view_" + appResource.getResourceName().toLowerCase() + "_input")
 				.build();
 	}
 
 	private MethodSpec getGetStyleable() {
 		return MethodSpec.methodBuilder("getStyleable").addModifiers(Modifier.PROTECTED).addAnnotation(Override.class).returns(int[].class)
-				.addStatement("return $T.styleable.$N", rClass, appResource.getResourceName() + "InputView")
+				.addStatement("return $T.styleable.$N", rClassName, appResource.getResourceName() + "InputView")
 				.build();
 	}
 }
