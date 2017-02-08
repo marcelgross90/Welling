@@ -11,7 +11,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.Car
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardViewGenerator {
+public class CardViewModelGenerator {
 
 	public static CardView lecturer() {
 		List<ResourceViewAttribute> resourceViewAttributes = new ArrayList<>();

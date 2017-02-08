@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.visitors.cardView;
+package de.fhws.applab.gemara.welling.visitors;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;

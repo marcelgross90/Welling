@@ -5,30 +5,32 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.resources.SingleResource;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
+import de.fhws.applab.gemara.welling.visitors.AttributeVisitor;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ResourceGenerator extends AbstractModelClass {
 
+	private final String resourceName;
 	private final ClassName resourceClassName;
 	private final ClassName specificResourceClassName;
-	private final AppResource appResource;
 
 	private final List<Attribute> attributes = new ArrayList<>();
 
-	public ResourceGenerator(String packageName, AppResource appResource) {
-		super(packageName + ".specific.model", appResource.getResourceName());
-		this.appResource = appResource;
+	public ResourceGenerator(String packageName, SingleResource singleResource) {
+		super(packageName + ".specific.model", singleResource.getResourceName());
+		this.resourceName = singleResource.getResourceName();
 		this.specificResourceClassName = ClassName.get(this.packageName, this.className);
 
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
 
-		this.attributes.addAll(appResource.getAttributes());
+		this.attributes.addAll(transformAttributes(singleResource.getAllAttributes()));
 	}
 
 	@Override
@@ -42,6 +44,7 @@ public class ResourceGenerator extends AbstractModelClass {
 		for (Attribute attribute : this.attributes) {
 			type.addMethods(attribute.createGetterSetter());
 		}
+
 		type.addMethod(getEquals());
 		type.addMethod(getHashCode());
 
@@ -74,7 +77,7 @@ public class ResourceGenerator extends AbstractModelClass {
 
 	private MethodSpec getEquals() {
 		ParameterSpec o = ParameterSpec.builder(Object.class, "o").build();
-		String resourceName = appResource.getResourceName().toLowerCase();
+		String resourceName = this.resourceName.toLowerCase();
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("equals");
 		builder.addAnnotation(Override.class);
 		builder.addModifiers(Modifier.PUBLIC);
@@ -132,5 +135,16 @@ public class ResourceGenerator extends AbstractModelClass {
 		}
 		builder.addStatement("return $N", "result");
 		return builder.build();
+	}
+
+	private List<Attribute> transformAttributes(Collection<de.fhws.applab.gemara.enfield.metamodel.attributes.Attribute> enfieldAttributes) {
+		List<Attribute> attributes = new ArrayList<>();
+		AttributeVisitor visitor = new AttributeVisitor(packageName);
+		for (de.fhws.applab.gemara.enfield.metamodel.attributes.Attribute enfieldAttribute : enfieldAttributes) {
+			enfieldAttribute.generate(visitor);
+			attributes.add(visitor.getAttribute());
+		}
+
+		return attributes;
 	}
 }

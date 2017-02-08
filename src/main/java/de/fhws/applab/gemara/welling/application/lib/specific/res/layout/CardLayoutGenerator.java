@@ -3,7 +3,7 @@ package de.fhws.applab.gemara.welling.application.lib.specific.res.layout;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
-import de.fhws.applab.gemara.welling.visitors.cardView.CardAttributeVisitor;
+import de.fhws.applab.gemara.welling.visitors.CardAttributeVisitor;
 
 import java.util.ArrayList;
 import java.util.List;

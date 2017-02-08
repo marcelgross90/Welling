@@ -6,9 +6,11 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
-import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.visitors.cardView.TitleVisitor;
+import de.fhws.applab.gemara.welling.visitors.ContainsImageVisitor;
+import de.fhws.applab.gemara.welling.visitors.TitleVisitor;
 
 import javax.lang.model.element.Modifier;
 
@@ -21,7 +23,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 public class ListFragmentGenerator extends AbstractModelClass {
 
 	private final String resourceName;
-	private final DetailView detailView;
+	private final CardView cardView;
 
 	private final ClassName rClassName;
 	private final ClassName resourceListAdapterClassName;
@@ -43,10 +45,10 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	private final ParameterizedTypeName resourceList;
 	private final ParameterizedTypeName linkMap;
 
-	public ListFragmentGenerator(String packageName, DetailView detailView, String appName) {
-		super(packageName + ".fragment", detailView.getResourceName() + "ListFragment");
-		this.resourceName = detailView.getResourceName();
-		this.detailView = detailView;
+	public ListFragmentGenerator(String packageName, CardView cardView, String appName) {
+		super(packageName + ".fragment", cardView.getResourceName() + "ListFragment");
+		this.resourceName = cardView.getResourceName();
+		this.cardView = cardView;
 
 		this.rClassName = ClassName.get(packageName, "R");
 		this.resourceListAdapterClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.adapter", "ResourceListAdapter");
@@ -86,8 +88,8 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getOnResourceClickWithView() {
-		TitleVisitor titleVisitor = new TitleVisitor(detailView.getResourceName());
-		detailView.getTitle().accept(titleVisitor);
+		TitleVisitor titleVisitor = new TitleVisitor(cardView.getResourceName());
+		cardView.getTitle().accept(titleVisitor);
 
 		MethodSpec.Builder method = MethodSpec.methodBuilder("onResourceClickWithView");
 		method.addModifiers(Modifier.PUBLIC);
@@ -95,7 +97,16 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		method.addAnnotation(Override.class);
 		method.addParameter(resourceClassName, "resource");
 		method.addParameter(getViewClassName(), "view");
-		if (detailView.getImage() == null) {
+		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		boolean containsImage = false;
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(visitor);
+			containsImage = visitor.isContainsImage();
+			if (containsImage) {
+				break;
+			}
+		}
+		if (!containsImage) {
 			method.addCode("//not needed here\n");
 		} else {
 			method.addStatement("$T $N = ($T) $N", specificResourceClassName, resourceName.toLowerCase(), specificResourceClassName, "resource");
@@ -124,7 +135,16 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		method.returns(void.class);
 		method.addAnnotation(Override.class);
 		method.addParameter(resourceClassName, "resource");
-		if (detailView.getImage() != null) {
+		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		boolean containsImage = false;
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(visitor);
+			containsImage = visitor.isContainsImage();
+			if (containsImage) {
+				break;
+			}
+		}
+		if (!containsImage) {
 			method.addCode("//not needed here\n");
 		} else {
 			//todo

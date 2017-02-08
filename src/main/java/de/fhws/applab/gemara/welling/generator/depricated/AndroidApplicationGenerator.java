@@ -1,8 +1,7 @@
-package de.fhws.applab.gemara.welling;
+package de.fhws.applab.gemara.welling.generator.depricated;
 
-import de.fhws.applab.gemara.welling.generator.AppGenerator;
-import de.fhws.applab.gemara.welling.generator.LibGenerator;
-import de.fhws.applab.gemara.welling.generator.ProjectGenerator;
+import de.fhws.applab.gemara.welling.generator.depricated.AppGenerator;
+import de.fhws.applab.gemara.welling.generator.depricated.LibGenerator;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
@@ -16,7 +15,6 @@ public class AndroidApplicationGenerator {
 	private final AndroidMetaModel model;
 	
 	private final String startDir = "gemara/android/src-gen/generated/";
-	private final ProjectGenerator projectGenerator;
 	private final LibGenerator libGenerator;
 	private final AppGenerator appGenerator;
 
@@ -24,19 +22,14 @@ public class AndroidApplicationGenerator {
 		this.model = model;
 
 		this.libGenerator = new LibGenerator(model);
-		this.projectGenerator = new ProjectGenerator(model.getApplicationName().toLowerCase() + "_lib");
 		this.appGenerator = new AppGenerator(model);
 	}
 
 	public void generate() {
-		generateProjectFiles();
 		generateApp();
 		generateLib();
 	}
 
-	private void generateProjectFiles() {
-		writeGeneratedFiles(projectGenerator.getGradleClasses());
-	}
 
 	private void generateApp() {
 		writeJavaAppClasses();
@@ -47,12 +40,8 @@ public class AndroidApplicationGenerator {
 	private void generateLib() {
 		writeJavaLibClasses();
 		writeXMLLibClasses();
-		writeGradleLibClasses();
 	}
 
-	private void writeGradleLibClasses() {
-		writeGeneratedFiles(libGenerator.getGradleClasses());
-	}
 
 	private void writeXMLLibClasses() {
 		writeGeneratedFiles(libGenerator.getXMLClasses());

@@ -4,8 +4,8 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
 
 import javax.lang.model.element.Modifier;
 
@@ -13,7 +13,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class NewSpecificResourceFragment extends AbstractModelClass {
 
-	private final AppResource appResource;
+	private final String resourceName;
 
 	private final ClassName rClassName;
 	private final ClassName specificResourceInputView;
@@ -22,16 +22,16 @@ public class NewSpecificResourceFragment extends AbstractModelClass {
 	private final ClassName detailActivityClassName;
 	private final ClassName newResourceFragmentClassName;
 
-	public NewSpecificResourceFragment(String packageName, AppResource appResource, String appName) {
-		super(packageName + ".fragment", "New" + appResource.getResourceName() + "Fragment");
-		this.appResource = appResource;
+	public NewSpecificResourceFragment(String packageName, InputView inputView, String appName) {
+		super(packageName + ".fragment", "New" + inputView.getResourceName() + "Fragment");
+		this.resourceName = inputView.getResourceName();
 
 		this.rClassName = ClassName.get(packageName, "R");
-		this.specificResourceInputView = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.customView", appResource.getResourceName() + "InputView");
+		this.specificResourceInputView = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.customView", resourceName + "InputView");
 		this.networkCallBackClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkCallback");
 		this.networkResponseClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkResponse");
 		this.newResourceFragmentClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.fragment", "NewSpecificResourceFragment");
-		this.detailActivityClassName = ClassName.get(packageName, appResource.getResourceName() + "DetailActivity");
+		this.detailActivityClassName = ClassName.get(packageName, resourceName + "DetailActivity");
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class NewSpecificResourceFragment extends AbstractModelClass {
 				.addModifiers(Modifier.PROTECTED)
 				.addAnnotation(Override.class)
 				.returns(int.class)
-				.addStatement("return $T.layout.$N", rClassName, "fragment_new_" + appResource.getResourceName().toLowerCase())
+				.addStatement("return $T.layout.$N", rClassName, "fragment_new_" + resourceName.toLowerCase())
 				.build();
 	}
 
@@ -62,7 +62,7 @@ public class NewSpecificResourceFragment extends AbstractModelClass {
 				.addModifiers(Modifier.PROTECTED)
 				.returns(void.class)
 				.addParameter(getViewClassName(), "view")
-				.addStatement("$N = ($T) $N.findViewById($T.id.$N)", "inputView", specificResourceInputView, "view", rClassName, appResource.getResourceName().toLowerCase() + "_input")
+				.addStatement("$N = ($T) $N.findViewById($T.id.$N)", "inputView", specificResourceInputView, "view", rClassName, resourceName.toLowerCase() + "_input")
 				.build();
 	}
 

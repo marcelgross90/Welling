@@ -8,10 +8,10 @@ import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.visitors.cardView.FieldVisitor;
-import de.fhws.applab.gemara.welling.visitors.cardView.HideViewsVisitor;
-import de.fhws.applab.gemara.welling.visitors.cardView.InitializeViewVisitor;
-import de.fhws.applab.gemara.welling.visitors.cardView.SetTextVisitor;
+import de.fhws.applab.gemara.welling.visitors.FieldVisitor;
+import de.fhws.applab.gemara.welling.visitors.HideViewsVisitor;
+import de.fhws.applab.gemara.welling.visitors.InitializeViewVisitor;
+import de.fhws.applab.gemara.welling.visitors.SetTextVisitor;
 
 import javax.lang.model.element.Modifier;
 

@@ -8,7 +8,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputViewExcept
 import java.util.ArrayList;
 import java.util.List;
 
-public class InputViewGenerator {
+public class InputViewModelGenerator {
 
 	public static InputView lecturer() {
 

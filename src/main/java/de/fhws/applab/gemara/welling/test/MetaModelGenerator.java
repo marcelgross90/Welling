@@ -6,11 +6,8 @@ import de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleA
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
 import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
 import de.fhws.applab.gemara.welling.metaModel.AppColor;
-import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
 import de.fhws.applab.gemara.welling.metaModel.AppRestAPI;
 import de.fhws.applab.gemara.welling.metaModel.AppString;
-import de.fhws.applab.gemara.welling.metaModel.AppStyle;
 import de.fhws.applab.gemara.welling.metaModel.InputException;
 
 import javax.lang.model.element.Modifier;
@@ -34,20 +31,12 @@ public class MetaModelGenerator {
 
 		model.setAppColor(new AppColor("#3F51B5", "#303F9F", "#FF4081", "#fff", "#8080FF"));
 		model.setAppRestAPI(appRestAPI);
-		model.setLibStyles(generateLibStyle());
-		model.setAppStyles(generateAppStyle());
 		model.setLibStrings(getLibStrings());
 		model.setAppStrings(getAppStrings());
-		model.setAppDeclareStyleable(generateAppDeclareStyleable());
-		model.setLibManifest(generateLibManifest());
 		model.setAppManifest(generateAppManifest());
-		model.addAppResource(getLecturerResource());
 		return model;
 	}
 
-	private static AppAndroidManifest generateLibManifest() {
-		return new AppAndroidManifest(packageNameLib);
-	}
 
 	private static AppAndroidManifest generateAppManifest() {
 		AppAndroidManifest manifest = new AppAndroidManifest(packageName);
@@ -186,95 +175,8 @@ public class MetaModelGenerator {
 		return new AppString(stringMap);
 	}
 
-	private static AppStyle generateLibStyle() {
-		AppStyle.Style appTheme = new AppStyle.Style("AppTheme");
-		appTheme.setParent("Theme.AppCompat.Light.NoActionBar");
-		appTheme.setItem("colorPrimary", "@color/colorPrimary");
-		appTheme.setItem("colorPrimaryDark", "@color/colorPrimaryDark");
-		appTheme.setItem("colorAccent", "@color/colorAccent");
 
-		AppStyle.Style toolbarTheme = new AppStyle.Style("ToolbarTheme");
-		toolbarTheme.setParent("ThemeOverlay.AppCompat.Dark.ActionBar");
-		toolbarTheme.setItem("android:textColorPrimary", "@color/toolbar_text");
 
-		AppStyle.Style cardView = new AppStyle.Style("cardView");
-		cardView.setItem("android:layout_width", "match_parent");
-		cardView.setItem("android:layout_height", "wrap_content");
-		cardView.setItem("cardCornerRadius", "1dp");
-		cardView.setItem("android:layout_marginBottom", "10dp");
-		cardView.setItem("cardElevation", "5dp");
-
-		AppStyle.Style detailCardView = new AppStyle.Style("detailCardView");
-		cardView.setItem("android:layout_width", "match_parent");
-		cardView.setItem("android:layout_height", "wrap_content");
-		cardView.setItem("cardCornerRadius", "1dp");
-		cardView.setItem("cardElevation", "5dp");
-
-		AppStyle.Style appBarOverlay = new AppStyle.Style("AppTheme.AppBarOverlay");
-		appBarOverlay.setParent("ThemeOverlay.AppCompat.Dark.ActionBar");
-
-		AppStyle.Style popupOverlay = new AppStyle.Style("AppTheme.PopupOverlay");
-		popupOverlay.setParent("ThemeOverlay.AppCompat.Light");
-
-		List<AppStyle.Style> styles = new ArrayList<>();
-		styles.add(appTheme);
-		styles.add(toolbarTheme);
-		styles.add(cardView);
-		styles.add(detailCardView);
-		styles.add(appBarOverlay);
-		styles.add(popupOverlay);
-
-		return new AppStyle(styles);
-	}
-
-	private static AppStyle generateAppStyle() {
-		AppStyle.Style appTheme = new AppStyle.Style("AppTheme");
-		appTheme.setParent("Theme.AppCompat.Light.NoActionBar");
-		appTheme.setItem("colorPrimary", "@color/colorPrimary");
-		appTheme.setItem("colorPrimaryDark", "@color/colorPrimaryDark");
-		appTheme.setItem("colorAccent", "@color/colorAccent");
-
-		AppStyle.Style appBarOverlay = new AppStyle.Style("AppTheme.AppBarOverlay");
-		appBarOverlay.setParent("ThemeOverlay.AppCompat.Dark.ActionBar");
-
-		AppStyle.Style popupOverlay = new AppStyle.Style("AppTheme.PopupOverlay");
-		popupOverlay.setParent("ThemeOverlay.AppCompat.Light");
-
-		List<AppStyle.Style> styles = new ArrayList<>();
-		styles.add(appTheme);
-
-		styles.add(appBarOverlay);
-		styles.add(popupOverlay);
-
-		return new AppStyle(styles);
-	}
-
-	private static AppDeclareStyleable generateAppDeclareStyleable() {
-		List<AppDeclareStyleable.DeclareStyleable> declareStyleables = new ArrayList<>();
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("AttributeView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("DateTimeView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("ProfileImageView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("LecturerCardView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("ChargeCardView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("ChargeDetailView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("LecturerDetailView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("LecturerDetailCardView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("LecturerInputView"));
-		declareStyleables.add(new AppDeclareStyleable.DeclareStyleable("ChargeInputView"));
-		AppDeclareStyleable.DeclareStyleable attributeInput = new AppDeclareStyleable.DeclareStyleable("AttributeInput");
-		attributeInput.setAttr("hintText", "integer");
-		attributeInput.setAttr("inputType", "string");
-		declareStyleables.add(attributeInput);
-
-		return new AppDeclareStyleable(declareStyleables);
-	}
-
-	private static AppResource getLecturerResource() {
-		AppResource appResource = new AppResource("Lecturer");
-		appResource.setAttributes(getLecturerAttributes());
-
-		return appResource;
-	}
 
 	private static List<Attribute> getLecturerAttributes() {
 		List<Attribute> attributes = new ArrayList<>();

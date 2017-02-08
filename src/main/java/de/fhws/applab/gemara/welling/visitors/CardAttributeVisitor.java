@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.visitors.cardView;
+package de.fhws.applab.gemara.welling.visitors;
 
 import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.DisplayViewAttribute;

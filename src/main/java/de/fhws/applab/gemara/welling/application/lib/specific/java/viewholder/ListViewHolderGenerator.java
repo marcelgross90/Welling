@@ -9,7 +9,7 @@ import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.visitors.cardView.ContainsImageVisitor;
+import de.fhws.applab.gemara.welling.visitors.ContainsImageVisitor;
 
 import javax.lang.model.element.Modifier;
 

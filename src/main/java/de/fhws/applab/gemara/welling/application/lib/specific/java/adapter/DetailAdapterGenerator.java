@@ -6,8 +6,8 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
 
 import javax.lang.model.element.Modifier;
 
@@ -15,7 +15,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class DetailAdapterGenerator extends AbstractModelClass {
 
-	private final AppResource resource;
+	private final DetailView detailView;
 
 	private final ClassName specificResourceClassName;
 	private final ClassName viewHolderClassName;
@@ -27,18 +27,19 @@ public class DetailAdapterGenerator extends AbstractModelClass {
 	private final FieldSpec listener;
 	private final FieldSpec specificResource;
 
-	public DetailAdapterGenerator(String packageName, AppResource appResource) {
-		super(packageName + ".specific.adapter", appResource.getResourceName() + "DetailAdapter");
-		this.resource = appResource;
+	public DetailAdapterGenerator(String packageName, DetailView detailView) {
+		super(packageName + ".specific.adapter", detailView.getResourceName() + "DetailAdapter");
+		this.detailView = detailView;
 
-		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", appResource.getResourceName());
+		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", detailView.getResourceName());
 		this.viewHolderClassName = getViewHolderClassName();
 		this.viewGroupClassName = getViewGroupClassName();
 		this.rClassName = ClassName.get(packageName, "R");
-		this.specificDetailViewHolderClassName = ClassName.get(packageName + ".specific.viewholder", appResource.getResourceName() + "DetailViewHolder");
+		this.specificDetailViewHolderClassName = ClassName.get(packageName + ".specific.viewholder",
+				detailView.getResourceName() + "DetailViewHolder");
 
 		this.listener = FieldSpec.builder(getViewOnClickListenerClassName(), "listener", Modifier.PRIVATE, Modifier.FINAL).build();
-		this.specificResource = FieldSpec.builder(specificResourceClassName, appResource.getResourceName().toLowerCase(), Modifier.PRIVATE).build();
+		this.specificResource = FieldSpec.builder(specificResourceClassName, detailView.getResourceName().toLowerCase(), Modifier.PRIVATE).build();
 	}
 
 	@Override
@@ -68,8 +69,8 @@ public class DetailAdapterGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getAddResource() {
-		ParameterSpec resourceParam = ParameterSpec.builder(specificResourceClassName, resource.getResourceName().toLowerCase()).build();
-		String methodName = "add" + resource.getResourceName();
+		ParameterSpec resourceParam = ParameterSpec.builder(specificResourceClassName, detailView.getResourceName().toLowerCase()).build();
+		String methodName = "add" + detailView.getResourceName();
 		return MethodSpec.methodBuilder(methodName)
 				.addModifiers(Modifier.PUBLIC)
 				.returns(void.class)
@@ -88,7 +89,7 @@ public class DetailAdapterGenerator extends AbstractModelClass {
 				.addParameter(int.class, "viewType")
 				.addStatement("$T $N = null", viewHolderClassName, "result")
 				.beginControlFlow("if ($N == 0)", "viewType")
-				.addStatement("$T $N = $T.layout.$N", int.class, "layout", rClassName, "card_" + resource.getResourceName().toLowerCase() + "_detail")
+				.addStatement("$T $N = $T.layout.$N", int.class, "layout", rClassName, "card_" + detailView.getResourceName().toLowerCase() + "_detail")
 				.addStatement("$T $N = $T.from($N.getContext()).inflate($N, $N, false)", getViewClassName(), "v", getLayoutInflaterClassName(), "parent", "layout", "parent")
 				.addStatement("$N = new $T($N, $N)", "result", specificDetailViewHolderClassName, "v", listener)
 				.endControlFlow()

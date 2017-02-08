@@ -12,7 +12,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.D
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailViewGenerator {
+public class DetailViewModelGenerator {
 
 	public static DetailView lecturer() {
 

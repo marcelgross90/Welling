@@ -1,16 +1,12 @@
-package de.fhws.applab.gemara.welling.generator;
+package de.fhws.applab.gemara.welling.generator.depricated;
 
 import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.InputViewsGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.InputLayoutGenerator;
-import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.ViewResourceDetailActivityGenerator;
-import de.fhws.applab.gemara.welling.application.lib.specific.java.adapter.DetailAdapterGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.DetailCardViewGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.DetailViewGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.viewholder.DetailViewHolderGenerator;
-import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.DetailCardLayoutGenerator;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
-import de.fhws.applab.gemara.welling.application.lib.generic.ManifestGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.activity.AbstractMainActivity;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.activity.ResourceActivity;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.activity.ResourceDetailActivity;
@@ -28,20 +24,8 @@ import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.Detai
 import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.EditResourceFragment;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.NewResourceFragment;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.ResourceListFragment;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.model.Link;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.model.Resource;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.HeaderParser;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.NetworkCallback;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.NetworkClient;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.NetworkRequest;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.NetworkResponse;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.network.OKHttpSingleton;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.util.FragmentHandler;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.util.GensonBuilder;
-import de.fhws.applab.gemara.welling.application.lib.generic.java.util.ScrollListener;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.viewholder.ResourceViewHolder;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.ActivityMain;
-import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.CustomCardViewLayoutGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.FragmentResourceList;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.TextinputAttribute;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.Toolbar;
@@ -54,36 +38,28 @@ import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Dimens;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.RestApi;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Strings;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Styles;
-import de.fhws.applab.gemara.welling.application.lib.specific.java.adapter.ListAdapterGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.ResourceCardViewGenerator;
-import de.fhws.applab.gemara.welling.application.lib.specific.java.model.ResourceGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.viewholder.ListViewHolderGenerator;
-import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.CardLayoutGenerator;
-import de.fhws.applab.gemara.welling.application.gradle.lib.BuildGradleLib;
-import de.fhws.applab.gemara.welling.application.gradle.lib.LibProguardRules;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
-import de.fhws.applab.gemara.welling.test.modelGenerator.CardViewGenerator;
-import de.fhws.applab.gemara.welling.test.modelGenerator.InputViewGenerator;
+import de.fhws.applab.gemara.welling.test.modelGenerator.CardViewModelGenerator;
+import de.fhws.applab.gemara.welling.test.modelGenerator.DetailViewModelGenerator;
+import de.fhws.applab.gemara.welling.test.modelGenerator.InputViewModelGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LibGenerator {
 
 	private final AndroidMetaModel model;
 	private final String baseDir;
-	private final String xmlBaseDir;
 	private final String resDir;
 
 	public LibGenerator(AndroidMetaModel model) {
 		this.model = model;
 		this.baseDir = "generated/" + model.getApplicationName().toLowerCase() + "_lib/";
-		this.xmlBaseDir = baseDir + "src/main/";
+		String xmlBaseDir = baseDir + "src/main/";
 		this.resDir = xmlBaseDir + "res/";
 
-		copyDrawableFolders();
 	}
 
 	public List<AbstractModelClass> getJavaClasses() {
@@ -102,20 +78,11 @@ public class LibGenerator {
 		return classes;
 	}
 
-	public List<GeneratedFile> getGradleClasses() {
-		List<GeneratedFile> classes = new ArrayList<>();
-
-		classes.add(new BuildGradleLib(baseDir));
-		classes.add(new LibProguardRules(baseDir));
-
-		return classes;
-	}
 
 	public List<GeneratedFile> getResClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
 
 		classes.addAll(getLayoutClasses());
-		classes.add(getManifest());
 		classes.addAll(getValuesClasses());
 		classes.addAll(getMenuClasses());
 
@@ -154,7 +121,7 @@ public class LibGenerator {
 	private List<GeneratedFile> getInputViewClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
 
-		classes.add(new InputLayoutGenerator(resDir, model.getPackageNameLib(), InputViewGenerator.lecturer()));
+		classes.add(new InputLayoutGenerator(resDir, model.getPackageNameLib(), InputViewModelGenerator.lecturer()));
 
 		return classes;
 	}
@@ -162,24 +129,25 @@ public class LibGenerator {
 	private List<GeneratedFile> getDetailViewClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
 
-		for (AppResource appResource : model.getAppResources()) {
+		/*for (AppResource appResource : model.getAppResources()) {
 			classes.add(new ViewResourceDetailActivityGenerator(resDir, appResource.getResourceName(), model.getPackageNameLib()));
-		}
+		}*/
 
 		return classes;
 	}
 
 	private List<GeneratedFile> getSpecificCardViewClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
-		for (AppResource appResource : model.getAppResources()) {
+		/*for (AppResource appResource : model.getAppResources()) {
 			String resourceName = appResource.getResourceName();
 			//todo replace cardView
 			classes.add(new CardLayoutGenerator("view_" + resourceName.toLowerCase() + "_card", resDir,
-					CardViewGenerator.lecturer(), model.getPackageNameLib()));
+					CardViewModelGenerator.lecturer(), model.getPackageNameLib()));
 			//todo replace detailView
-			classes.add(new DetailCardLayoutGenerator("view_" + resourceName.toLowerCase() + "_detail_card", resDir, model.getPackageNameLib(), de.fhws.applab.gemara.welling.test.modelGenerator.DetailViewGenerator.lecturer()));
+			classes.add(new DetailCardLayoutGenerator("view_" + resourceName.toLowerCase() + "_detail_card", resDir, model.getPackageNameLib(), DetailViewModelGenerator
+					.lecturer()));
 
-		}
+		}*/
 
 		return classes;
 	}
@@ -187,17 +155,13 @@ public class LibGenerator {
 	private List<GeneratedFile> getCustomCardViewLayoutClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
 
-		for (AppResource appResource : model.getAppResources()) {
+	/*	for (AppResource appResource : model.getAppResources()) {
 			String resourceName = appResource.getResourceName();
 			classes.add(new CustomCardViewLayoutGenerator(resDir, model.getPackageNameLib(), "card_" + resourceName.toLowerCase(), resourceName + "CardView", resourceName.toLowerCase() + "_card"));
 			classes.add(new CustomCardViewLayoutGenerator(resDir, model.getPackageNameLib(), "card_" + resourceName.toLowerCase() + "_detail", resourceName + "DetailCardView", resourceName.toLowerCase() + "_detail_card"));
-		}
+		}*/
 
 		return classes;
-	}
-
-	private GeneratedFile getManifest() {
-		return new ManifestGenerator(xmlBaseDir, model.getLibManifest());
 	}
 
 	private List<GeneratedFile> getValuesClasses() {
@@ -228,9 +192,6 @@ public class LibGenerator {
 		classes.addAll(getGenericAdapter());
 		classes.addAll(getGenericCustomViews());
 		classes.addAll(getGenericFragments());
-		classes.addAll(getGenericModels());
-		classes.addAll(getGenericNetwork());
-		classes.addAll(getGenericUtil());
 		classes.addAll(getGenericViewholder());
 
 		return classes;
@@ -277,35 +238,6 @@ public class LibGenerator {
 		return classes;
 	}
 
-	private List<AbstractModelClass> getGenericModels() {
-		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new Link(model.getPackageNameLib()));
-		classes.add(new Resource(model.getPackageNameLib()));
-
-		return classes;
-	}
-
-	private List<AbstractModelClass> getGenericNetwork() {
-		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new HeaderParser(model.getPackageNameLib()));
-		classes.add(new NetworkCallback(model.getPackageNameLib()));
-		classes.add(new NetworkClient(model.getPackageNameLib()));
-		classes.add(new NetworkRequest(model.getPackageNameLib()));
-		classes.add(new NetworkResponse(model.getPackageNameLib()));
-		classes.add(new OKHttpSingleton(model.getPackageNameLib()));
-
-		return classes;
-	}
-
-	private List<AbstractModelClass> getGenericUtil() {
-		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new FragmentHandler(model.getPackageNameLib()));
-		classes.add(new GensonBuilder(model.getPackageNameLib()));
-		classes.add(new ScrollListener(model.getPackageNameLib()));
-
-		return classes;
-	}
-
 	private List<AbstractModelClass> getGenericViewholder() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 		classes.add(new ResourceViewHolder(model.getPackageNameLib()));
@@ -318,7 +250,6 @@ public class LibGenerator {
 
 		classes.addAll(getSpecificAdapter());
 		classes.addAll(getSpecificCustomViews());
-		classes.addAll(getSpecificModels());
 		classes.addAll(getSpecificViewholder());
 
 		return classes;
@@ -327,48 +258,39 @@ public class LibGenerator {
 	private List<AbstractModelClass> getSpecificAdapter() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
-		for (AppResource appResource : model.getAppResources()) {
+	/*	for (AppResource appResource : model.getAppResources()) {
 			classes.add(new ListAdapterGenerator(model.getPackageNameLib(), appResource.getResourceName()));
-			classes.add(new DetailAdapterGenerator(model.getPackageNameLib(), appResource));
-		}
+			//todo detailview
+			classes.add(new DetailAdapterGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
+		}*/
 
 		return classes;
 	}
 
 	private List<AbstractModelClass> getSpecificCustomViews() {
 		List<AbstractModelClass> classes = new ArrayList<>();
-		for (AppResource appResource : model.getAppResources()) {
 			//todo add right cardView
-			classes.add(new ResourceCardViewGenerator(model.getPackageNameLib(), CardViewGenerator.lecturer()));
-			classes.add(new DetailViewGenerator(model.getPackageNameLib(), de.fhws.applab.gemara.welling.test.modelGenerator.DetailViewGenerator.lecturer()));
-			classes.add(new DetailCardViewGenerator(model.getPackageNameLib(), de.fhws.applab.gemara.welling.test.modelGenerator.DetailViewGenerator.lecturer()));
+			classes.add(new ResourceCardViewGenerator(model.getPackageNameLib(), CardViewModelGenerator.lecturer()));
+			classes.add(new DetailViewGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
+			classes.add(new DetailCardViewGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
 		//todo add inputview instead of appResource
-				classes.add(new InputViewsGenerator(model.getPackageNameLib(), InputViewGenerator.lecturer()));
-		}
+				classes.add(new InputViewsGenerator(model.getPackageNameLib(), InputViewModelGenerator.lecturer()));
 
 		return classes;
 	}
 
-	private List<AbstractModelClass> getSpecificModels() {
-		return model.getAppResources().stream()
-				.map(appResource -> new ResourceGenerator(model.getPackageNameLib(), appResource)).collect(Collectors.toList());
-	}
+
 
 
 	private List<AbstractModelClass> getSpecificViewholder() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
-		for (AppResource appResource : model.getAppResources()) {
 			//todo replace cardview
-			classes.add(new ListViewHolderGenerator(model.getPackageNameLib(), CardViewGenerator.lecturer()));
-			classes.add(new DetailViewHolderGenerator(model.getPackageNameLib(), appResource));
-		}
+			classes.add(new ListViewHolderGenerator(model.getPackageNameLib(), CardViewModelGenerator.lecturer()));
+			classes.add(new DetailViewHolderGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
 
 		return classes;
 	}
 
-	private void copyDrawableFolders() {
-		Copy copy = new Copy();
-		copy.copySubFolderOnly("drawable_lib", model.getApplicationName().toLowerCase() + "_lib/src/main/res");
-	}
+
 }

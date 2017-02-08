@@ -10,10 +10,10 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceView
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.visitors.cardView.FieldVisitor;
-import de.fhws.applab.gemara.welling.visitors.cardView.HideViewsVisitor;
-import de.fhws.applab.gemara.welling.visitors.cardView.InitializeViewVisitor;
-import de.fhws.applab.gemara.welling.visitors.cardView.SetTextVisitor;
+import de.fhws.applab.gemara.welling.visitors.FieldVisitor;
+import de.fhws.applab.gemara.welling.visitors.HideViewsVisitor;
+import de.fhws.applab.gemara.welling.visitors.InitializeViewVisitor;
+import de.fhws.applab.gemara.welling.visitors.SetTextVisitor;
 
 import javax.lang.model.element.Modifier;
 

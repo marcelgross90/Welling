@@ -9,8 +9,15 @@ public class AppDeclareStyleable {
 
 	private final List<DeclareStyleable> declareStyleables = new ArrayList<>();
 
-	public AppDeclareStyleable(List<DeclareStyleable> declareStyleables) {
+	public AppDeclareStyleable() {
+	}
+
+	public void setDeclareStyleables(List<DeclareStyleable> declareStyleables) {
 		this.declareStyleables.addAll(declareStyleables);
+	}
+
+	public void setDeclareStyleables(DeclareStyleable declareStyleable) {
+		this.declareStyleables.add(declareStyleable);
 	}
 
 	public List<DeclareStyleable> getDeclareStyleables() {

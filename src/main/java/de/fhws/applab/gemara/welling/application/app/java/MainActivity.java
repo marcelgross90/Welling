@@ -5,7 +5,6 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppResource;
 
 import javax.lang.model.element.Modifier;
 
@@ -13,19 +12,19 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class MainActivity extends AbstractModelClass {
 
-	private final AppResource startResource;
+	private final String resourceName;
 	private final ClassName rClassName;
 	private final ClassName abstractMainActivityClassName;
 	private final ClassName resourceListFragmentClassName;
 
 
-	public MainActivity(String packageName, AppResource startResource, String appName) {
+	public MainActivity(String packageName, String resourceName, String appName) {
 		super(packageName, "MainActivity");
-		this.startResource = startResource;
 
+		this.resourceName = resourceName;
 		this.rClassName = ClassName.get(packageName, "R");
 		this.abstractMainActivityClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.activity", "AbstractMainActivity");
-		this.resourceListFragmentClassName = ClassName.get(packageName + ".fragment", startResource.getResourceName() + "ListFragment");
+		this.resourceListFragmentClassName = ClassName.get(packageName + ".fragment", resourceName + "ListFragment");
 	}
 
 	@Override
@@ -54,7 +53,7 @@ public class MainActivity extends AbstractModelClass {
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(int.class)
-				.addStatement("return $T.string.$N", rClassName, "load_" + startResource.getResourceName().toLowerCase() + "_error")
+				.addStatement("return $T.string.$N", rClassName, "load_" + resourceName.toLowerCase() + "_error")
 				.build();
 	}
 
