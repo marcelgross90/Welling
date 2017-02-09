@@ -39,7 +39,7 @@ public class AttributeView extends de.fhws.applab.gemara.welling.application.lib
 	@Override
 	public MethodSpec getInitMethod() {
 		return getInitMethodSignature()
-				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.AttributeInput, $N, 0)",
+				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.AttributeView, $N, 0)",
 						getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr).addStatement("typedArray.recycle()").build();
 	}
 

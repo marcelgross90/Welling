@@ -150,26 +150,18 @@ public class EnfieldMetaModel {
 		metaModel.addState( editSingleLecturerPrimaryState.getName( ), editSingleLecturerPrimaryState );
 
 
-		//Lecturer Image
-		final SimpleAttribute profileImage = new SimpleAttribute( "profileImage", SimpleDatatype.IMAGE );
-		profileImage.setBelongsToResource( singleResourceLecturer );
-		singleResourceLecturer.addAttribute( profileImage );
-		singleResourceLecturer.setCaching( new CachingByEtag( ) );
-		//Hier nochmal setModel?
-
-
 		//Lecturer Image Post
 		final PostImageState postProfileImageState = new PostImageState( );
 		postProfileImageState.setName( "PostProfileImage" );
 		postProfileImageState.setResourceType( singleResourceLecturer );
 		postProfileImageState.setModel( metaModel );
-		postProfileImageState.setImageAttribute( profileImage );
+//		postProfileImageState.setImageAttribute( profileImage );
 
 		getSingleLecturerPrimarySingleResource.addTransition( postProfileImageState, "postImage" );
 		postProfileImageState.setName( "PostProfileImage" );
 		postProfileImageState.setResourceType( singleResourceLecturer );
 		postProfileImageState.setModel( metaModel );
-		postProfileImageState.setImageAttribute( profileImage );
+//		postProfileImageState.setImageAttribute( profileImage );
 
 		metaModel.addState( postProfileImageState.getName( ), postProfileImageState );
 
@@ -179,7 +171,7 @@ public class EnfieldMetaModel {
 		getProfileImageState.setName( "GetProfileImage" );
 		getProfileImageState.setResourceType( singleResourceLecturer );
 		getProfileImageState.setModel( metaModel );
-		getProfileImageState.setImageAttribute( profileImage );
+		//getProfileImageState.setImageAttribute( profileImage );
 
 		getSingleLecturerPrimarySingleResource.addTransition( getProfileImageState, "getProfileImage" );
 

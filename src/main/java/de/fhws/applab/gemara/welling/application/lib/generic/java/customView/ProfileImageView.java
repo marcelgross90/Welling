@@ -58,7 +58,7 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 	@Override
 	public MethodSpec getInitMethod() {
 		return getInitMethodSignature()
-				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.AttributeInput, $N, 0)",
+				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.ProfileImageView, $N, 0)",
 						getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr).addStatement("typedArray.recycle()").build();
 	}
 

@@ -32,8 +32,9 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		DisplayViewAttribute displayViewAttribute = singleResourceViewAttribute.getDisplayViewAttribute();
 		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE) {
 			getImageView(displayViewAttribute.getAttributeLabel(), packageName);
+		} else {
+			_visitForCardSubView(displayViewAttribute.getAttributeName());
 		}
-		_visitForCardSubView(displayViewAttribute.getAttributeName());
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package de.fhws.applab.gemara.welling.generator.resourceViewGenerator;
 
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.application.app.java.fragment.ListFragmentGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.adapter.ResourceListAdapter;
@@ -18,6 +19,7 @@ import de.fhws.applab.gemara.welling.generator.FileWriter;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.visitors.LinkDescriptionVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +56,7 @@ public class CardViewGenerator {
 		FileWriter.writeGeneratedFiles(getLibXMLClasses());
 
 		FileWriter.writeJavaFiles(getAppJavaClasses(), appJavaDirectory);
-
+		addCardViewStrings();
 	}
 
 	private List<AbstractModelClass> getLibJavaClasses() {
@@ -153,5 +155,12 @@ public class CardViewGenerator {
 		classes.add(new ListFragmentGenerator(appPackageName, cardView, appName));
 
 		return classes;
+	}
+
+	private void addCardViewStrings() {
+		LinkDescriptionVisitor visitor = new LinkDescriptionVisitor(appDescription);
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(visitor);
+		}
 	}
 }

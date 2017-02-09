@@ -38,13 +38,13 @@ public class CardViewModelGenerator {
 		}
 		resourceViewAttributes.add(name);
 
-		DisplayViewAttribute mailAttribute = new DisplayViewAttribute("mail", ViewAttribute.AttributeType.MAIL);
+		DisplayViewAttribute mailAttribute = new DisplayViewAttribute("email", ViewAttribute.AttributeType.MAIL);
 		mailAttribute.setAttributeLabel("E-Mail");
 		mailAttribute.setClickActionAndroid(true);
 		SingleResourceViewAttribute mail = new SingleResourceViewAttribute(mailAttribute);
 		resourceViewAttributes.add(mail);
 
-		DisplayViewAttribute phoneAttribute = new DisplayViewAttribute("phoneNumber", ViewAttribute.AttributeType.PHONE_NUMBER);
+		DisplayViewAttribute phoneAttribute = new DisplayViewAttribute("phone", ViewAttribute.AttributeType.PHONE_NUMBER);
 		phoneAttribute.setAttributeLabel("Phone Number");
 		phoneAttribute.setClickActionAndroid(true);
 		SingleResourceViewAttribute phone = new SingleResourceViewAttribute(phoneAttribute);
@@ -56,20 +56,20 @@ public class CardViewModelGenerator {
 		SingleResourceViewAttribute address = new SingleResourceViewAttribute(addressAttribute);
 		resourceViewAttributes.add(address);
 
-		DisplayViewAttribute roomAttribute = new DisplayViewAttribute("room", ViewAttribute.AttributeType.TEXT);
+		DisplayViewAttribute roomAttribute = new DisplayViewAttribute("roomNumber", ViewAttribute.AttributeType.TEXT);
 		roomAttribute.setAttributeLabel("Room");
 		roomAttribute.setClickActionAndroid(true);
 		SingleResourceViewAttribute room = new SingleResourceViewAttribute(roomAttribute);
 		resourceViewAttributes.add(room);
 
-		DisplayViewAttribute welearnAttribute = new DisplayViewAttribute("welearn", ViewAttribute.AttributeType.URL);
+		DisplayViewAttribute welearnAttribute = new DisplayViewAttribute("homepage", ViewAttribute.AttributeType.URL);
 		welearnAttribute.setAttributeLabel("welearn");
 		welearnAttribute.setClickActionAndroid(true);
 		welearnAttribute.setLinkDescription("welearn");
 		SingleResourceViewAttribute welearn = new SingleResourceViewAttribute(welearnAttribute);
 		resourceViewAttributes.add(welearn);
 
-		DisplayViewAttribute imageAttribute = new DisplayViewAttribute("profileImage", ViewAttribute.AttributeType.PICTURE);
+		DisplayViewAttribute imageAttribute = new DisplayViewAttribute("profileImageUrl", ViewAttribute.AttributeType.PICTURE);
 		imageAttribute.setAttributeLabel("ProfileImage");
 		imageAttribute.setPicturePosition(DisplayViewAttribute.PicturePosition.LEFT);
 		SingleResourceViewAttribute image = new SingleResourceViewAttribute(imageAttribute);

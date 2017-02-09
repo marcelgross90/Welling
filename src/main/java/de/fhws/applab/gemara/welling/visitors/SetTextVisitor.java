@@ -32,7 +32,7 @@ public class SetTextVisitor implements ResourceViewAttributeVisitor {
 					specificResourceName, GetterSetterGenerator.getGetter(displayViewAttribute.getAttributeName()), rClassName, rClassName);
 		} else if (displayViewAttribute.getAttributeType() == AttributeType.URL) {
 			builder.addStatement("$N.setText(getResources().getText($T.string.$N))", displayViewAttribute.getAttributeName(), rClassName,
-					displayViewAttribute.getLinkDescription());
+					displayViewAttribute.getLinkDescription().toLowerCase());
 		} else {
 			builder.addStatement("$N.setText($N.$L())", displayViewAttribute.getAttributeName(), specificResourceName, GetterSetterGenerator.getGetter(displayViewAttribute.getAttributeName()));
 		}

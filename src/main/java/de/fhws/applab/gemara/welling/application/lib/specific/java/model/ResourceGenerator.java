@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class ResourceGenerator extends AbstractModelClass {
 
+	private final AppDescription appDescription;
 	private final String resourceName;
 	private final ClassName resourceClassName;
 	private final ClassName specificResourceClassName;
@@ -26,12 +27,14 @@ public class ResourceGenerator extends AbstractModelClass {
 
 	public ResourceGenerator(AppDescription appDescription, SingleResource singleResource) {
 		super(appDescription.getLibPackageName() + ".specific.model", singleResource.getResourceName());
+		this.appDescription = appDescription;
 		this.resourceName = singleResource.getResourceName();
 		this.specificResourceClassName = ClassName.get(this.packageName, this.className);
 
 		this.resourceClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Resource");
 
 		this.attributes.addAll(transformAttributes(singleResource.getAllAttributes()));
+		this.appDescription.setLibStrings("load_" + resourceName.toLowerCase() + "_error", "Could not load " + resourceName);
 	}
 
 	@Override
@@ -140,7 +143,7 @@ public class ResourceGenerator extends AbstractModelClass {
 
 	private List<Attribute> transformAttributes(Collection<de.fhws.applab.gemara.enfield.metamodel.attributes.Attribute> enfieldAttributes) {
 		List<Attribute> attributes = new ArrayList<>();
-		AttributeVisitor visitor = new AttributeVisitor(packageName);
+		AttributeVisitor visitor = new AttributeVisitor(appDescription.getLibPackageName());
 		for (de.fhws.applab.gemara.enfield.metamodel.attributes.Attribute enfieldAttribute : enfieldAttributes) {
 			enfieldAttribute.generate(visitor);
 			attributes.add(visitor.getAttribute());
