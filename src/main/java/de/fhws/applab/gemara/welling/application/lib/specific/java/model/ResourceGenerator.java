@@ -6,6 +6,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.resources.SingleResource;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.visitors.AttributeVisitor;
 
@@ -23,12 +24,12 @@ public class ResourceGenerator extends AbstractModelClass {
 
 	private final List<Attribute> attributes = new ArrayList<>();
 
-	public ResourceGenerator(String packageName, SingleResource singleResource) {
-		super(packageName + ".specific.model", singleResource.getResourceName());
+	public ResourceGenerator(AppDescription appDescription, SingleResource singleResource) {
+		super(appDescription.getLibPackageName() + ".specific.model", singleResource.getResourceName());
 		this.resourceName = singleResource.getResourceName();
 		this.specificResourceClassName = ClassName.get(this.packageName, this.className);
 
-		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
+		this.resourceClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Resource");
 
 		this.attributes.addAll(transformAttributes(singleResource.getAllAttributes()));
 	}

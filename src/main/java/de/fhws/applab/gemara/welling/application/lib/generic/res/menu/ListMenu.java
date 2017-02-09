@@ -1,17 +1,24 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.menu;
 
+import de.fhws.applab.gemara.welling.generator.AppDescription;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ListMenu extends MenuGenerator {
 
-	public ListMenu(String directoryName) {
-		super("list_menu", directoryName);
+	private final AppDescription appDescription;
+
+	public ListMenu(AppDescription appDescription) {
+		super("list_menu", appDescription.getLibResDirectory());
+
+		this.appDescription = appDescription;
 	}
 
 	@Override
 	protected List<MenuItem> addMenuItems() {
+		addString("add", "Add");
 		MenuItem item = new MenuItem("@+id/add", "@string/add");
 		item.setIcon("@drawable/ic_add");
 		item.setShowAsAction("always");
@@ -23,5 +30,10 @@ public class ListMenu extends MenuGenerator {
 	@Override
 	protected List<MenuGroup> addMenuGroups() {
 		return Collections.emptyList();
+	}
+
+	private void addString(String key, String value) {
+		appDescription.setLibStrings(key, value);
+
 	}
 }

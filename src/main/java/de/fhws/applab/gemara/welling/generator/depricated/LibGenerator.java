@@ -179,7 +179,7 @@ public class LibGenerator {
 	private List<GeneratedFile> getMenuClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
 		classes.add(new DetailMenu(resDir));
-		classes.add(new ListMenu(resDir));
+//		classes.add(new ListMenu(resDir));
 		classes.add(new SaveMenu(resDir));
 
 		return classes;

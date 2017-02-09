@@ -3,6 +3,7 @@ package de.fhws.applab.gemara.welling.application.lib.specific.res.layout;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.visitors.CardAttributeVisitor;
 
 import java.util.ArrayList;
@@ -12,11 +13,13 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 
 	private final String packageName;
 	private final CardView cardView;
+	private final AppDescription appDescription;
 
-	public CardLayoutGenerator(String fileName, String directoryName, CardView cardView, String packageName) {
-		super(fileName, directoryName);
+	public CardLayoutGenerator(AppDescription appDescription, String fileName, CardView cardView) {
+		super(fileName, appDescription.getLibResDirectory());
+		this.appDescription = appDescription;
 		this.cardView = cardView;
-		this.packageName = packageName;
+		this.packageName = appDescription.getLibPackageName();
 	}
 
 	@Override
@@ -48,7 +51,7 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 
 
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
-			CardAttributeVisitor visitor = new CardAttributeVisitor(packageName);
+			CardAttributeVisitor visitor = new CardAttributeVisitor(appDescription,packageName);
 			resourceViewAttribute.accept(visitor);
 			List<View> views =  visitor.getViews();
 			if (views.size() == 2) {

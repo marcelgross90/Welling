@@ -33,54 +33,9 @@ public class MetaModelGenerator {
 		model.setAppRestAPI(appRestAPI);
 		model.setLibStrings(getLibStrings());
 		model.setAppStrings(getAppStrings());
-		model.setAppManifest(generateAppManifest());
 		return model;
 	}
 
-
-	private static AppAndroidManifest generateAppManifest() {
-		AppAndroidManifest manifest = new AppAndroidManifest(packageName);
-		AppAndroidManifest.Application application = manifest.getApplication();
-		List<String> applicationAttributes = new ArrayList<>();
-		applicationAttributes.add("android:fullBackupContent=\"true\"");
-		applicationAttributes.add("android:icon=\"@mipmap/ic_launcher\"");
-		applicationAttributes.add("android:theme=\"@style/AppTheme\"");
-		application.addApplicationAttributes(applicationAttributes);
-
-		List<AppAndroidManifest.Activity> activities = new ArrayList<>();
-		AppAndroidManifest.Activity mainActivity = new AppAndroidManifest.Activity(".MainActivity");
-		AppAndroidManifest.Activity lecturerDetailActivity = new AppAndroidManifest.Activity(".LecturerDetailActivity");
-
-		activities.add(lecturerDetailActivity);
-
-		List<AppAndroidManifest.IntentFilter> intentFilters = new ArrayList<>();
-
-		AppAndroidManifest.IntentFilter mainFilter = new AppAndroidManifest.IntentFilter();
-		mainFilter.setAction("android.intent.action.MAIN");
-		List<String> mainFilterCategories = new ArrayList<>();
-		mainFilterCategories.add("android.intent.category.LAUNCHER");
-		mainFilter.setCategories(mainFilterCategories);
-		intentFilters.add(mainFilter);
-
-		AppAndroidManifest.IntentFilter viewFilter = new AppAndroidManifest.IntentFilter();
-		viewFilter.setAction("android.intent.action.VIEW");
-		viewFilter.setData(new AppAndroidManifest.Data("www.fhws.de", "http"));
-		List<String> viewFilterCategories = new ArrayList<>();
-		viewFilterCategories.add("android.intent.category.DEFAULT");
-		viewFilterCategories.add("android.intent.category.BROWSABLE");
-		viewFilter.setCategories(viewFilterCategories);
-		intentFilters.add(viewFilter);
-
-		mainActivity.addIntentFilters(intentFilters);
-		activities.add(mainActivity);
-
-		application.addActivities(activities);
-
-		//todo finish manifest
-		manifest.setApplication(application);
-
-		return manifest;
-	}
 
 	private static Map<String, String> generateRestAPI() {
 		Map<String, String> api = new HashMap<>();

@@ -11,6 +11,17 @@ public class AppString {
 		this.strings.putAll(strings);
 	}
 
+	public AppString() {
+	}
+
+	public void setStrings(Map<String, String> strings) {
+		this.strings.putAll(strings);
+	}
+
+	public void setStrings(String key, String value) {
+		this.strings.put(key, value);
+	}
+
 	public Map<String, String> getStrings() {
 		return strings;
 	}

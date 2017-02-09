@@ -6,6 +6,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.GroupResourc
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttributeVisitor;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResourceViewAttribute;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,12 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 
 	private String packageName;
 
+	private final AppDescription appDescription;
 	private final List<AbstractLayoutGenerator.View> views = new ArrayList<>();
 
-	public CardAttributeVisitor(String packageName) {
+	public CardAttributeVisitor(AppDescription appDescription, String packageName) {
 		this.packageName = packageName;
+		this.appDescription = appDescription;
 	}
 
 	public List<AbstractLayoutGenerator.View> getViews() {
@@ -49,6 +52,8 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 	}
 
 	private void getImageView(String imageLabel, String packageName) {
+		addString(imageLabel.toLowerCase(), imageLabel);
+
 		AbstractLayoutGenerator.View imageView = new AbstractLayoutGenerator.View(packageName + ".generic.customView.ProfileImageView");
 
 		List<String> viewAttributes = new ArrayList<>();
@@ -69,6 +74,10 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 
 		addViews(imageViews);
 
+	}
+
+	private void addString(String key, String value) {
+		appDescription.setLibStrings(key, value);
 	}
 
 	private AbstractLayoutGenerator.View getBorderView(String imageName) {

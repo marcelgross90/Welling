@@ -21,6 +21,7 @@ public class PrepareAppGenerator {
 		this.startResourceName = startResourceName;
 
 		copyMipMapFolder();
+		addInitialStrings();
 	}
 
 	public void generate() {
@@ -28,7 +29,6 @@ public class PrepareAppGenerator {
 		FileWriter.writeGeneratedFiles(getAnimClasses());
 		FileWriter.writeGeneratedFiles(getStyle());
 	}
-
 
 	private AbstractModelClass getMainActivity() {
 		return new MainActivity(appDescription.getAppPackageName(), startResourceName, appDescription.getAppName());
@@ -44,11 +44,15 @@ public class PrepareAppGenerator {
 	}
 
 	private GeneratedFile getStyle() {
-		return new Styles(appDescription.getLibResDirectory(), StyleGenerator.getAppStyle());
+		return new Styles(appDescription.getAppResDirectory(), StyleGenerator.getAppStyle());
 	}
 
 	private void copyMipMapFolder() {
 		Copy copy = new Copy();
 		copy.copySubFolderOnly("mipmap_app", "app/src/main/res");
+	}
+
+	private void addInitialStrings() {
+		appDescription.setAppStrings("app_name", appDescription.getAppName());
 	}
 }

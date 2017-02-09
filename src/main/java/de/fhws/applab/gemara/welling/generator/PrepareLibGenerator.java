@@ -37,6 +37,7 @@ public class PrepareLibGenerator {
 		this.appDescription = appDescription;
 
 		copyDrawableFolders();
+		addInitialStrings();
 	}
 
 	public void generate() {
@@ -132,5 +133,9 @@ public class PrepareLibGenerator {
 	private void copyDrawableFolders() {
 		Copy copy = new Copy();
 		copy.copySubFolderOnly("drawable_lib", appDescription.getLibName() + "/src/main/res");
+	}
+
+	private void addInitialStrings() {
+		appDescription.setLibStrings("app_name", appDescription.getLibName());
 	}
 }

@@ -134,7 +134,7 @@ public class CardViewGenerator {
 		classes.add(new CustomCardViewLayoutGenerator(libResDirectory, libPackageName, "card_" + resourceName.toLowerCase(),
 				resourceName + "CardView", resourceName.toLowerCase() + "_card"));
 		classes.add(new FragmentResourceList(libResDirectory));
-		classes.add(new CardLayoutGenerator("view_" + resourceName.toLowerCase() + "_card", libResDirectory, cardView, libPackageName));
+		classes.add(new CardLayoutGenerator(appDescription, "view_" + resourceName.toLowerCase() + "_card", cardView));
 
 		return classes;
 	}
@@ -142,7 +142,7 @@ public class CardViewGenerator {
 	private List<GeneratedFile> getLibMenuClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
 
-		classes.add(new ListMenu(libResDirectory));
+		classes.add(new ListMenu(appDescription));
 
 		return classes;
 	}

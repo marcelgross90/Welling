@@ -35,7 +35,7 @@ public class StateVisitorImpl implements IStateVisitor {
 
 	public void visit(GetPrimaryCollectionResourceByQueryState getPrimaryCollectionResourceByQueryState) {
 		SingleResource resource = getPrimaryCollectionResourceByQueryState.getResourceType();
-		FileWriter.writeJavaFiles(new ResourceGenerator(appDescription.getLibPackageName(), resource), appDescription.getLibJavaDirectory());
+		FileWriter.writeJavaFiles(new ResourceGenerator(appDescription, resource), appDescription.getLibJavaDirectory());
 
 		SingleResourceView resourceView = getPrimaryCollectionResourceByQueryState.getSingleResourceView();
 		resourceView.getCardView().accept(new ResourceViewVisitorImpl(appDescription));

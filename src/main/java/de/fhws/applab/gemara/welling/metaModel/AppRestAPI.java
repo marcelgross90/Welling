@@ -21,7 +21,7 @@ public class AppRestAPI {
 		restApi.putAll(api);
 	}
 
-	public void addState(String relTypeKey, String relType) {
+	public void setRestApi(String relTypeKey, String relType) {
 		restApi.put(relTypeKey, relType);
 	}
 }

@@ -19,7 +19,7 @@ public class AppAndroidManifest {
 		this.permissions.addAll(permissions);
 	}
 
-	public void addPermission(String permission) {
+	public void setPermissions(String permission) {
 		this.permissions.add(permission);
 	}
 
