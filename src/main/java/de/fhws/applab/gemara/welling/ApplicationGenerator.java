@@ -51,9 +51,9 @@ public class ApplicationGenerator {
 
 	public void generate() {
 
-		prepareGradleGenerator.generate();
 		prepareLibGenerator.generate();
 		prepareAppGenerator.generate();
+		prepareGradleGenerator.generate();
 
 		iterateOverStates();
 
