@@ -1,6 +1,5 @@
 package de.fhws.applab.gemara.welling.visitors;
 
-import de.fhws.applab.gemara.enfield.metamodel.resources.SingleResource;
 import de.fhws.applab.gemara.enfield.metamodel.states.GetDispatcherState;
 import de.fhws.applab.gemara.enfield.metamodel.states.IStateVisitor;
 import de.fhws.applab.gemara.enfield.metamodel.states.primary.DeletePrimaryResourceState;
@@ -15,79 +14,83 @@ import de.fhws.applab.gemara.enfield.metamodel.states.secondary.GetSecondaryColl
 import de.fhws.applab.gemara.enfield.metamodel.states.secondary.GetSecondarySingleResourceByIdState;
 import de.fhws.applab.gemara.enfield.metamodel.states.secondary.PostSecondaryResourceState;
 import de.fhws.applab.gemara.enfield.metamodel.states.secondary.PutSecondaryResourceState;
-import de.fhws.applab.gemara.enfield.metamodel.views.SingleResourceView;
 import de.fhws.applab.gemara.welling.StateHolder;
-import de.fhws.applab.gemara.welling.application.lib.specific.java.model.ResourceGenerator;
-import de.fhws.applab.gemara.welling.generator.AppDescription;
-import de.fhws.applab.gemara.welling.generator.FileWriter;
 
-public class StateVisitorImpl implements IStateVisitor {
+public class StateIdentifierVisitor implements IStateVisitor {
 
-	private final AppDescription appDescription;
-	private final StateHolder stateHolder;
+	private StateHolder.StateType stateType;
 
-	public StateVisitorImpl(AppDescription appDescription, StateHolder stateHolder) {
-		this.appDescription = appDescription;
-		this.stateHolder = stateHolder;
+	public StateHolder.StateType getStateType() {
+		return stateType;
 	}
 
+
+	@Override
 	public void visit(GetPrimarySingleResourceByIdState getPrimarySingleResourceByIdState) {
-		SingleResource resource = getPrimarySingleResourceByIdState.getResourceType();
+		this.stateType = StateHolder.StateType.GET_SINGLE;
 
 	}
 
+	@Override
 	public void visit(GetPrimaryCollectionResourceByQueryState getPrimaryCollectionResourceByQueryState) {
-		SingleResource resource = getPrimaryCollectionResourceByQueryState.getResourceType();
-		FileWriter.writeJavaFiles(new ResourceGenerator(appDescription, resource), appDescription.getLibJavaDirectory());
-
-		SingleResourceView resourceView = getPrimaryCollectionResourceByQueryState.getSingleResourceView();
-		resourceView.getCardView().accept(new ResourceViewVisitorImpl(appDescription, stateHolder));
-
+		this.stateType = StateHolder.StateType.GET_COLLECTION;
 
 	}
 
+	@Override
 	public void visit(PostPrimaryResourceState postPrimaryResourceState) {
-		SingleResource resource = postPrimaryResourceState.getResourceType();
+		this.stateType = StateHolder.StateType.POST;
+
 	}
 
+	@Override
 	public void visit(PutPrimaryResourceState putPrimaryResourceState) {
-		SingleResource resource = putPrimaryResourceState.getResourceType();
+		this.stateType = StateHolder.StateType.PUT;
 
 	}
 
+	@Override
 	public void visit(DeletePrimaryResourceState deletePrimaryResourceState) {
-
+		this.stateType = StateHolder.StateType.DELETE;
 	}
 
+	@Override
 	public void visit(GetSecondarySingleResourceByIdState getSecondarySingleResourceByIdState) {
-
+		this.stateType = StateHolder.StateType.GET_SINGLE;
 	}
 
+	@Override
 	public void visit(GetSecondaryCollectionResourceByQueryState getSecondaryCollectionResourceByQueryState) {
-
+		this.stateType = StateHolder.StateType.GET_COLLECTION;
 	}
 
+	@Override
 	public void visit(PostSecondaryResourceState postSecondaryResourceState) {
-
+		this.stateType = StateHolder.StateType.POST;
 	}
 
+	@Override
 	public void visit(PutSecondaryResourceState putSecondaryResourceState) {
-
+		this.stateType = StateHolder.StateType.PUT;
 	}
 
+	@Override
 	public void visit(DeleteSecondaryResourceState deleteSecondaryResourceState) {
-
+		this.stateType = StateHolder.StateType.DELETE;
 	}
 
+	@Override
 	public void visit(GetDispatcherState getDispatcherState) {
-
+		this.stateType = StateHolder.StateType.DISPATCHER;
 	}
 
+	@Override
 	public void visit(PostImageState postImageState) {
-
+		this.stateType = StateHolder.StateType.POST_IMAGE;
 	}
 
+	@Override
 	public void visit(GetImageState getImageState) {
-
+		this.stateType = StateHolder.StateType.GET_IMAGE;
 	}
 }

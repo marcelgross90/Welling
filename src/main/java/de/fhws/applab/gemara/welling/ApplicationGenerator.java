@@ -18,12 +18,16 @@ import de.fhws.applab.gemara.welling.generator.PrepareAppGenerator;
 import de.fhws.applab.gemara.welling.generator.PrepareLibGenerator;
 import de.fhws.applab.gemara.welling.metaModel.AppColor;
 import de.fhws.applab.gemara.welling.metaModel.InputException;
+import de.fhws.applab.gemara.welling.visitors.StateIdentifierVisitor;
 import de.fhws.applab.gemara.welling.visitors.StateVisitorImpl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ApplicationGenerator {
 
@@ -103,14 +107,44 @@ public class ApplicationGenerator {
 
 		Collection<ActionTransition> allActionTransitions = getAllActionTransitionsFromState(dispatcherState);
 
-		generateRestApi(allActionTransitions);
-
 		Collection<AbstractState> allNextStates = getAllNextStates(allActionTransitions);
 
 		for (AbstractState state : allNextStates) {
-			StateVisitorImpl visitor = new StateVisitorImpl(appDescription);
+
+			StateIdentifierVisitor stateIdentifierVisitor = new StateIdentifierVisitor();
+			state.generate(stateIdentifierVisitor);
+			StateHolder stateHolder = null;
+			if (stateIdentifierVisitor.getStateType() != StateHolder.StateType.DISPATCHER) {
+				stateHolder = getStateHolder(getTransitionFromState(state));
+			}
+
+			StateVisitorImpl visitor = new StateVisitorImpl(appDescription, stateHolder);
 			state.generate(new VisitStatesOnlyOnce(visitor));
 		}
+	}
+
+	private List<AbstractTransition> getTransitionFromState(AbstractState state) {
+		return state.getTransitions().stream().collect(Collectors.toList());
+	}
+
+	private StateHolder getStateHolder(List<AbstractTransition> abstractTransitions) {
+		StateHolder stateHolder = new StateHolder();
+
+		for (AbstractTransition abstractTransition : abstractTransitions) {
+			AbstractState currentState = abstractTransition.getNextState();
+
+			StateIdentifierVisitor stateIdentifierVisitor1 = new StateIdentifierVisitor();
+			currentState.generate(stateIdentifierVisitor1);
+
+			String relType = "";
+			if (abstractTransition instanceof ActionTransition) {
+				relType = ((ActionTransition) abstractTransition).getRelationType();
+				generateRestApi(relType);
+			}
+			stateHolder.setNextStates(stateIdentifierVisitor1.getStateType(), relType);
+		}
+
+		return stateHolder;
 	}
 
 	private Collection<ActionTransition> getAllActionTransitionsFromState(AbstractState state) {
@@ -149,6 +183,11 @@ public class ApplicationGenerator {
 			api.put("rel_type_" + allTransition.getRelationType().toLowerCase(), allTransition.getRelationType());
 		}
 		appDescription.setRestApi(api);
+	}
+
+	private void generateRestApi(String relType) {
+
+		appDescription.setRestApi("rel_type_" + relType.toLowerCase(), relType);
 	}
 
 	private String getNameOfStartResource() {

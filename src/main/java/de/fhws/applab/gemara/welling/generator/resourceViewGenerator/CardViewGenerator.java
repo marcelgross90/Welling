@@ -2,6 +2,7 @@ package de.fhws.applab.gemara.welling.generator.resourceViewGenerator;
 
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
+import de.fhws.applab.gemara.welling.StateHolder;
 import de.fhws.applab.gemara.welling.application.app.java.fragment.ListFragmentGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.adapter.ResourceListAdapter;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.ResourceCardView;
@@ -28,6 +29,8 @@ public class CardViewGenerator {
 
 	private final AppDescription appDescription;
 	private final CardView cardView;
+	private final StateHolder stateHolder;
+
 	private final String appName;
 	private final String resourceName;
 
@@ -38,9 +41,11 @@ public class CardViewGenerator {
 	private final String libResDirectory;
 	private final String libJavaDirectory;
 
-	public CardViewGenerator(CardView cardView, AppDescription appDescription) {
+	public CardViewGenerator(CardView cardView, AppDescription appDescription, StateHolder stateHolder) {
 		this.appDescription = appDescription;
 		this.cardView = cardView;
+		this.stateHolder = stateHolder;
+
 		this.appName = appDescription.getAppName();
 		this.resourceName = cardView.getResourceName();
 
@@ -152,7 +157,7 @@ public class CardViewGenerator {
 	private List<AbstractModelClass> getAppJavaClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
-		classes.add(new ListFragmentGenerator(appPackageName, cardView, appName));
+		classes.add(new ListFragmentGenerator(stateHolder, appDescription, cardView));
 
 		return classes;
 	}

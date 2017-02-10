@@ -72,7 +72,7 @@ public class AppGenerator {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
 			//todo change detailView
-			classes.add(new ListFragmentGenerator(model.getPackageName(), CardViewModelGenerator.lecturer(), model.getApplicationName()));
+			//classes.add(new ListFragmentGenerator(model.getPackageName(), CardViewModelGenerator.lecturer(), model.getApplicationName()));
 			classes.add(new NewSpecificResourceFragment(model.getPackageName(), InputViewModelGenerator.lecturer(), model.getApplicationName()));
 
 		return classes;
