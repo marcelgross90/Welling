@@ -43,9 +43,9 @@ public class ApplicationGenerator {
 
 		this.appDescription = new AppDescription(metaModel, startDir, baseUrl);
 
-		prepareGradleGenerator = new PrepareGradleGenerator(appDescription);
 		prepareLibGenerator = new PrepareLibGenerator(appDescription);
 		prepareAppGenerator = new PrepareAppGenerator(appDescription, getNameOfStartResource());
+		prepareGradleGenerator = new PrepareGradleGenerator(appDescription);
 
 	}
 
