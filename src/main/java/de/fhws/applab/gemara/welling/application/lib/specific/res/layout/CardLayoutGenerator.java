@@ -70,6 +70,7 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 
 		List<String> viewAttributes = getLayoutAttributes("wrap_content", "wrap_content");
 		viewAttributes.add("android:layout_alignParentTop=\"true\"");
+		viewAttributes.add("android:layout_toRightOf=\"@+id/border\"");
 		viewAttributes.add("android:layout_toEndOf=\"@+id/border\"");
 		viewAttributes.add("android:orientation=\"vertical\"");
 

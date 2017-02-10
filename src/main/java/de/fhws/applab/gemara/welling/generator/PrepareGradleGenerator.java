@@ -5,7 +5,6 @@ import de.fhws.applab.gemara.welling.application.gradle.app.BuildGradleApp;
 import de.fhws.applab.gemara.welling.application.gradle.lib.BuildGradleLib;
 import de.fhws.applab.gemara.welling.application.gradle.lib.LibProguardRules;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
-import de.fhws.applab.gemara.welling.application.gradle.BuildGradleProject;
 import de.fhws.applab.gemara.welling.application.gradle.SettingsGradle;
 
 import java.util.ArrayList;
@@ -36,7 +35,6 @@ public class PrepareGradleGenerator {
 
 	private List<GeneratedFile> getProjectGradleClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
-		classes.add(new BuildGradleProject());
 		classes.add(new SettingsGradle(appDescription.getLibName()));
 
 		return classes;
@@ -67,6 +65,7 @@ public class PrepareGradleGenerator {
 
 		copy.copyFile("gradle/gradlew.bat", "gradlew.bat");
 		copy.copyFile("gradle/gradlew", "gradlew");
+		copy.copyFile("gradle/build.gradle", "build.gradle");
 		copy.copyFolder("gradle/wrapper", "gradle/wrapper");
 	}
 

@@ -33,18 +33,19 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE) {
 			getImageView(displayViewAttribute.getAttributeLabel(), packageName);
 		} else {
-			_visitForCardSubView(displayViewAttribute.getAttributeName());
+			_visitForCardSubView(displayViewAttribute);
 		}
 	}
 
 	@Override
 	public void visit(GroupResourceViewAttribute groupResourceViewAttribute) {
 		DisplayViewAttribute displayViewAttribute = groupResourceViewAttribute.getGroupResouceViewAttribute();
-		_visitForCardSubView(displayViewAttribute.getAttributeName());
+		_visitForCardSubView(displayViewAttribute);
 	}
 
-	private void  _visitForCardSubView(String viewName) {
-		AbstractLayoutGenerator.View view = getAttributeView(viewName, packageName);
+
+	private void  _visitForCardSubView(DisplayViewAttribute displayViewAttribute) {
+		AbstractLayoutGenerator.View view = getAttributeView(displayViewAttribute, packageName);
 
 		List<AbstractLayoutGenerator.View> views = new ArrayList<>();
 		views.add(view);
@@ -99,13 +100,55 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		return border;
 	}
 
-	private AbstractLayoutGenerator.View getAttributeView(String viewName, String packageName) {
+	private AbstractLayoutGenerator.View getAttributeView(DisplayViewAttribute displayViewAttribute, String packageName) {
 		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View(packageName + ".generic.customView.AttributeView");
 
 		List<String> viewAttributes = new ArrayList<>();
 		viewAttributes.add("android:layout_width=\"match_parent\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
-		viewAttributes.add("android:id=\"@+id/" + viewName + "\"");
+		viewAttributes.add("android:id=\"@+id/" + displayViewAttribute.getAttributeName() + "\"");
+
+		if (displayViewAttribute.getFontColor() != null) {
+			viewAttributes.add("android:textColor=\"" + displayViewAttribute.getFontColor() + "\"");
+		}
+
+		if (displayViewAttribute.getFontSize() == DisplayViewAttribute.FontSize.LARGE) {
+			viewAttributes.add("android:textSize=\"18sp\"");
+		}
+
+		if (displayViewAttribute.getFontSize() == DisplayViewAttribute.FontSize.SMALL) {
+			viewAttributes.add("android:textSize=\"9sp\"");
+		}
+
+		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.HOME) {
+			viewAttributes.add("android:drawableLeft=\"@drawable/ic_home\"");
+			viewAttributes.add("android:drawableStart=\"@drawable/ic_home\"");
+			viewAttributes.add("android:drawablePadding=\"@dimen/spacing_small\"");
+		}
+
+		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.MAIL) {
+			viewAttributes.add("android:drawableLeft=\"@drawable/ic_email\"");
+			viewAttributes.add("android:drawableStart=\"@drawable/ic_email\"");
+			viewAttributes.add("android:drawablePadding=\"@dimen/spacing_small\"");
+		}
+
+		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PHONE_NUMBER) {
+			viewAttributes.add("android:drawableLeft=\"@drawable/ic_phone\"");
+			viewAttributes.add("android:drawableStart=\"@drawable/ic_phone\"");
+			viewAttributes.add("android:drawablePadding=\"@dimen/spacing_small\"");
+		}
+
+		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.LOCATION) {
+			viewAttributes.add("android:drawableLeft=\"@drawable/ic_location\"");
+			viewAttributes.add("android:drawableStart=\"@drawable/ic_location\"");
+			viewAttributes.add("android:drawablePadding=\"@dimen/spacing_small\"");
+		}
+
+		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.URL) {
+			viewAttributes.add("android:drawableLeft=\"@drawable/ic_open_in_browser\"");
+			viewAttributes.add("android:drawableStart=\"@drawable/ic_open_in_browser\"");
+			viewAttributes.add("android:drawablePadding=\"@dimen/spacing_small\"");
+		}
 
 		view.setViewAttributes(viewAttributes);
 

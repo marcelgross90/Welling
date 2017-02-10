@@ -18,11 +18,11 @@ public class CardViewModelGenerator {
 
 		DisplayViewAttribute titleAttributes = new DisplayViewAttribute("title", ViewAttribute.AttributeType.TEXT);
 		titleAttributes.setAttributeLabel("Title");
-		titleAttributes.setFontSize(DisplayViewAttribute.FontSize.SMALL);
 		SingleResourceViewAttribute title = new SingleResourceViewAttribute(titleAttributes);
 		resourceViewAttributes.add(title);
 
 		DisplayViewAttribute nameAttribute = new DisplayViewAttribute("name", ViewAttribute.AttributeType.TEXT);
+		nameAttribute.setFontSize(DisplayViewAttribute.FontSize.LARGE);
 		List<DisplayViewAttribute> nameAttributes = new ArrayList<>();
 		DisplayViewAttribute firstNameAttributes = new DisplayViewAttribute("firstName", ViewAttribute.AttributeType.TEXT);
 		firstNameAttributes.setAttributeLabel("FirstName");
@@ -32,6 +32,7 @@ public class CardViewModelGenerator {
 		nameAttributes.add(lastNameAttributes);
 		GroupResourceViewAttribute name;
 		try {
+			nameAttribute.setFontColor("#000");
 			name = new GroupResourceViewAttribute(nameAttribute, nameAttributes);
 		} catch (DisplayViewException ex) {
 			name = null;
@@ -56,7 +57,7 @@ public class CardViewModelGenerator {
 		SingleResourceViewAttribute address = new SingleResourceViewAttribute(addressAttribute);
 		resourceViewAttributes.add(address);
 
-		DisplayViewAttribute roomAttribute = new DisplayViewAttribute("roomNumber", ViewAttribute.AttributeType.TEXT);
+		DisplayViewAttribute roomAttribute = new DisplayViewAttribute("roomNumber", ViewAttribute.AttributeType.HOME);
 		roomAttribute.setAttributeLabel("Room");
 		roomAttribute.setClickActionAndroid(true);
 		SingleResourceViewAttribute room = new SingleResourceViewAttribute(roomAttribute);
