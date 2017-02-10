@@ -1,24 +1,28 @@
-package de.fhws.applab.gemara.welling.generator;
+package de.fhws.applab.gemara.welling.generator.preparation;
 
 import de.fhws.applab.gemara.welling.application.gradle.app.AppProguardRules;
 import de.fhws.applab.gemara.welling.application.gradle.app.BuildGradleApp;
 import de.fhws.applab.gemara.welling.application.gradle.lib.BuildGradleLib;
 import de.fhws.applab.gemara.welling.application.gradle.lib.LibProguardRules;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
+import de.fhws.applab.gemara.welling.generator.Copy;
+import de.fhws.applab.gemara.welling.generator.FileWriter;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.application.gradle.SettingsGradle;
+import de.fhws.applab.gemara.welling.generator.preparation.Preparation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrepareGradleGenerator {
+public class PrepareGradleGenerator extends Preparation {
 
-	private final AppDescription appDescription;
 
 	public PrepareGradleGenerator(AppDescription appDescription) {
-		this.appDescription = appDescription;
+		super(appDescription);
 		copyGradleFiles();
 	}
 
+	@Override
 	public void generate() {
 		FileWriter.writeGeneratedFiles(getGradleClasses());
 	}

@@ -14,7 +14,7 @@ import de.fhws.applab.gemara.enfield.metamodel.states.secondary.GetSecondaryColl
 import de.fhws.applab.gemara.enfield.metamodel.states.secondary.GetSecondarySingleResourceByIdState;
 import de.fhws.applab.gemara.enfield.metamodel.states.secondary.PostSecondaryResourceState;
 import de.fhws.applab.gemara.enfield.metamodel.states.secondary.PutSecondaryResourceState;
-import de.fhws.applab.gemara.welling.StateHolder;
+import de.fhws.applab.gemara.welling.generator.StateHolder;
 
 public class StateIdentifierVisitor implements IStateVisitor {
 

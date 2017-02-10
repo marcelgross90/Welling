@@ -16,7 +16,7 @@ import de.fhws.applab.gemara.enfield.metamodel.states.secondary.GetSecondarySing
 import de.fhws.applab.gemara.enfield.metamodel.states.secondary.PostSecondaryResourceState;
 import de.fhws.applab.gemara.enfield.metamodel.states.secondary.PutSecondaryResourceState;
 import de.fhws.applab.gemara.enfield.metamodel.views.SingleResourceView;
-import de.fhws.applab.gemara.welling.StateHolder;
+import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.ResourceGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.FileWriter;

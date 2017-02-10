@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling;
+package de.fhws.applab.gemara.welling.generator;
 
 import java.util.ArrayList;
 import java.util.List;

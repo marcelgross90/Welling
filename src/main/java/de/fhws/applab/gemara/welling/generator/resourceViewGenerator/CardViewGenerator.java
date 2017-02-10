@@ -2,7 +2,7 @@ package de.fhws.applab.gemara.welling.generator.resourceViewGenerator;
 
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
-import de.fhws.applab.gemara.welling.StateHolder;
+import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.application.app.java.fragment.ListFragmentGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.adapter.ResourceListAdapter;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.ResourceCardView;
@@ -16,7 +16,6 @@ import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.Re
 import de.fhws.applab.gemara.welling.application.lib.specific.java.viewholder.ListViewHolderGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.res.layout.CardLayoutGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
-import de.fhws.applab.gemara.welling.generator.FileWriter;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
@@ -25,46 +24,19 @@ import de.fhws.applab.gemara.welling.visitors.LinkDescriptionVisitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardViewGenerator {
+public class CardViewGenerator extends ResourceViewGenerator<CardView> {
 
-	private final AppDescription appDescription;
-	private final CardView cardView;
-	private final StateHolder stateHolder;
-
-	private final String appName;
 	private final String resourceName;
 
-	private final String appPackageName;
-	private final String appJavaDirectory;
-
-	private final String libPackageName;
-	private final String libResDirectory;
-	private final String libJavaDirectory;
 
 	public CardViewGenerator(CardView cardView, AppDescription appDescription, StateHolder stateHolder) {
-		this.appDescription = appDescription;
-		this.cardView = cardView;
-		this.stateHolder = stateHolder;
+		super(cardView, appDescription, stateHolder);
 
-		this.appName = appDescription.getAppName();
 		this.resourceName = cardView.getResourceName();
-
-		this.appPackageName = appDescription.getAppPackageName();
-		this.appJavaDirectory = appDescription.getAppJavaDirectory();
-		this.libPackageName = appDescription.getLibPackageName();
-		this.libResDirectory = appDescription.getLibResDirectory();
-		this.libJavaDirectory = appDescription.getLibJavaDirectory();
 	}
 
-	public void generate() {
-		FileWriter.writeJavaFiles(getLibJavaClasses(), libJavaDirectory);
-		FileWriter.writeGeneratedFiles(getLibXMLClasses());
-
-		FileWriter.writeJavaFiles(getAppJavaClasses(), appJavaDirectory);
-		addCardViewStrings();
-	}
-
-	private List<AbstractModelClass> getLibJavaClasses() {
+	@Override
+	protected List<AbstractModelClass> getLibJavaClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
 		classes.addAll(getLibGenericJavaClasses());
@@ -73,7 +45,8 @@ public class CardViewGenerator {
 		return classes;
 	}
 
-	private List<GeneratedFile> getLibXMLClasses() {
+	@Override
+	protected List<GeneratedFile> getLibXMLClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
 
 		classes.addAll(getLibLayoutClasses());
@@ -124,7 +97,7 @@ public class CardViewGenerator {
 	}
 
 	private AbstractModelClass getLibSpecificCardView() {
-		ResourceCardViewGenerator resourceCardViewGenerator = new ResourceCardViewGenerator(libPackageName, cardView);
+		ResourceCardViewGenerator resourceCardViewGenerator = new ResourceCardViewGenerator(libPackageName, resourceView);
 
 		appDescription.setDeclareStyleables(new AppDeclareStyleable.DeclareStyleable(resourceCardViewGenerator.getClassName()));
 
@@ -132,7 +105,7 @@ public class CardViewGenerator {
 	}
 
 	private AbstractModelClass getLibSpecificViewHolder() {
-		return new ListViewHolderGenerator(libPackageName, cardView);
+		return new ListViewHolderGenerator(libPackageName, resourceView);
 	}
 
 	private List<GeneratedFile> getLibLayoutClasses() {
@@ -141,7 +114,7 @@ public class CardViewGenerator {
 		classes.add(new CustomCardViewLayoutGenerator(libResDirectory, libPackageName, "card_" + resourceName.toLowerCase(),
 				resourceName + "CardView", resourceName.toLowerCase() + "_card"));
 		classes.add(new FragmentResourceList(libResDirectory));
-		classes.add(new CardLayoutGenerator(appDescription, "view_" + resourceName.toLowerCase() + "_card", cardView));
+		classes.add(new CardLayoutGenerator(appDescription, "view_" + resourceName.toLowerCase() + "_card", resourceView));
 
 		return classes;
 	}
@@ -154,17 +127,19 @@ public class CardViewGenerator {
 		return classes;
 	}
 
-	private List<AbstractModelClass> getAppJavaClasses() {
+	@Override
+	protected List<AbstractModelClass> getAppJavaClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
-		classes.add(new ListFragmentGenerator(stateHolder, appDescription, cardView));
+		classes.add(new ListFragmentGenerator(stateHolder, appDescription, resourceView));
 
 		return classes;
 	}
 
-	private void addCardViewStrings() {
+	@Override
+	protected void addStrings() {
 		LinkDescriptionVisitor visitor = new LinkDescriptionVisitor(appDescription);
-		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+		for (ResourceViewAttribute resourceViewAttribute : resourceView.getResourceViewAttributes()) {
 			resourceViewAttribute.accept(visitor);
 		}
 	}
