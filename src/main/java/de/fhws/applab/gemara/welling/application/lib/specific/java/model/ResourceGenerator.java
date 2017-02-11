@@ -34,7 +34,11 @@ public class ResourceGenerator extends AbstractModelClass {
 		this.resourceClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Resource");
 
 		this.attributes.addAll(transformAttributes(singleResource.getAllAttributes()));
-		this.appDescription.setLibStrings("load_" + resourceName.toLowerCase() + "_error", "Could not load " + resourceName);
+		this.appDescription.setLibStrings("load_" + replaceIllegalCharacters(resourceName.toLowerCase()) + "_error", "Could not load " + resourceName);
+	}
+
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
 	}
 
 	@Override
@@ -148,7 +152,7 @@ public class ResourceGenerator extends AbstractModelClass {
 			enfieldAttribute.generate(visitor);
 			attributes.add(visitor.getAttribute());
 		}
-
+		attributes.add(new LinkAttribute("self", appDescription.getLibPackageName(), Modifier.PRIVATE));
 		return attributes;
 	}
 }

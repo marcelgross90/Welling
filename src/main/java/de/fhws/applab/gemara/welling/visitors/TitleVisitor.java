@@ -31,7 +31,7 @@ public class TitleVisitor implements ResourceViewAttributeVisitor {
 		List<DisplayViewAttribute> attributes = groupResourceViewAttribute.getDisplayViewAttributes();
 
 		for (int i = 0; i < attributes.size(); i++) {
-			result += resourceName + "." + GetterSetterGenerator.getGetter(attributes.get(i).getAttributeName()) + "()";
+			result += resourceName.toLowerCase() + "." + GetterSetterGenerator.getGetter(attributes.get(i).getAttributeName()) + "()";
 			if (i < attributes.size() -1) {
 				result += "+ \" \" + ";
 			}

@@ -53,8 +53,11 @@ public class MainActivity extends AbstractModelClass {
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(int.class)
-				.addStatement("return $T.string.$N", rClassName, "load_" + resourceName.toLowerCase() + "_error")
+				.addStatement("return $T.string.$N", rClassName, "load_" + replaceIllegalCharacters(resourceName.toLowerCase()) + "_error")
 				.build();
 	}
 
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
+	}
 }

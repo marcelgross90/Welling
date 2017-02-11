@@ -93,7 +93,7 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 		viewAttributes.add("android:layout_marginRight=\"@dimen/spacing_medium\"");
 		viewAttributes.add("android:layout_gravity=\"end\"");
 		viewAttributes.add("android:textSize=\"16sp\"");
-		viewAttributes.add("android:text=\"@string/card_caption_" + category.getName().toLowerCase() + "\"");
+		viewAttributes.add("android:text=\"@string/card_caption_" + replaceIllegalCharacters(category.getName().toLowerCase()) + "\"");
 
 		View textView = new View("TextView");
 		textView.setViewAttributes(viewAttributes);
@@ -115,6 +115,10 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 	}
 
 	private void addString(String key, String value) {
-		appDescription.setLibStrings(key, value);
+		appDescription.setLibStrings(replaceIllegalCharacters(key), value);
+	}
+
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
 	}
 }

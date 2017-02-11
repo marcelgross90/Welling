@@ -20,7 +20,7 @@ public class SetTextVisitor implements ResourceViewAttributeVisitor {
 	public SetTextVisitor(MethodSpec.Builder builder, ClassName rClassName, String specificResourceName) {
 		this.builder = builder;
 		this.rClassName = rClassName;
-		this.specificResourceName = specificResourceName;
+		this.specificResourceName = specificResourceName.toLowerCase();
 	}
 
 	@Override

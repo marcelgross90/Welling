@@ -71,8 +71,9 @@ public class ResourceDetailView extends de.fhws.applab.gemara.welling.applicatio
 	protected MethodSpec getConstructorTwo() {
 		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
 				.addParameter(getAttributeSetParam()).addStatement("super($N, $N)", getContextParam(), getAttributeSetParam())
+				.addStatement("this.$N = $N", context, getContextParam())
 				.addStatement("$N($N, $N, 0)", getInitMethod(), getContextParam(), getAttributeSetParam())
-				.addStatement("this.$N = $N", context, getContextParam()).build();
+				.build();
 	}
 
 	@Override
@@ -81,8 +82,9 @@ public class ResourceDetailView extends de.fhws.applab.gemara.welling.applicatio
 		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
 				.addParameter(getAttributeSetParam()).addParameter(defStyleAttr)
 				.addStatement("super($N, $N, $N)", getContextParam(), getAttributeSetParam(), defStyleAttr)
+				.addStatement("this.$N = $N", context, getContextParam())
 				.addStatement("$N($N, $N, $N)", getInitMethod(), getContextParam(), getAttributeSetParam(), defStyleAttr)
-				.addStatement("this.$N = $N", context, getContextParam()).build();
+				.build();
 	}
 
 	private MethodSpec getGetLayout() {

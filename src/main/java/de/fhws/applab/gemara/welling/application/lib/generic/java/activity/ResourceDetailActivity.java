@@ -6,6 +6,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import de.fhws.applab.gemara.welling.application.androidSpecifics.AbstractActivityClass;
 import de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods;
+import de.fhws.applab.gemara.welling.generator.StateHolder;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import java.util.List;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
 public class ResourceDetailActivity extends AbstractActivityClass {
+
+	private final StateHolder stateHolder;
 
 	private final ClassName rClassName;
 	private final ClassName deleteDialogListenerClassName;
@@ -30,8 +33,11 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 	private final FieldSpec currentResource;
 
 
-	public ResourceDetailActivity(String packageName) {
+	public ResourceDetailActivity(StateHolder stateHolder, String packageName) {
 		super(packageName + ".generic.activity", "ResourceDetailActivity");
+
+		this.stateHolder = stateHolder;
+
 		this.rClassName = ClassName.get(packageName, "R");
 		this.deleteDialogListenerClassName = ClassName.get(packageName + ".generic.fragment.DeleteDialogFragment", "DeleteDialogListener");
 		this.networkCallbackClassName = ClassName.get(packageName + ".generic.network", "NetworkCallback");
@@ -55,7 +61,8 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 	@Override
 	protected List<ClassName> getSuperInterfaces() {
 		List<ClassName> interfaces = new ArrayList<>();
-		interfaces.add(deleteDialogListenerClassName);
+		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE))
+			interfaces.add(deleteDialogListenerClassName);
 		return interfaces;
 	}
 
@@ -79,17 +86,21 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 	@Override
 	protected List<MethodSpec> getMethods() {
 		List<MethodSpec> methods = new ArrayList<>();
-		methods.add(getGetIntentForClose());
-		methods.add(getGetDeleteErrorMessage());
 		methods.add(getGetLayout());
 		methods.add(getInitializeView());
 		methods.add(getGetEnterAnim());
 		methods.add(getGetExitAnim());
-		methods.add(getGetIntentForEdit());
-		methods.add(getPrepareBundle());
 		methods.add(getExtractTitleFromIntent());
 		methods.add(getGetCallback());
-		methods.add(getOnDialogClosed());
+		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
+			methods.add(getOnDialogClosed());
+			methods.add(getGetIntentForClose());
+			methods.add(getGetDeleteErrorMessage());
+		}
+		if (stateHolder.getNextStates().contains(StateHolder.StateType.PUT)) {
+			methods.add(getGetIntentForEdit());
+			methods.add(getPrepareBundle());
+		}
 		methods.add(getOnCreate());
 		methods.add(getOnCreateOptionsMenu());
 		methods.add(getOnOptionsItemSelected());
@@ -214,35 +225,41 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 	private MethodSpec getOnOptionsItemSelected() {
 		ParameterSpec item = ParameterSpec.builder(getMenuItemClassName(), "item").build();
 
-		return MethodSpec.methodBuilder("onOptionsItemSelected")
-				.addModifiers(Modifier.PUBLIC).returns(boolean.class)
-				.addAnnotation(Override.class)
-				.addParameter(item)
-				.addStatement("$T $N = $N.getItemId()", int.class, "i", item)
-				.beginControlFlow("if ($N == android.R.id.home)", "i")
-				.addStatement("onBackPressed()")
-				.addStatement("overridePendingTransition($N(), $N())", getGetEnterAnim(), getGetExitAnim())
-				.addStatement("return true")
-				.endControlFlow()
-				.beginControlFlow("else if ($N == $T.id.edit_item)", "i", rClassName)
-				.addStatement("$T $N = $N()", getIntentClassName(), "intent", getGetIntentForEdit())
-				.addStatement("$N.putExtra($S, $N.getHref())", "intent", "url", updateLink)
-				.addStatement("$N.putExtra($S, $N.getType())", "intent", "mediaType", updateLink)
-				.addStatement("startActivity($N)", "intent")
-				.addStatement("return true")
-				.endControlFlow()
-				.beginControlFlow("else if ($N == $T.id.delete_item)", "i", rClassName)
-				.addStatement("$T $N = $N()", getBundleClassName(), "bundle", getPrepareBundle())
-				.addStatement("$N.putString($S, $N.getHref())", "bundle", "url", deleteLink)
-				.addStatement("$T $N = new $T()", deleteDialogFragmentClassName, "deleteDialogFragment", deleteDialogFragmentClassName)
-				.addStatement("$N.setArguments($N)", "deleteDialogFragment", "bundle")
-				.addStatement("$N.show(getSupportFragmentManager(), null)", "deleteDialogFragment")
-				.addStatement("return true")
-				.endControlFlow()
-				.beginControlFlow("else")
-				.addStatement("return super.onOptionsItemSelected($N)", item)
-				.endControlFlow()
-				.build();
+		MethodSpec.Builder method = MethodSpec.methodBuilder("onOptionsItemSelected");
+		method.addModifiers(Modifier.PUBLIC).returns(boolean.class);
+		method.addAnnotation(Override.class);
+		method.addParameter(item);
+		method.addStatement("$T $N = $N.getItemId()", int.class, "i", item);
+		method.beginControlFlow("if ($N == android.R.id.home)", "i");
+		method.addStatement("onBackPressed()");
+		method.addStatement("overridePendingTransition($N(), $N())", getGetEnterAnim(), getGetExitAnim());
+		method.addStatement("return true");
+		method.endControlFlow();
+		if (stateHolder.getNextStates().contains(StateHolder.StateType.PUT)){
+			method.beginControlFlow("else if ($N == $T.id.edit_item)", "i", rClassName);
+			method.addStatement("$T $N = $N()", getIntentClassName(), "intent", getGetIntentForEdit());
+			method.addStatement("$N.putExtra($S, $N.getHref())", "intent", "url", updateLink);
+			method.addStatement("$N.putExtra($S, $N.getType())", "intent", "mediaType", updateLink);
+			method.addStatement("startActivity($N)", "intent");
+			method.addStatement("return true");
+			method.endControlFlow();
+		}
+		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
+			method.beginControlFlow("else if ($N == $T.id.delete_item)", "i", rClassName);
+			method.addStatement("$T $N = $N()", getBundleClassName(), "bundle", getPrepareBundle());
+			method.addStatement("$N.putString($S, $N.getHref())", "bundle", "url", deleteLink);
+			method.addStatement("$T $N = new $T()", deleteDialogFragmentClassName, "deleteDialogFragment", deleteDialogFragmentClassName);
+			method.addStatement("$N.setArguments($N)", "deleteDialogFragment", "bundle");
+			method.addStatement("$N.show(getSupportFragmentManager(), null)", "deleteDialogFragment");
+			method.addStatement("return true");
+			method.endControlFlow();
+		}
+
+		method.beginControlFlow("else");
+		method.addStatement("return super.onOptionsItemSelected($N)", item);
+		method.endControlFlow();
+
+		return method.build();
 	}
 
 	private MethodSpec getSetUpToolbar() {

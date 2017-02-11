@@ -31,8 +31,13 @@ public class LinkDescriptionVisitor implements ResourceViewAttributeVisitor {
 		String linkDescription = displayViewAttribute.getLinkDescription();
 		if (linkDescription != null) {
 			if (!linkDescription.trim().isEmpty()) {
-				appDescription.setLibStrings(linkDescription.toLowerCase(), linkDescription);
+				appDescription.setLibStrings(replaceIllegalCharacters(linkDescription.toLowerCase()), linkDescription);
 			}
 		}
 	}
+
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
+	}
+
 }

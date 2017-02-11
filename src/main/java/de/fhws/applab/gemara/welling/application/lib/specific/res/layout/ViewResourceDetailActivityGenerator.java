@@ -85,12 +85,12 @@ public class ViewResourceDetailActivityGenerator extends AbstractLayoutGenerator
 
 	private View getProfileImageView() {
 		DisplayViewAttribute image = detailView.getImage().getDisplayViewAttribute();
-		addString(image.getLinkDescription().toLowerCase(), image.getLinkDescription());
+		addString(image.getAttributeLabel().toLowerCase(), image.getAttributeLabel());
 		View view = new View(packageName + ".generic.customView.ProfileImageView");
 
 		List<String> viewAttributes = getLayoutAttributes("match_parent", "match_parent");
 		viewAttributes.add("android:id=\"@+id/iv" + resourceName + "Picture\"");
-		viewAttributes.add("android:contentDescription=\"@string/" + image.getLinkDescription().toLowerCase() + "\"");
+		viewAttributes.add("android:contentDescription=\"@string/" + replaceIllegalCharacters(image.getAttributeLabel().toLowerCase()) + "\"");
 		viewAttributes.add("android:fitsSystemWindows=\"true\"");
 		viewAttributes.add("android:scaleType=\"centerCrop\"");
 		viewAttributes.add("app:layout_collapseMode=\"parallax\"");
@@ -114,6 +114,10 @@ public class ViewResourceDetailActivityGenerator extends AbstractLayoutGenerator
 	}
 
 	private void addString(String key, String value) {
-		appDescription.setLibStrings(key, value);
+		appDescription.setLibStrings(replaceIllegalCharacters(key), value);
+	}
+
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
 	}
 }

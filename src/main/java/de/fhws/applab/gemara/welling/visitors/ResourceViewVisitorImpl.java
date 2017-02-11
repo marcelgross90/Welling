@@ -36,6 +36,7 @@ public class ResourceViewVisitorImpl implements ResourceViewVisitor {
 	@Override
 	public void visit(DetailView detailView) {
 		DetailViewGenerator detailViewGenerator = new DetailViewGenerator(detailView, appDescription, stateHolder);
+		detailViewGenerator.generate();
 
 	}
 }

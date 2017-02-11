@@ -64,7 +64,7 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 
 	private AbstractLayoutGenerator.View getDescriptionView(DisplayViewAttribute displayViewAttribute) {
 		String viewName = "tv" + getInputWithCapitalStart(displayViewAttribute.getAttributeName()) + "Caption";
-		String stringName = displayViewAttribute.getAttributeLabel().toLowerCase();
+		String stringName = replaceIllegalCharacters(displayViewAttribute.getAttributeLabel().toLowerCase());
 		addString(stringName, displayViewAttribute.getAttributeLabel());
 
 		List<String> viewAttributes = new ArrayList<>();
@@ -124,5 +124,9 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 
 	private void addString(String key, String value) {
 		appDescription.setLibStrings(key, value);
+	}
+
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
 	}
 }

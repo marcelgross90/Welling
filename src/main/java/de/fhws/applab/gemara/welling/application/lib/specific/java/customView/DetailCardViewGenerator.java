@@ -14,6 +14,7 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelCl
 import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
 import de.fhws.applab.gemara.welling.visitors.FieldVisitor;
 import de.fhws.applab.gemara.welling.visitors.HideViewsVisitor;
+import de.fhws.applab.gemara.welling.visitors.InitializeDetailViewVisitor;
 import de.fhws.applab.gemara.welling.visitors.InitializeViewVisitor;
 import de.fhws.applab.gemara.welling.visitors.SetTextVisitor;
 
@@ -139,7 +140,7 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 
 		for (Category category : detailView.getCategories()) {
 			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
-				InitializeViewVisitor viewVisitor = new InitializeViewVisitor(builder, attributeViewClassName, profileImageViewClassName, rClassName);
+				InitializeDetailViewVisitor viewVisitor = new InitializeDetailViewVisitor(builder, attributeViewClassName, rClassName);
 				resourceViewAttribute.accept(viewVisitor);
 			}
 		}
@@ -164,7 +165,7 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 
 		for (Category category : detailView.getCategories()) {
 			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
-				SetTextVisitor visitor = new SetTextVisitor(builder, rClassName, detailView.getResourceName());
+				SetTextVisitor visitor = new SetTextVisitor(builder, rClassName, detailView.getResourceName().toLowerCase());
 				resourceViewAttribute.accept(visitor);
 			}
 		}

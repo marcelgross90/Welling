@@ -22,7 +22,7 @@ public class HideViewsVisitor implements ResourceViewAttributeVisitor {
 
 	public HideViewsVisitor(MethodSpec.Builder builder, String specificResourceName) {
 		this.builder = builder;
-		this.specificResourceName = specificResourceName;
+		this.specificResourceName = specificResourceName.toLowerCase();
 		this.viewClassName = getViewClassName();
 	}
 

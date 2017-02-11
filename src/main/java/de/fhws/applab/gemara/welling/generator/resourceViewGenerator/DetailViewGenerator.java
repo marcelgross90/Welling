@@ -6,6 +6,7 @@ import de.fhws.applab.gemara.welling.application.app.res.layout.ActivityDetailVi
 import de.fhws.applab.gemara.welling.application.lib.generic.java.activity.ResourceDetailActivity;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.ResourceDetailView;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.DeleteDialogFragment;
+import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.CustomCardViewLayoutGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.menu.DetailMenu;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.adapter.DetailAdapterGenerator;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.customView.DetailCardViewGenerator;
@@ -33,11 +34,6 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 		this.appResDirectory = appDescription.getAppResDirectory();
 		this.appName = appDescription.getAppName();
 
-		addActivityToManifest();
-	}
-
-	private void addActivityToManifest() {
-		//todo
 	}
 
 
@@ -45,7 +41,7 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 	protected List<AbstractModelClass> getLibJavaClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 		if (containsImage()) {
-			classes.add(new ResourceDetailActivity(libPackageName));
+			classes.add(new ResourceDetailActivity(stateHolder, libPackageName));
 			classes.add(new DetailAdapterGenerator(libPackageName, resourceView));
 			classes.add(new DetailViewHolderGenerator(libPackageName, resourceView));
 
@@ -70,10 +66,15 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 			classes.add(new DetailCardLayoutGenerator(appDescription, "view_" + resourceName.toLowerCase() + "_detail_card", resourceView));
 			classes.add(new ViewResourceDetailActivityGenerator(appDescription, resourceView));
 		}
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE) ||
+		//todo fix stateholder
+		/*if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE) ||
 				stateHolder.getNextStates().contains(StateHolder.StateType.PUT)) {
 			classes.add(new DetailMenu(appDescription));
-		}
+		}*/
+		classes.add(new DetailMenu(appDescription));
+
+		classes.add(new CustomCardViewLayoutGenerator(libResDirectory, libPackageName, "card_" + resourceName.toLowerCase() + "_detail",
+				resourceName + "DetailCardView", resourceName.toLowerCase() + "_detail_card"));
 
 		return classes;
 	}
@@ -82,7 +83,7 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 	protected List<AbstractModelClass> getAppJavaClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 		if (containsImage()) {
-			classes.add(new DetailActivityGenerator(appDescription, resourceView));
+			classes.add(new DetailActivityGenerator(appDescription, resourceView, stateHolder));
 		}
 
 		//todo implement and add LecturerActivity
@@ -94,9 +95,14 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 	protected void addStrings() {
 		String resourceName = resourceView.getResourceName();
 		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
-			appDescription.setLibStrings(resourceName.toLowerCase() + "_delete_error", "Could not delete " + resourceName.toLowerCase());
+			appDescription.setLibStrings(replaceIllegalCharacters(resourceName.toLowerCase()) + "_delete_error", "Could not delete " + resourceName.toLowerCase());
 		}
 	}
+
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
+	}
+
 
 
 	private boolean containsImage() {

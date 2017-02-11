@@ -177,7 +177,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 				.addModifiers(Modifier.PUBLIC)
 				.returns(void.class)
 				.addStatement("$T.makeText(getActivity(), $T.string.$N, $T.LENGTH_SHORT).show()",
-						getToastClassName(), rClassName, "load_" + resourceName.toLowerCase() + "_error", getToastClassName())
+						getToastClassName(), rClassName, "load_" + replaceIllegalCharacters(resourceName.toLowerCase()) + "_error", getToastClassName())
 				.build()).build();
 
 		TypeSpec networkCallback = TypeSpec.anonymousClassBuilder("")
@@ -272,4 +272,9 @@ public class ListFragmentGenerator extends AbstractModelClass {
 				.build();
 		}
 	}
+
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
+	}
+
 }

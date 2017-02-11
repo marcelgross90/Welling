@@ -201,7 +201,7 @@ public class LibGenerator {
 		List<AbstractModelClass> classes = new ArrayList<>();
 		classes.add(new AbstractMainActivity(model.getPackageNameLib()));
 		classes.add(new ResourceActivity(model.getPackageNameLib()));
-		classes.add(new ResourceDetailActivity(model.getPackageNameLib()));
+		//classes.add(new ResourceDetailActivity(model.getPackageNameLib()));
 
 		return classes;
 	}

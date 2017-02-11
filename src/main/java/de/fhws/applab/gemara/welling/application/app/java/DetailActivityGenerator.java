@@ -8,6 +8,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
+import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
 import de.fhws.applab.gemara.welling.visitors.TitleVisitor;
@@ -22,6 +23,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 
 	private final DetailView detailView;
 	private final AppDescription appDescription;
+	private final StateHolder stateHolder;
 
 	private final ClassName resourceDetailActivityClassName;
 	private final ClassName specificResourceDetailViewClassName;
@@ -33,11 +35,12 @@ public class DetailActivityGenerator extends AbstractModelClass {
 	private final ClassName networkResponseClassName;
 	private final ClassName linkClassName;
 
-	public DetailActivityGenerator(AppDescription appDescription, DetailView detailView) {
+	public DetailActivityGenerator(AppDescription appDescription, DetailView detailView, StateHolder stateHolder) {
 		super(appDescription.getAppPackageName(), detailView.getResourceName() + "DetailActivity");
 
 		this.detailView = detailView;
 		this.appDescription = appDescription;
+		this.stateHolder = stateHolder;
 
 		String appName = appDescription.getAppName();
 
@@ -67,22 +70,26 @@ public class DetailActivityGenerator extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
-		TypeSpec typeSpec = TypeSpec.classBuilder(this.className)
-				.superclass(resourceDetailActivityClassName)
-				.addModifiers(Modifier.PUBLIC)
-				.addMethod(getGetIntentForClose())
-				.addMethod(getGetDeleteErrorMessage())
-				.addMethod(getGetLayout())
-				.addMethod(getInitializeView())
-				.addMethod(getGetEnterAnim())
-				.addMethod(getGetExitAnim())
-				.addMethod(getGetIntentForEdit())
-				.addMethod(getPrepareBundle())
-				.addMethod(getExtractTitleFromIntent())
-				.addMethod(getGetCallback())
-				.addMethod(getSetUp())
-				.build();
-		return JavaFile.builder(this.packageName, typeSpec).build();
+		TypeSpec.Builder typeSpec = TypeSpec.classBuilder(this.className);
+		typeSpec.superclass(resourceDetailActivityClassName);
+		typeSpec.addModifiers(Modifier.PUBLIC);
+		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
+			typeSpec.addMethod(getGetIntentForClose());
+			typeSpec.addMethod(getGetDeleteErrorMessage());
+		}
+		if (stateHolder.getNextStates().contains(StateHolder.StateType.PUT)) {
+			typeSpec.addMethod(getGetIntentForEdit());
+			typeSpec.addMethod(getPrepareBundle());
+		}
+		typeSpec.addMethod(getGetLayout());
+		typeSpec.addMethod(getInitializeView());
+		typeSpec.addMethod(getGetEnterAnim());
+		typeSpec.addMethod(getGetExitAnim());
+		typeSpec.addMethod(getExtractTitleFromIntent());
+		typeSpec.addMethod(getGetCallback());
+		typeSpec.addMethod(getSetUp());
+
+		return JavaFile.builder(this.packageName, typeSpec.build()).build();
 	}
 
 	private MethodSpec getGetIntentForClose() {
@@ -95,11 +102,10 @@ public class DetailActivityGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getGetDeleteErrorMessage() {
-		return MethodSpec.methodBuilder("getDeleteErrorMessage")
-				.addAnnotation(Override.class)
-				.addModifiers(Modifier.PROTECTED)
+		addString(replaceIllegalCharacters(detailView.getResourceName().toLowerCase()) + "_delete_error", "Could not delete " + detailView.getResourceName().toLowerCase());
+		return MethodSpec.methodBuilder("getDeleteErrorMessage").addAnnotation(Override.class).addModifiers(Modifier.PROTECTED)
 				.returns(int.class)
-				.addStatement("return $T.string.$N", rClassName, detailView.getResourceName().toLowerCase() + "_delete_error")
+				.addStatement("return $T.string.$N", rClassName, replaceIllegalCharacters(detailView.getResourceName().toLowerCase()) + "_delete_error")
 				.build();
 	}
 
@@ -179,14 +185,6 @@ public class DetailActivityGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getGetCallback() {
-		ParameterSpec response = ParameterSpec.builder(networkResponseClassName, "response").build();
-		ParameterizedTypeName stringLinkMap = ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), linkClassName);
-
-		TypeSpec runnable = TypeSpec.anonymousClassBuilder("")
-				.addSuperinterface(Runnable.class)
-				.addMethod(MethodSpec.methodBuilder("run").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(void.class).addStatement("$N(($T) $N)", getSetUp(), specificResourceClassName, "currentResource").build())
-				.build();
-
 		TypeSpec callback = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(networkCallbackClassName)
 				.addMethod(
@@ -196,17 +194,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 								.returns(void.class)
 								.build())
 				.addMethod(
-						MethodSpec.methodBuilder("onSuccess")
-								.addAnnotation(Override.class)
-								.addModifiers(Modifier.PUBLIC)
-								.returns(void.class)
-								.addParameter(response)
-						.addStatement("$N = $N.deserialize($N.getResponseReader(), $T.class)", "currentResource", "genson", response, specificResourceClassName)
-						.addStatement("$T $N = $N.getLinkHeader()", stringLinkMap, "linkHeader", response)
-						.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "deleteLink", "linkHeader", thisClassName, rClassName, "rel_type_delete_" + detailView.getResourceName().toLowerCase())
-						.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "updateLink", "linkHeader", thisClassName, rClassName, "rel_type_update_" + detailView.getResourceName().toLowerCase())
-						.addStatement("runOnUiThread($L)", runnable)
-						.build())
+						getOnSuccess())
 				.build();
 
 		return MethodSpec.methodBuilder("getCallback")
@@ -215,6 +203,32 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.returns(networkCallbackClassName)
 				.addStatement("return $L", callback)
 				.build();
+	}
+
+	private MethodSpec getOnSuccess() {
+		ParameterSpec response = ParameterSpec.builder(networkResponseClassName, "response").build();
+		ParameterizedTypeName stringLinkMap = ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), linkClassName);
+
+		TypeSpec runnable = TypeSpec.anonymousClassBuilder("")
+				.addSuperinterface(Runnable.class)
+				.addMethod(MethodSpec.methodBuilder("run").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(void.class).addStatement("$N(($T) $N)", getSetUp(), specificResourceClassName, "currentResource").build())
+				.build();
+
+		MethodSpec.Builder builder = MethodSpec.methodBuilder("onSuccess");
+		builder.addAnnotation(Override.class);
+		builder.addModifiers(Modifier.PUBLIC);
+		builder.returns(void.class);
+		builder.addParameter(response);
+		builder.addStatement("$N = $N.deserialize($N.getResponseReader(), $T.class)", "currentResource", "genson", response, specificResourceClassName);
+		builder.addStatement("$T $N = $N.getLinkHeader()", stringLinkMap, "linkHeader", response);
+		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
+			builder.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "deleteLink", "linkHeader", thisClassName, rClassName, "rel_type_delete_" + detailView.getResourceName().toLowerCase());
+		}
+		if (stateHolder.getNextStates().contains(StateHolder.StateType.PUT)) {
+			builder.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "updateLink", "linkHeader", thisClassName, rClassName, "rel_type_update_" + detailView.getResourceName().toLowerCase());
+		}
+		builder.addStatement("runOnUiThread($L)", runnable);
+		return builder.build();
 	}
 
 	private MethodSpec getSetUp() {
@@ -227,6 +241,14 @@ public class DetailActivityGenerator extends AbstractModelClass {
 						//.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getAttributeName().toLowerCase(), "this")
 				.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", detailView.getResourceName().toLowerCase(), "null")
 				.build();
+	}
+
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
+	}
+
+	private void addString(String key, String value) {
+		appDescription.setLibStrings(key, value);
 	}
 
 }

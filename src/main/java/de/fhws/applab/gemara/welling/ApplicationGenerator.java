@@ -109,18 +109,20 @@ public class ApplicationGenerator {
 
 		Collection<AbstractState> allNextStates = getAllNextStates(allActionTransitions);
 
+		StateHolder stateHolder = null;
 		for (AbstractState state : allNextStates) {
 
 			StateIdentifierVisitor stateIdentifierVisitor = new StateIdentifierVisitor();
 			state.generate(stateIdentifierVisitor);
-			StateHolder stateHolder = null;
 			if (stateIdentifierVisitor.getStateType() != StateHolder.StateType.DISPATCHER) {
 				stateHolder = getStateHolder(getTransitionFromState(state));
 			}
 
-			StateVisitorImpl visitor = new StateVisitorImpl(appDescription, stateHolder);
-			state.generate(new VisitStatesOnlyOnce(visitor));
+			//StateVisitorImpl visitor = new StateVisitorImpl(appDescription, stateHolder);
+			//state.generate(new VisitStatesOnlyOnce(visitor));
 		}
+
+		dispatcherState.generate(new VisitStatesOnlyOnce(new StateVisitorImpl(appDescription, stateHolder)));
 	}
 
 	private List<AbstractTransition> getTransitionFromState(AbstractState state) {

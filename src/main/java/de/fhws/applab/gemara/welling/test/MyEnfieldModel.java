@@ -72,7 +72,7 @@ public class MyEnfieldModel {
 
 		createDeleteLecturerState( );
 
-		createPostNewLecturerState( );
+	//	createPostNewLecturerState( );
 
 		createUpdateLecturerState( );
 

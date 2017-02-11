@@ -36,7 +36,7 @@ public class DetailViewModelGenerator {
 	}
 
 	private static SingleResourceViewAttribute getImage() {
-		DisplayViewAttribute imageAttribute = new DisplayViewAttribute("profileImage", ViewAttribute.AttributeType.PICTURE);
+		DisplayViewAttribute imageAttribute = new DisplayViewAttribute("profileImageUrl", ViewAttribute.AttributeType.PICTURE);
 		imageAttribute.setAttributeLabel("ProfileImage");
 		imageAttribute.setPicturePosition(DisplayViewAttribute.PicturePosition.LEFT);
 		return new SingleResourceViewAttribute(imageAttribute);
@@ -62,7 +62,7 @@ public class DetailViewModelGenerator {
 		SingleResourceViewAttribute address = new SingleResourceViewAttribute(addressAttribute);
 		officeAttributes.add(address);
 
-		DisplayViewAttribute roomAttribute = new DisplayViewAttribute("room", ViewAttribute.AttributeType.TEXT);
+		DisplayViewAttribute roomAttribute = new DisplayViewAttribute("roomNumber", ViewAttribute.AttributeType.TEXT);
 		roomAttribute.setAttributeLabel("Room");
 		roomAttribute.setClickActionAndroid(true);
 		SingleResourceViewAttribute room = new SingleResourceViewAttribute(roomAttribute);
@@ -73,19 +73,19 @@ public class DetailViewModelGenerator {
 	private static List<ResourceViewAttribute> getContactResourceViewAttributes() {
 		List<ResourceViewAttribute> contactAttributes = new ArrayList<>();
 
-		DisplayViewAttribute mailAttribute = new DisplayViewAttribute("mail", ViewAttribute.AttributeType.MAIL);
+		DisplayViewAttribute mailAttribute = new DisplayViewAttribute("email", ViewAttribute.AttributeType.MAIL);
 		mailAttribute.setAttributeLabel("E-Mail");
 		mailAttribute.setClickActionAndroid(true);
 		SingleResourceViewAttribute mail = new SingleResourceViewAttribute(mailAttribute);
 		contactAttributes.add(mail);
 
-		DisplayViewAttribute phoneAttribute = new DisplayViewAttribute("phoneNumber", ViewAttribute.AttributeType.PHONE_NUMBER);
+		DisplayViewAttribute phoneAttribute = new DisplayViewAttribute("phone", ViewAttribute.AttributeType.PHONE_NUMBER);
 		phoneAttribute.setAttributeLabel("Phone Number");
 		phoneAttribute.setClickActionAndroid(true);
 		SingleResourceViewAttribute phone = new SingleResourceViewAttribute(phoneAttribute);
 		contactAttributes.add(phone);
 
-		DisplayViewAttribute welearnAttribute = new DisplayViewAttribute("welearn", ViewAttribute.AttributeType.URL);
+		DisplayViewAttribute welearnAttribute = new DisplayViewAttribute("homepage", ViewAttribute.AttributeType.URL);
 		welearnAttribute.setAttributeLabel("welearn");
 		welearnAttribute.setClickActionAndroid(true);
 		welearnAttribute.setLinkDescription("welearn");
