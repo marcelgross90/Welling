@@ -26,22 +26,9 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 
 	@Override
 	protected View generateLayout() {
-		return getCardView();
+		return getLinearLayout();
 	}
 
-	private View getCardView() {
-		List<String> viewAttributes = new ArrayList<>();
-		viewAttributes.add("xmlns:android=\"http://schemas.android.com/apk/res/android\"");
-		viewAttributes.add("xmlns:app=\"http://schemas.android.com/apk/res-auto\"");
-		viewAttributes.add("style=\"@style/cardView\"");
-		viewAttributes.add("app:cardPreventCornerOverlap=\"false\"");
-		viewAttributes.add("android:id=\"@+id/detailCardView\"");
-		View cardView = new View("android.support.v7.widget.CardView");
-		cardView.setViewAttributes(viewAttributes);
-		cardView.addSubView(getLinearLayout());
-
-		return cardView;
-	}
 
 	private View getLinearLayout() {
 		View linearLayout = getBaseLinearLayout();

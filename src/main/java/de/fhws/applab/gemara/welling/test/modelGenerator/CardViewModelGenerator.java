@@ -79,7 +79,7 @@ public class CardViewModelGenerator {
 		CardView cardView;
 
 		try {
-			cardView = new CardView("Lecturer", resourceViewAttributes, title);
+			cardView = new CardView("Lecturer", resourceViewAttributes, name);
 		} catch (DisplayViewException ex) {
 			cardView = null;
 		}

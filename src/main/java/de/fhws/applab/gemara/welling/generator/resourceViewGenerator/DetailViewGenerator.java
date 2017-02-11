@@ -62,7 +62,7 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 		String resourceName = resourceView.getResourceName();
 		List<GeneratedFile> classes = new ArrayList<>();
 		if (containsImage()) {
-			classes.add(new ActivityDetailViewGenerator(appResDirectory, resourceName, appPackageName));
+			classes.add(new ActivityDetailViewGenerator(appResDirectory, resourceName, libPackageName));
 			classes.add(new DetailCardLayoutGenerator(appDescription, "view_" + resourceName.toLowerCase() + "_detail_card", resourceView));
 			classes.add(new ViewResourceDetailActivityGenerator(appDescription, resourceView));
 		}
