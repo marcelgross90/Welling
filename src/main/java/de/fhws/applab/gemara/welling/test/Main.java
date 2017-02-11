@@ -9,7 +9,8 @@ public class Main {
 	/*	AndroidApplicationGenerator generator = new AndroidApplicationGenerator(MetaModelGenerator.generateMetaModel());
 		generator.generate();*/
 
-		EnfieldMetaModel enfieldMetaModel = new EnfieldMetaModel();
+//		EnfieldMetaModel enfieldMetaModel = new EnfieldMetaModel();
+		MyEnfieldModel enfieldMetaModel = new MyEnfieldModel();
 		ApplicationGenerator generator = new ApplicationGenerator(enfieldMetaModel.create());
 
 		generator.generate();

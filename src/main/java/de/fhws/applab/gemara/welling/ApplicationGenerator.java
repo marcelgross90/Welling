@@ -160,6 +160,7 @@ public class ApplicationGenerator {
 		return allActionTransitions;
 	}
 
+
 	private Collection<AbstractState> getAllNextStates(Collection<ActionTransition> transitions) {
 		Collection<AbstractState> allNextStates = new LinkedList<>();
 
