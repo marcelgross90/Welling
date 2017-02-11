@@ -75,6 +75,7 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 
 	private MethodSpec getConstructorOne() {
 		return MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
 				.addParameter(getContextParam())
 				.addStatement("super($N)", getContextParam())
 				.build();
@@ -82,6 +83,7 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 
 	private MethodSpec getConstructorTwo() {
 		return MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
 				.addParameter(getContextParam())
 				.addParameter(getAttributeSetParam())
 				.addStatement("super($N, $N)", getContextParam(), getAttributeSetParam())
@@ -90,6 +92,7 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 
 	private MethodSpec getConstructorThree() {
 		return MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
 				.addParameter(getContextParam())
 				.addParameter(getAttributeSetParam())
 				.addParameter(int.class, "defStyleAttr")

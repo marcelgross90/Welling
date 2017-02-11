@@ -178,9 +178,9 @@ public class LibGenerator {
 
 	private List<GeneratedFile> getMenuClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
-		classes.add(new DetailMenu(resDir));
+		//classes.add(new DetailMenu(resDir));
 //		classes.add(new ListMenu(resDir));
-		classes.add(new SaveMenu(resDir));
+//		classes.add(new SaveMenu(resDir));
 
 		return classes;
 	}
@@ -271,8 +271,8 @@ public class LibGenerator {
 		List<AbstractModelClass> classes = new ArrayList<>();
 			//todo add right cardView
 			classes.add(new ResourceCardViewGenerator(model.getPackageNameLib(), CardViewModelGenerator.lecturer()));
-			classes.add(new DetailViewGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
-			classes.add(new DetailCardViewGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
+		//	classes.add(new DetailViewGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
+		//	classes.add(new DetailCardViewGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
 		//todo add inputview instead of appResource
 				classes.add(new InputViewsGenerator(model.getPackageNameLib(), InputViewModelGenerator.lecturer()));
 

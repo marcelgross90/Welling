@@ -8,12 +8,8 @@ import java.util.List;
 
 public class ListMenu extends MenuGenerator {
 
-	private final AppDescription appDescription;
-
 	public ListMenu(AppDescription appDescription) {
-		super("list_menu", appDescription.getLibResDirectory());
-
-		this.appDescription = appDescription;
+		super("list_menu", appDescription);
 	}
 
 	@Override
@@ -32,8 +28,5 @@ public class ListMenu extends MenuGenerator {
 		return Collections.emptyList();
 	}
 
-	private void addString(String key, String value) {
-		appDescription.setLibStrings(key, value);
 
-	}
 }

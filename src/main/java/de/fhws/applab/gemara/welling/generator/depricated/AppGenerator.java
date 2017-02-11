@@ -83,7 +83,7 @@ public class AppGenerator {
 
 		//classes.add(new MainActivity(model.getPackageName(), model.getAppResources().get(0).getResourceName(), model.getApplicationName()));
 		//todo change detailview
-		classes.add(new DetailActivityGenerator(model.getPackageName(), DetailViewModelGenerator.lecturer(), model.getApplicationName()));
+		//classes.add(new DetailActivityGenerator(model.getPackageName(), DetailViewModelGenerator.lecturer(), model.getApplicationName()));
 		return classes;
 	}
 

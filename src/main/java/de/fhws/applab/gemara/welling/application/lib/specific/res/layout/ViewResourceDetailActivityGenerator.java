@@ -1,6 +1,9 @@
 package de.fhws.applab.gemara.welling.application.lib.specific.res.layout;
 
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.DisplayViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 
 import java.util.List;
 
@@ -8,11 +11,16 @@ public class ViewResourceDetailActivityGenerator extends AbstractLayoutGenerator
 
 	private final String resourceName;
 	private final String packageName;
+	private final DetailView detailView;
+	private final AppDescription appDescription;
 
-	public ViewResourceDetailActivityGenerator(String directoryName, String resourceName, String packagenName) {
-		super("view_" + resourceName.toLowerCase() + "_detail", directoryName);
-		this.resourceName = resourceName;
-		this.packageName = packagenName;
+
+	public ViewResourceDetailActivityGenerator(AppDescription appDescription, DetailView detailView) {
+		super("view_" + detailView.getResourceName().toLowerCase() + "_detail", appDescription.getLibResDirectory());
+		this.resourceName = detailView.getResourceName();
+		this.packageName = appDescription.getLibPackageName();
+		this.detailView = detailView;
+		this.appDescription = appDescription;
 	}
 
 	@Override
@@ -76,11 +84,13 @@ public class ViewResourceDetailActivityGenerator extends AbstractLayoutGenerator
 	}
 
 	private View getProfileImageView() {
+		DisplayViewAttribute image = detailView.getImage().getDisplayViewAttribute();
+		addString(image.getLinkDescription().toLowerCase(), image.getLinkDescription());
 		View view = new View(packageName + ".generic.customView.ProfileImageView");
 
 		List<String> viewAttributes = getLayoutAttributes("match_parent", "match_parent");
 		viewAttributes.add("android:id=\"@+id/iv" + resourceName + "Picture\"");
-		viewAttributes.add("android:contentDescription=\"@string/profile_image\"");
+		viewAttributes.add("android:contentDescription=\"@string/" + image.getLinkDescription().toLowerCase() + "\"");
 		viewAttributes.add("android:fitsSystemWindows=\"true\"");
 		viewAttributes.add("android:scaleType=\"centerCrop\"");
 		viewAttributes.add("app:layout_collapseMode=\"parallax\"");
@@ -101,5 +111,9 @@ public class ViewResourceDetailActivityGenerator extends AbstractLayoutGenerator
 		view.setViewAttributes(viewAttributes);
 
 		return view;
+	}
+
+	private void addString(String key, String value) {
+		appDescription.setLibStrings(key, value);
 	}
 }

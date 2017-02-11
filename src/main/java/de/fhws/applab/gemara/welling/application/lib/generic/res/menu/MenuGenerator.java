@@ -1,5 +1,6 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.menu;
 
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 
 import java.util.ArrayList;
@@ -12,10 +13,12 @@ public abstract class MenuGenerator extends GeneratedFile {
 
 	protected final String fileName;
 	protected final String directoryName;
+	protected final AppDescription appDescription;
 
-	public MenuGenerator(String fileName, String directoryName) {
+	public MenuGenerator(String fileName, AppDescription appDescription) {
+		this.appDescription = appDescription;
 		this.fileName = fileName + ".xml";
-		this.directoryName = directoryName + "/menu";
+		this.directoryName = appDescription.getLibResDirectory() + "/menu";
 	}
 
 	@Override
@@ -36,6 +39,11 @@ public abstract class MenuGenerator extends GeneratedFile {
 	@Override
 	protected String getDirectoryName() {
 		return this.directoryName;
+	}
+
+	protected void addString(String key, String value) {
+		appDescription.setLibStrings(key, value);
+
 	}
 
 	private void addGroups(List<MenuGroup> menuGroups) {

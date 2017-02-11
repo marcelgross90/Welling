@@ -9,7 +9,9 @@ import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
+import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
 import de.fhws.applab.gemara.welling.visitors.FieldVisitor;
 import de.fhws.applab.gemara.welling.visitors.HideViewsVisitor;
 import de.fhws.applab.gemara.welling.visitors.InitializeViewVisitor;
@@ -30,6 +32,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 public class DetailCardViewGenerator extends AbstractModelClass {
 
 	private final DetailView detailView;
+	private final AppDescription appDescription;
 
 	private final ClassName rClassName;
 	private final ClassName specificResourceClassName;
@@ -41,15 +44,21 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 	private final ParameterSpec defStyleAttr = ParameterSpec.builder(int.class, "defStyleAttr").build();
 
 
-	public DetailCardViewGenerator(String packageName, DetailView detailView) {
-		super(packageName + ".specific.customView", detailView.getResourceName() + "DetailCardView");
+	public DetailCardViewGenerator(AppDescription appDescription, DetailView detailView) {
+		super(appDescription.getLibPackageName() + ".specific.customView", detailView.getResourceName() + "DetailCardView");
 		this.detailView = detailView;
+		this.appDescription = appDescription;
 
-		this.rClassName = ClassName.get(packageName, "R");
-		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", detailView.getResourceName());
-		this.attributeViewClassName = ClassName.get(packageName + ".generic.customView", "AttributeView");
-		this.profileImageViewClassName = ClassName.get(packageName + ".generic.customView", "ProfileImageView");
+		this.rClassName = ClassName.get(appDescription.getLibPackageName(), "R");
+		this.specificResourceClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.model", detailView.getResourceName());
+		this.attributeViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "AttributeView");
+		this.profileImageViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "ProfileImageView");
 
+		addDeclareStyleables();
+	}
+
+	private void addDeclareStyleables() {
+		appDescription.setDeclareStyleables(new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailCardView"));
 	}
 
 	@Override

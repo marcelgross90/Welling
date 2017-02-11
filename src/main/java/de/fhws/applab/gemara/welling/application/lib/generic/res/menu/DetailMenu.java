@@ -1,13 +1,15 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.menu;
 
+import de.fhws.applab.gemara.welling.generator.AppDescription;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class DetailMenu extends MenuGenerator {
 
-	public DetailMenu(String directoryName) {
-		super("detail_menu", directoryName);
+	public DetailMenu(AppDescription appDescription) {
+		super("detail_menu", appDescription);
 	}
 
 	@Override
@@ -23,12 +25,14 @@ public class DetailMenu extends MenuGenerator {
 	}
 
 	private MenuItem getEditItem() {
+		addString("edit", "Edit");
 		MenuItem menuItem = new MenuItem("@+id/edit_item", "@string/edit");
 		menuItem.setIcon("@drawable/ic_edit");
 		return menuItem;
 	}
 
 	private MenuItem getDeleteItem() {
+		addString("delete", "Delete");
 		MenuItem menuItem = new MenuItem("@+id/delete_item", "@string/delete");
 		menuItem.setIcon("@drawable/ic_delete");
 		return menuItem;

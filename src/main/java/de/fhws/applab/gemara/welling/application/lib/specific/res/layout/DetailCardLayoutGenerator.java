@@ -4,6 +4,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceView
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.visitors.DetailCardSubViewVisitor;
 
 import java.util.ArrayList;
@@ -11,14 +12,16 @@ import java.util.List;
 
 public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 
+	private final AppDescription appDescription;
 	private final DetailView detailView;
 	private final String packageName;
 
-	public DetailCardLayoutGenerator(String fileName, String directoryName, String packageName, DetailView detailView) {
-		super(fileName, directoryName);
+	public DetailCardLayoutGenerator(AppDescription appDescription, String fileName, DetailView detailView) {
+		super(fileName, appDescription.getLibResDirectory());
 
+		this.appDescription = appDescription;
 		this.detailView = detailView;
-		this.packageName = packageName;
+		this.packageName = appDescription.getLibPackageName();
 	}
 
 	@Override
@@ -43,9 +46,9 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 	private View getLinearLayout() {
 		View linearLayout = getBaseLinearLayout();
 
-		DetailCardSubViewVisitor viewVisitor = new DetailCardSubViewVisitor(packageName);
+		DetailCardSubViewVisitor viewVisitor = new DetailCardSubViewVisitor(appDescription, packageName);
 		for (Category category : detailView.getCategories()) {
-			linearLayout.addSubView(getGroupHeaderView(category.getName()));
+			linearLayout.addSubView(getGroupHeaderView(category));
 			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
 				resourceViewAttribute.accept(viewVisitor);
 				linearLayout.addSubView(viewVisitor.getView());
@@ -67,7 +70,7 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 		return baseLinearLayout;
 	}
 
-	private View getGroupHeaderView(String header) {
+	private View getGroupHeaderView(Category category) {
 		List<String> viewAttributes = getLayoutAttributes("match_parent", "wrap_content");
 		viewAttributes.add("android:layout_marginTop=\"@dimen/spacing_medium\"");
 		viewAttributes.add("android:layout_marginLeft=\"@dimen/spacing_medium\"");
@@ -76,20 +79,21 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 
 		View linearLayout = new View("LinearLayout");
 		linearLayout.setViewAttributes(viewAttributes);
-		linearLayout.addSubView(getGroupHeadlineView(header));
+		linearLayout.addSubView(getGroupHeadlineView(category));
 		linearLayout.addSubView(getSeparatorView());
 
 		return linearLayout;
 	}
 
-	private View getGroupHeadlineView(String header) {
+	private View getGroupHeadlineView(Category category) {
+		addString("card_caption_" + category.getName().toLowerCase(), category.getName());
 		List<String> viewAttributes = getLayoutAttributes("wrap_content", "wrap_content");
 		viewAttributes.add("android:layout_marginTop=\"@dimen/spacing_medium\"");
 		viewAttributes.add("android:layout_marginLeft=\"@dimen/spacing_medium\"");
 		viewAttributes.add("android:layout_marginRight=\"@dimen/spacing_medium\"");
 		viewAttributes.add("android:layout_gravity=\"end\"");
 		viewAttributes.add("android:textSize=\"16sp\"");
-		viewAttributes.add("android:text=\"@string/card_caption_" + header.toLowerCase() + "\"");
+		viewAttributes.add("android:text=\"@string/card_caption_" + category.getName().toLowerCase() + "\"");
 
 		View textView = new View("TextView");
 		textView.setViewAttributes(viewAttributes);
@@ -108,5 +112,9 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 		separator.setViewAttributes(viewAttributes);
 
 		return separator;
+	}
+
+	private void addString(String key, String value) {
+		appDescription.setLibStrings(key, value);
 	}
 }

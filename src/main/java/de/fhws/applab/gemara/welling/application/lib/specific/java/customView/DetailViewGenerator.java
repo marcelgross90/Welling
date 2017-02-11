@@ -8,7 +8,9 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.application.util.GetterSetterGenerator;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
+import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
 
 import javax.lang.model.element.Modifier;
 
@@ -17,6 +19,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 public class DetailViewGenerator extends AbstractModelClass {
 
 	private final DetailView detailView;
+	private final AppDescription appDescription;
 
 	private final ClassName rClassName;
 	private final ClassName recyclerViewClassName;
@@ -32,20 +35,26 @@ public class DetailViewGenerator extends AbstractModelClass {
 	private final ParameterSpec attrs = ParameterSpec.builder(getAttributeSetClassName(), "attrs").build();
 	private final ParameterSpec defStyleAttr = ParameterSpec.builder(int.class, "defStyleAttr").build();
 
-
-	public DetailViewGenerator(String packageName, DetailView detailView) {
-		super(packageName + ".specific.customView", detailView.getResourceName() + "DetailView");
+	public DetailViewGenerator(AppDescription appDescription, DetailView detailView) {
+		super(appDescription.getLibPackageName() + ".specific.customView", detailView.getResourceName() + "DetailView");
 		this.detailView = detailView;
+		this.appDescription = appDescription;
 
-		this.rClassName = ClassName.get(packageName, "R");
+		this.rClassName = ClassName.get(appDescription.getLibPackageName(), "R");
 		this.recyclerViewClassName = getRecyclerViewClassName();
-		this.profileImageViewClassName = ClassName.get(packageName + ".generic.customView", "ProfileImageView");
-		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", detailView.getResourceName());
-		this.resourceDetailViewClassName = ClassName.get(packageName + ".generic.customView", "ResourceDetailView");
-		this.specificResourceDetailAdapterClassName = ClassName.get(packageName + ".specific.adapter", detailView.getResourceName() + "DetailAdapter");
+		this.profileImageViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "ProfileImageView");
+		this.specificResourceClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.model", detailView.getResourceName());
+		this.resourceDetailViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "ResourceDetailView");
+		this.specificResourceDetailAdapterClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.adapter", detailView.getResourceName() + "DetailAdapter");
 
 		this.profileImageView = FieldSpec.builder(profileImageViewClassName, "profileImageView", Modifier.PRIVATE).build();
 		this.recyclerView = FieldSpec.builder(recyclerViewClassName, "recyclerView", Modifier.PRIVATE).build();
+
+		addDeclareStyleable();
+	}
+
+	public void addDeclareStyleable() {
+		appDescription.setDeclareStyleables(new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailView"));
 	}
 
 	@Override

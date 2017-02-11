@@ -6,16 +6,20 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.GroupResourc
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttributeVisitor;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResourceViewAttribute;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 
+	private final AppDescription appDescription;
+
 	private AbstractLayoutGenerator.View view;
 	private String packageName;
 
-	public DetailCardSubViewVisitor(String packageName) {
+	public DetailCardSubViewVisitor(AppDescription appDescription, String packageName) {
+		this.appDescription = appDescription;
 		this.packageName = packageName;
 	}
 
@@ -29,18 +33,18 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE) {
 			this.view = null;
 		}
-		_visitForDetailCardSubView(displayViewAttribute.getAttributeName(), packageName, displayViewAttribute.getAttributeLabel().toLowerCase());
+		_visitForDetailCardSubView(displayViewAttribute, packageName);
 	}
 
 	@Override
 	public void visit(GroupResourceViewAttribute groupResourceViewAttribute) {
 		DisplayViewAttribute displayViewAttribute = groupResourceViewAttribute.getGroupResouceViewAttribute();
-		_visitForDetailCardSubView(displayViewAttribute.getAttributeName(), packageName, displayViewAttribute.getAttributeLabel().toLowerCase());
+		_visitForDetailCardSubView(displayViewAttribute, packageName);
 	}
 
 
-	private void  _visitForDetailCardSubView(String viewName, String packageName, String stringName) {
-		AbstractLayoutGenerator.View view = getAttributeView("tv" + getInputWithCapitalStart(viewName) + "Value", packageName);
+	private void  _visitForDetailCardSubView(DisplayViewAttribute displayViewAttribute,  String packageName) {
+		AbstractLayoutGenerator.View view = getAttributeView(displayViewAttribute, packageName);
 		view.addViewAttribute("android:layout_weight=\"1\"");
 
 		AbstractLayoutGenerator.View linearLayout = new AbstractLayoutGenerator.View("LinearLayout");
@@ -52,13 +56,17 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 		viewAttributes.add("android:layout_marginRight=\"@dimen/spacing_medium\"");
 		viewAttributes.add("android:orientation=\"horizontal\"");
 		linearLayout.setViewAttributes(viewAttributes);
-		linearLayout.addSubView(getDescriptionView("tv" + getInputWithCapitalStart(viewName) + "Caption", stringName));
+		linearLayout.addSubView(getDescriptionView(displayViewAttribute));
 		linearLayout.addSubView(view);
 
 		this.view = linearLayout;
 	}
 
-	private AbstractLayoutGenerator.View getDescriptionView(String viewName, String stringName) {
+	private AbstractLayoutGenerator.View getDescriptionView(DisplayViewAttribute displayViewAttribute) {
+		String viewName = "tv" + getInputWithCapitalStart(displayViewAttribute.getAttributeName()) + "Caption";
+		String stringName = displayViewAttribute.getAttributeLabel().toLowerCase();
+		addString(stringName, displayViewAttribute.getAttributeLabel());
+
 		List<String> viewAttributes = new ArrayList<>();
 		viewAttributes.add("android:layout_width=\"match_parent\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
@@ -66,6 +74,17 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 		viewAttributes.add("android:layout_weight=\"2\"");
 		viewAttributes.add("android:text=\"@string/" + stringName + "\"");
 
+		if (displayViewAttribute.getFontColor() != null) {
+			viewAttributes.add("android:textColor=\"" + displayViewAttribute.getFontColor() + "\"");
+		}
+
+		if (displayViewAttribute.getFontSize() == DisplayViewAttribute.FontSize.LARGE) {
+			viewAttributes.add("android:textSize=\"18sp\"");
+		}
+
+		if (displayViewAttribute.getFontSize() == DisplayViewAttribute.FontSize.SMALL) {
+			viewAttributes.add("android:textSize=\"9sp\"");
+		}
 
 		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View("TextView");
 		view.setViewAttributes(viewAttributes);
@@ -73,13 +92,26 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 		return view;
 	}
 
-	private AbstractLayoutGenerator.View getAttributeView(String viewName, String packageName) {
+	private AbstractLayoutGenerator.View getAttributeView(DisplayViewAttribute displayViewAttribute, String packageName) {
+		String viewName = "tv" + getInputWithCapitalStart(displayViewAttribute.getAttributeName()) + "Value";
 		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View(packageName + ".generic.customView.AttributeView");
 
 		List<String> viewAttributes = new ArrayList<>();
 		viewAttributes.add("android:layout_width=\"match_parent\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
 		viewAttributes.add("android:id=\"@+id/" + viewName + "\"");
+
+		if (displayViewAttribute.getFontColor() != null) {
+			viewAttributes.add("android:textColor=\"" + displayViewAttribute.getFontColor() + "\"");
+		}
+
+		if (displayViewAttribute.getFontSize() == DisplayViewAttribute.FontSize.LARGE) {
+			viewAttributes.add("android:textSize=\"18sp\"");
+		}
+
+		if (displayViewAttribute.getFontSize() == DisplayViewAttribute.FontSize.SMALL) {
+			viewAttributes.add("android:textSize=\"9sp\"");
+		}
 
 		view.setViewAttributes(viewAttributes);
 
@@ -88,5 +120,9 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 
 	private String getInputWithCapitalStart(String input) {
 		return Character.toUpperCase(input.charAt(0)) + input.substring(1);
+	}
+
+	private void addString(String key, String value) {
+		appDescription.setLibStrings(key, value);
 	}
 }

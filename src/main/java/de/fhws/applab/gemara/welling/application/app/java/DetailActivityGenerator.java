@@ -7,7 +7,9 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
+import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
 import de.fhws.applab.gemara.welling.visitors.TitleVisitor;
 
 import javax.lang.model.element.Modifier;
@@ -19,6 +21,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 public class DetailActivityGenerator extends AbstractModelClass {
 
 	private final DetailView detailView;
+	private final AppDescription appDescription;
 
 	private final ClassName resourceDetailActivityClassName;
 	private final ClassName specificResourceDetailViewClassName;
@@ -30,21 +33,36 @@ public class DetailActivityGenerator extends AbstractModelClass {
 	private final ClassName networkResponseClassName;
 	private final ClassName linkClassName;
 
-	public DetailActivityGenerator(String packageName, DetailView detailView, String appName) {
-		super(packageName, detailView.getResourceName() + "DetailActivity");
+	public DetailActivityGenerator(AppDescription appDescription, DetailView detailView) {
+		super(appDescription.getAppPackageName(), detailView.getResourceName() + "DetailActivity");
 
 		this.detailView = detailView;
+		this.appDescription = appDescription;
 
-		this.resourceDetailActivityClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.activity", "ResourceDetailActivity");
-		this.specificResourceDetailViewClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.customView", detailView.getResourceName() + "DetailView");
-		this.mainActivityClassName = ClassName.get(packageName, "MainActivity");
-		this.rClassName = ClassName.get(packageName, "R");
+		String appName = appDescription.getAppName();
+
+		this.resourceDetailActivityClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.generic.activity", "ResourceDetailActivity");
+		this.specificResourceDetailViewClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.specific.customView", detailView.getResourceName() + "DetailView");
+		this.mainActivityClassName = ClassName.get(appDescription.getAppPackageName(), "MainActivity");
+		this.rClassName = ClassName.get(appDescription.getAppPackageName(), "R");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
-		this.specificResourceClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.model",
+		this.specificResourceClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.specific.model",
 				detailView.getResourceName());
-		this.networkCallbackClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkCallback");
-		this.networkResponseClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkResponse");
-		this.linkClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.model", "Link");
+		this.networkCallbackClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkCallback");
+		this.networkResponseClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkResponse");
+		this.linkClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.generic.model", "Link");
+		addActivityToManifest();
+	}
+
+	private void addActivityToManifest() {
+		AppAndroidManifest manifest = appDescription.getAppManifest();
+		AppAndroidManifest.Application application = manifest.getApplication();
+
+		application.addActivities(new AppAndroidManifest.Activity(this.className));
+
+		manifest.setApplication(application);
+
+		appDescription.setManifestApplication(application);
 	}
 
 	@Override

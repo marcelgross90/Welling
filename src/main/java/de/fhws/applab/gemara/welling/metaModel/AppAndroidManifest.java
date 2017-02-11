@@ -57,6 +57,10 @@ public class AppAndroidManifest {
 			this.activities.addAll(activities);
 		}
 
+		public void addActivities(Activity activitie) {
+			this.activities.add(activitie);
+		}
+
 		public List<String> getApplicationAttributes() {
 			return applicationAttributes;
 		}

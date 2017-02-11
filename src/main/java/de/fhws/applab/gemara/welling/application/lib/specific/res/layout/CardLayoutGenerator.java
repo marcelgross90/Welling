@@ -24,26 +24,14 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 
 	@Override
 	protected View generateLayout() {
-		return getCardView();
+		return getRelativeLayout();
 	}
 
-	private View getCardView() {
-		List<String> viewAttributes = new ArrayList<>();
-		viewAttributes.add("xmlns:android=\"http://schemas.android.com/apk/res/android\"");
-		viewAttributes.add("xmlns:app=\"http://schemas.android.com/apk/res-auto\"");
-		viewAttributes.add("style=\"@style/cardView\"");
-		viewAttributes.add("app:cardPreventCornerOverlap=\"false\"");
-		//viewAttributes.add("android:id=\"@+id/card_" + appResource.getAttributeName().toLowerCase() + "\"");
-		View cardView = new View("android.support.v7.widget.CardView");
-		cardView.setViewAttributes(viewAttributes);
-		cardView.addSubView(getRelativeLayout());
-
-		return cardView;
-	}
 
 	private View getRelativeLayout() {
 		View relativeLayout = new View("RelativeLayout");
 		List<String> viewAttributes = getLayoutAttributes("match_parent", "match_parent");
+		viewAttributes.add("xmlns:android=\"http://schemas.android.com/apk/res/android\"");
 		viewAttributes.add("android:id=\"@+id/relativeLayout\"");
 
 		relativeLayout.setViewAttributes(viewAttributes);
