@@ -4,8 +4,6 @@ import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
 
 import java.util.Map;
 
-import static de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable.DeclareStyleable;
-
 public class Attr extends ValueGenerator {
 
 	private final AppDeclareStyleable appDeclareStyleable;
@@ -17,12 +15,12 @@ public class Attr extends ValueGenerator {
 
 	@Override
 	public void generateBody() {
-		for (DeclareStyleable declareStyleable : this.appDeclareStyleable.getDeclareStyleables()) {
-			if (declareStyleable.getAttr().size() == 0) {
-				appendln("<declare-styleable name=\"" + declareStyleable.getName() + "\" />");
+		for (String key : this.appDeclareStyleable.getDeclareStyleables().keySet()) {
+			if (appDeclareStyleable.getDeclareStyleables().get(key).getAttr().size() == 0) {
+				appendln("<declare-styleable name=\"" + appDeclareStyleable.getDeclareStyleables().get(key).getName() + "\" />");
 			} else {
-				Map<String, String> attr = declareStyleable.getAttr();
-				appendln("<declare-styleable name=\"" + declareStyleable.getName() + "\" >");
+				Map<String, String> attr = appDeclareStyleable.getDeclareStyleables().get(key).getAttr();
+				appendln("<declare-styleable name=\"" + appDeclareStyleable.getDeclareStyleables().get(key).getName() + "\" >");
 				for (String name : attr.keySet()) {
 					appendln("<attr name=\"" + name + "\" format=\"" + attr.get(name) + "\"/>");
 				}

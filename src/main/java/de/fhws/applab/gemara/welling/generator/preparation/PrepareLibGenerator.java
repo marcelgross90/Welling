@@ -127,7 +127,7 @@ public class PrepareLibGenerator extends Preparation {
 
 	private void addDeclareStyleables(List<AbstractModelClass> customViews) {
 		for (AbstractModelClass customView : customViews) {
-			appDescription.setDeclareStyleables(new AppDeclareStyleable.DeclareStyleable(customView.getClassName()));
+			appDescription.setDeclareStyleables(customView.getClassName(), new AppDeclareStyleable.DeclareStyleable(customView.getClassName()));
 		}
 
 	}

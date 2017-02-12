@@ -1,26 +1,24 @@
 package de.fhws.applab.gemara.welling.metaModel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AppDeclareStyleable {
 
-	private final List<DeclareStyleable> declareStyleables = new ArrayList<>();
+	private final Map<String, DeclareStyleable> declareStyleables = new HashMap<>();
 
 	public AppDeclareStyleable() {
 	}
 
-	public void setDeclareStyleables(List<DeclareStyleable> declareStyleables) {
-		this.declareStyleables.addAll(declareStyleables);
+	public void setDeclareStyleables(Map<String, DeclareStyleable> declareStyleables) {
+		this.declareStyleables.putAll(declareStyleables);
 	}
 
-	public void setDeclareStyleables(DeclareStyleable declareStyleable) {
-		this.declareStyleables.add(declareStyleable);
+	public void setDeclareStyleables(String key, DeclareStyleable declareStyleable) {
+		this.declareStyleables.put(key, declareStyleable);
 	}
 
-	public List<DeclareStyleable> getDeclareStyleables() {
+	public Map<String, DeclareStyleable> getDeclareStyleables() {
 		return declareStyleables;
 	}
 

@@ -54,7 +54,7 @@ public class DetailViewGenerator extends AbstractModelClass {
 	}
 
 	public void addDeclareStyleable() {
-		appDescription.setDeclareStyleables(new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailView"));
+		appDescription.setDeclareStyleables(detailView.getResourceName() + "DetailView", new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailView"));
 	}
 
 	@Override

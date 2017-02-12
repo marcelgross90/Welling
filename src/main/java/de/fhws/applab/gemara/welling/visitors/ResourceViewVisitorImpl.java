@@ -12,12 +12,18 @@ import de.fhws.applab.gemara.welling.generator.resourceViewGenerator.InputViewGe
 
 public class ResourceViewVisitorImpl implements ResourceViewVisitor {
 
+	public enum InputType {
+		POST, PUT, NONE
+	}
+
 	private final AppDescription appDescription;
 	private final StateHolder stateHolder;
+	private final InputType inputType;
 
-	public ResourceViewVisitorImpl(AppDescription appDescription, StateHolder stateHolder) {
+	public ResourceViewVisitorImpl(AppDescription appDescription, StateHolder stateHolder, InputType inputType) {
 		this.appDescription = appDescription;
 		this.stateHolder = stateHolder;
+		this.inputType = inputType;
 	}
 
 	@Override

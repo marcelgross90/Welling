@@ -4,7 +4,6 @@ import de.fhws.applab.gemara.dalston.generator.utils.VisitStatesOnlyOnce;
 import de.fhws.applab.gemara.enfield.metamodel.Model;
 import de.fhws.applab.gemara.enfield.metamodel.states.AbstractState;
 import de.fhws.applab.gemara.enfield.metamodel.states.GetDispatcherState;
-import de.fhws.applab.gemara.enfield.metamodel.transitions.AbstractTransition;
 import de.fhws.applab.gemara.enfield.metamodel.transitions.ActionTransition;
 import de.fhws.applab.gemara.welling.application.lib.generic.ManifestGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Attr;
@@ -16,18 +15,12 @@ import de.fhws.applab.gemara.welling.generator.FileWriter;
 import de.fhws.applab.gemara.welling.generator.preparation.PrepareGradleGenerator;
 import de.fhws.applab.gemara.welling.generator.preparation.PrepareAppGenerator;
 import de.fhws.applab.gemara.welling.generator.preparation.PrepareLibGenerator;
-import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.metaModel.AppColor;
 import de.fhws.applab.gemara.welling.metaModel.InputException;
-import de.fhws.applab.gemara.welling.visitors.StateIdentifierVisitor;
 import de.fhws.applab.gemara.welling.visitors.StateVisitorImpl;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ApplicationGenerator {
 
@@ -48,7 +41,7 @@ public class ApplicationGenerator {
 		this.appDescription = new AppDescription(metaModel, startDir, baseUrl);
 
 		prepareLibGenerator = new PrepareLibGenerator(appDescription);
-		prepareAppGenerator = new PrepareAppGenerator(appDescription, getNameOfStartResource());
+		prepareAppGenerator = new PrepareAppGenerator(appDescription, getNameOfStartResource(metaModel.getDispatcherState()));
 		prepareGradleGenerator = new PrepareGradleGenerator(appDescription);
 
 	}
@@ -105,73 +98,11 @@ public class ApplicationGenerator {
 
 		getFirstRelType(dispatcherState);
 
-		Collection<ActionTransition> allActionTransitions = getAllActionTransitionsFromState(dispatcherState);
 
-		Collection<AbstractState> allNextStates = getAllNextStates(allActionTransitions);
-
-		StateHolder stateHolder = null;
-		for (AbstractState state : allNextStates) {
-
-			StateIdentifierVisitor stateIdentifierVisitor = new StateIdentifierVisitor();
-			state.generate(stateIdentifierVisitor);
-			if (stateIdentifierVisitor.getStateType() != StateHolder.StateType.DISPATCHER) {
-				stateHolder = getStateHolder(getTransitionFromState(state));
-			}
-
-			//StateVisitorImpl visitor = new StateVisitorImpl(appDescription, stateHolder);
-			//state.generate(new VisitStatesOnlyOnce(visitor));
-		}
-
-		dispatcherState.generate(new VisitStatesOnlyOnce(new StateVisitorImpl(appDescription, stateHolder)));
-	}
-
-	private List<AbstractTransition> getTransitionFromState(AbstractState state) {
-		return state.getTransitions().stream().collect(Collectors.toList());
-	}
-
-	private StateHolder getStateHolder(List<AbstractTransition> abstractTransitions) {
-		StateHolder stateHolder = new StateHolder();
-
-		for (AbstractTransition abstractTransition : abstractTransitions) {
-			AbstractState currentState = abstractTransition.getNextState();
-
-			StateIdentifierVisitor stateIdentifierVisitor1 = new StateIdentifierVisitor();
-			currentState.generate(stateIdentifierVisitor1);
-
-			String relType = "";
-			if (abstractTransition instanceof ActionTransition) {
-				relType = ((ActionTransition) abstractTransition).getRelationType();
-				generateRestApi(relType);
-			}
-			stateHolder.setNextStates(stateIdentifierVisitor1.getStateType(), relType);
-		}
-
-		return stateHolder;
-	}
-
-	private Collection<ActionTransition> getAllActionTransitionsFromState(AbstractState state) {
-		Collection<ActionTransition> allActionTransitions = new LinkedList<>();
-
-		for (AbstractTransition transition : state.getTransitions()) {
-			if (transition instanceof ActionTransition) {
-				ActionTransition actionTransition = (ActionTransition) transition;
-				allActionTransitions.add(actionTransition);
-			}
-		}
-
-		return allActionTransitions;
+		dispatcherState.generate(new VisitStatesOnlyOnce(new StateVisitorImpl(appDescription)));
 	}
 
 
-	private Collection<AbstractState> getAllNextStates(Collection<ActionTransition> transitions) {
-		Collection<AbstractState> allNextStates = new LinkedList<>();
-
-		for (ActionTransition transition : transitions) {
-			allNextStates.add(transition.getNextState());
-		}
-
-		return allNextStates;
-	}
 
 	private void getFirstRelType(GetDispatcherState dispatcherState) {
 		for (ActionTransition actionTransition : getAllActionTransitionsFromState(dispatcherState)) {
@@ -179,23 +110,24 @@ public class ApplicationGenerator {
 		}
 	}
 
-	private void generateRestApi(Collection<ActionTransition> allTransitions) {
-		Map<String, String> api = new HashMap<>();
+	private Collection<ActionTransition> getAllActionTransitionsFromState(AbstractState state) {
+		Collection<ActionTransition> allActionTransitions = new LinkedList<>();
 
-		for (ActionTransition allTransition : allTransitions) {
-			api.put("rel_type_" + allTransition.getRelationType().toLowerCase(), allTransition.getRelationType());
+		state.getTransitions().stream().filter(transition -> transition instanceof ActionTransition).forEach(transition -> {
+			ActionTransition actionTransition = (ActionTransition) transition;
+			allActionTransitions.add(actionTransition);
+		});
+
+		return allActionTransitions;
+	}
+
+
+
+	private String getNameOfStartResource(GetDispatcherState dispatcherState) {
+		for (ActionTransition actionTransition : getAllActionTransitionsFromState(dispatcherState)) {
+			return actionTransition.getNextState().getResourceType().getResourceName();
 		}
-		appDescription.setRestApi(api);
-	}
-
-	private void generateRestApi(String relType) {
-
-		appDescription.setRestApi("rel_type_" + relType.toLowerCase(), relType);
-	}
-
-	private String getNameOfStartResource() {
-		//todo use right resourceName;
-		return "Lecturer";
+		return "";
 	}
 
 }

@@ -167,7 +167,6 @@ public class LibGenerator {
 	private List<AbstractModelClass> getGenericFragments() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 		classes.add(new DateTimePickerFragment(model.getPackageNameLib()));
-		classes.add(new DeleteDialogFragment(model.getPackageNameLib()));
 		classes.add(new DetailResourceFragment(model.getPackageNameLib()));
 		classes.add(new EditResourceFragment(model.getPackageNameLib()));
 		classes.add(new NewResourceFragment(model.getPackageNameLib()));

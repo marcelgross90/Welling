@@ -46,8 +46,8 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 			classes.add(new DetailViewHolderGenerator(libPackageName, resourceView));
 
 		}
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
-			classes.add(new DeleteDialogFragment(libPackageName));
+		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
+			classes.add(new DeleteDialogFragment(appDescription));
 		}
 
 		classes.add(new de.fhws.applab.gemara.welling.application.lib.specific.java.customView.DetailViewGenerator(appDescription, resourceView));
@@ -66,12 +66,10 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 			classes.add(new DetailCardLayoutGenerator(appDescription, "view_" + resourceName.toLowerCase() + "_detail_card", resourceView));
 			classes.add(new ViewResourceDetailActivityGenerator(appDescription, resourceView));
 		}
-		//todo fix stateholder
-		/*if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE) ||
-				stateHolder.getNextStates().contains(StateHolder.StateType.PUT)) {
+		if (stateHolder.contains(StateHolder.StateType.DELETE) ||
+				stateHolder.contains(StateHolder.StateType.PUT)) {
 			classes.add(new DetailMenu(appDescription));
-		}*/
-		classes.add(new DetailMenu(appDescription));
+		}
 
 		classes.add(new CustomCardViewLayoutGenerator(libResDirectory, libPackageName, "card_" + resourceName.toLowerCase() + "_detail",
 				resourceName + "DetailCardView", resourceName.toLowerCase() + "_detail_card"));
@@ -94,7 +92,7 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 	@Override
 	protected void addStrings() {
 		String resourceName = resourceView.getResourceName();
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
+		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
 			appDescription.setLibStrings(replaceIllegalCharacters(resourceName.toLowerCase()) + "_delete_error", "Could not delete " + resourceName.toLowerCase());
 		}
 	}

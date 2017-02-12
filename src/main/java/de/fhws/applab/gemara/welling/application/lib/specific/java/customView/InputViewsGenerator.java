@@ -216,7 +216,7 @@ public class InputViewsGenerator extends CustomView {
 	}
 
 	private MethodSpec getGetStyleable() {
-		appDescription.setDeclareStyleables(new AppDeclareStyleable.DeclareStyleable(replaceIllegalCharacters(inputView.getResourceName() + "InputView")));
+		appDescription.setDeclareStyleables(replaceIllegalCharacters(inputView.getResourceName() + "InputView"), new AppDeclareStyleable.DeclareStyleable(replaceIllegalCharacters(inputView.getResourceName() + "InputView")));
 		return MethodSpec.methodBuilder("getStyleable").addModifiers(Modifier.PROTECTED).addAnnotation(Override.class).returns(int[].class)
 				.addStatement("return $T.styleable.$N", rClassName, replaceIllegalCharacters(inputView.getResourceName() + "InputView")).build();
 	}

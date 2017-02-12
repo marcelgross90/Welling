@@ -96,12 +96,12 @@ public class AppDescription {
 		return appDeclareStyleable;
 	}
 
-	public void setDeclareStyleables(List<AppDeclareStyleable.DeclareStyleable> declareStyleables) {
+	public void setDeclareStyleables(Map<String, AppDeclareStyleable.DeclareStyleable> declareStyleables) {
 		this.appDeclareStyleable.setDeclareStyleables(declareStyleables);
 	}
 
-	public void setDeclareStyleables(AppDeclareStyleable.DeclareStyleable declareStyleable) {
-		this.appDeclareStyleable.setDeclareStyleables(declareStyleable);
+	public void setDeclareStyleables(String key, AppDeclareStyleable.DeclareStyleable declareStyleable) {
+		this.appDeclareStyleable.setDeclareStyleables(key, declareStyleable);
 	}
 
 	public AppRestAPI getAppRestAPI() {
@@ -191,7 +191,6 @@ public class AppDescription {
 
 		application.addActivities(activities);
 
-		//todo finish manifest
 		this.appManifest.setApplication(application);
 
 	}

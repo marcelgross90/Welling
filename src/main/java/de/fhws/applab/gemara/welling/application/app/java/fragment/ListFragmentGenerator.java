@@ -104,7 +104,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		method.addParameter(resourceClassName, "resource");
 		method.addParameter(getViewClassName(), "view");
 
-		if (!stateHolder.getNextStates().contains(StateHolder.StateType.GET_SINGLE)) {
+		if (!stateHolder.contains(StateHolder.StateType.GET_SINGLE)) {
 			return method.addCode("//no detailView\n").build();
 		}
 
@@ -148,7 +148,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		method.addAnnotation(Override.class);
 		method.addParameter(resourceClassName, "resource");
 
-		if (!stateHolder.getNextStates().contains(StateHolder.StateType.GET_SINGLE)) {
+		if (!stateHolder.contains(StateHolder.StateType.GET_SINGLE)) {
 			return method.addCode("//no detailView\n").build();
 		}
 
@@ -227,7 +227,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		onSuccessMethod.addStatement("$T $N = $N.getLinkHeader()", linkMap, "linkHeader", "response");
 		onSuccessMethod.addStatement("$T $N = $N.get(getActivity().getString($T.string.$N))",
 						linkClassName, "nextLink", "linkHeader", rClassName, "rel_type_next");
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.POST)) {
+		if (stateHolder.contains(StateHolder.StateType.POST)) {
 			onSuccessMethod.addStatement("$N = $N.get(getActivity().getString($T.string.$N))",
 					"createNewResourceLink", "linkHeader", rClassName, "rel_type_" + stateHolder.getRelType().toLowerCase());
 		}
@@ -257,7 +257,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getGetFragment() {
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.POST)) {
+		if (stateHolder.contains(StateHolder.StateType.POST)) {
 			return MethodSpec.methodBuilder("getFragment")
 					.addModifiers(Modifier.PROTECTED)
 					.returns(getFragmentClassName())

@@ -35,7 +35,7 @@ public class AttributeInput extends de.fhws.applab.gemara.welling.application.li
 		AppDeclareStyleable.DeclareStyleable attributeInput = new AppDeclareStyleable.DeclareStyleable("AttributeInput");
 		attributeInput.setAttr("hintText", "integer");
 		attributeInput.setAttr("inputType", "string");
-		appDescription.setDeclareStyleables(attributeInput);
+		appDescription.setDeclareStyleables("AttributeInput", attributeInput);
 	}
 
 	@Override

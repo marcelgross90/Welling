@@ -99,7 +99,7 @@ public class CardViewGenerator extends ResourceViewGenerator<CardView> {
 	private AbstractModelClass getLibSpecificCardView() {
 		ResourceCardViewGenerator resourceCardViewGenerator = new ResourceCardViewGenerator(libPackageName, resourceView);
 
-		appDescription.setDeclareStyleables(new AppDeclareStyleable.DeclareStyleable(resourceCardViewGenerator.getClassName()));
+		appDescription.setDeclareStyleables(resourceCardViewGenerator.getClassName(), new AppDeclareStyleable.DeclareStyleable(resourceCardViewGenerator.getClassName()));
 
 		return resourceCardViewGenerator;
 	}

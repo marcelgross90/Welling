@@ -15,7 +15,6 @@ import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
 import de.fhws.applab.gemara.welling.visitors.FieldVisitor;
 import de.fhws.applab.gemara.welling.visitors.HideViewsVisitor;
 import de.fhws.applab.gemara.welling.visitors.InitializeDetailViewVisitor;
-import de.fhws.applab.gemara.welling.visitors.InitializeViewVisitor;
 import de.fhws.applab.gemara.welling.visitors.SetTextVisitor;
 
 import javax.lang.model.element.Modifier;
@@ -59,7 +58,7 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 	}
 
 	private void addDeclareStyleables() {
-		appDescription.setDeclareStyleables(new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailCardView"));
+		appDescription.setDeclareStyleables(detailView.getResourceName() + "DetailCardView", new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailCardView"));
 	}
 
 	@Override

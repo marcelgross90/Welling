@@ -111,8 +111,7 @@ public class EnfieldMetaModel {
 		getAllLecturersCollectionState.setSingleResourceView(lecturerSingleResourceView);
 
 		dispatcherState.addTransition( new ActionTransition( getAllLecturersCollectionState, "getAllLecturers" ) );
-		//todo add get single
-		//getAllLecturersCollectionState.addTransition( getSingleLecturerPrimarySingleResource );
+		getAllLecturersCollectionState.addTransition( getSingleLecturerPrimarySingleResource );
 
 		metaModel.addState( getAllLecturersCollectionState.getName( ), getAllLecturersCollectionState );
 
@@ -134,8 +133,7 @@ public class EnfieldMetaModel {
 		createSingleLecturerPrimaryState.setResourceType( singleResourceLecturer );
 		createSingleLecturerPrimaryState.setModel( metaModel );
 
-		//todo add transition
-//		getAllLecturersCollectionState.addTransition( new ActionTransition( createSingleLecturerPrimaryState, "createNewLecturer" ) );
+		getAllLecturersCollectionState.addTransition( new ActionTransition( createSingleLecturerPrimaryState, "createNewLecturer" ) );
 
 		metaModel.addState( createSingleLecturerPrimaryState.getName( ), createSingleLecturerPrimaryState );
 

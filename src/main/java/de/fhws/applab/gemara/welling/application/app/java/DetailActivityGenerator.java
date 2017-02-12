@@ -73,11 +73,11 @@ public class DetailActivityGenerator extends AbstractModelClass {
 		TypeSpec.Builder typeSpec = TypeSpec.classBuilder(this.className);
 		typeSpec.superclass(resourceDetailActivityClassName);
 		typeSpec.addModifiers(Modifier.PUBLIC);
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
+		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
 			typeSpec.addMethod(getGetIntentForClose());
 			typeSpec.addMethod(getGetDeleteErrorMessage());
 		}
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.PUT)) {
+		if (stateHolder.contains(StateHolder.StateType.PUT)) {
 			typeSpec.addMethod(getGetIntentForEdit());
 			typeSpec.addMethod(getPrepareBundle());
 		}
@@ -166,7 +166,8 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(getBundleClassName())
-				.addStatement("$T $N = ($T) $N", specificResourceClassName, detailView.getResourceName().toLowerCase(), specificResourceClassName, "currentResource")
+				.addStatement("$T $N = ($T) $N", specificResourceClassName, detailView.getResourceName().toLowerCase(),
+						specificResourceClassName, "currentResource")
 				.addStatement("$T $N = new $T()", getBundleClassName(), "bundle", getBundleClassName())
 				.addStatement("$N.putString($S, $N)", "bundle", "name", titleVisitor.getTitle())
 				.addStatement("return $N", "bundle")
@@ -207,7 +208,8 @@ public class DetailActivityGenerator extends AbstractModelClass {
 
 	private MethodSpec getOnSuccess() {
 		ParameterSpec response = ParameterSpec.builder(networkResponseClassName, "response").build();
-		ParameterizedTypeName stringLinkMap = ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), linkClassName);
+		ParameterizedTypeName stringLinkMap = ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class),
+				linkClassName);
 
 		TypeSpec runnable = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
@@ -221,11 +223,11 @@ public class DetailActivityGenerator extends AbstractModelClass {
 		builder.addParameter(response);
 		builder.addStatement("$N = $N.deserialize($N.getResponseReader(), $T.class)", "currentResource", "genson", response, specificResourceClassName);
 		builder.addStatement("$T $N = $N.getLinkHeader()", stringLinkMap, "linkHeader", response);
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
-			builder.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "deleteLink", "linkHeader", thisClassName, rClassName, "rel_type_delete_" + detailView.getResourceName().toLowerCase());
+		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
+			builder.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "deleteLink", "linkHeader", thisClassName, rClassName, "rel_type_" + stateHolder.getRelType(StateHolder.StateType.DELETE).toLowerCase());
 		}
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.PUT)) {
-			builder.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "updateLink", "linkHeader", thisClassName, rClassName, "rel_type_update_" + detailView.getResourceName().toLowerCase());
+		if (stateHolder.contains(StateHolder.StateType.PUT)) {
+			builder.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "updateLink", "linkHeader", thisClassName, rClassName, "rel_type_" + stateHolder.getRelType(StateHolder.StateType.PUT).toLowerCase());
 		}
 		builder.addStatement("runOnUiThread($L)", runnable);
 		return builder.build();
@@ -239,7 +241,8 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.addStatement("invalidateOptionsMenu()")
 						//todo add clickListener
 						//.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getAttributeName().toLowerCase(), "this")
-				.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", detailView.getResourceName().toLowerCase(), "null")
+				.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView",
+						detailView.getResourceName().toLowerCase(), "null")
 				.build();
 	}
 

@@ -6,6 +6,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
@@ -14,6 +15,8 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods.*;
 
 public class DeleteDialogFragment extends AbstractModelClass {
+
+	private final AppDescription appDescription;
 
 	private final ClassName deleteDialogListenerClassName;
 	private final ClassName rClassName;
@@ -25,16 +28,26 @@ public class DeleteDialogFragment extends AbstractModelClass {
 	private final FieldSpec url = FieldSpec.builder(String.class, "url", Modifier.PRIVATE).build();
 	private final FieldSpec deleteDialogListener;
 
-	public DeleteDialogFragment(String packageName) {
-		super(packageName + ".generic.fragment", "DeleteDialogFragment");
-		this.rClassName = ClassName.get(packageName, "R");
+	public DeleteDialogFragment(AppDescription appDescription) {
+		super(appDescription.getLibPackageName() + ".generic.fragment", "DeleteDialogFragment");
+		this.appDescription = appDescription;
+
+		this.rClassName = ClassName.get(appDescription.getLibPackageName(), "R");
 		this.deleteDialogListenerClassName = ClassName.get(this.packageName + "." + this.className, "DeleteDialogListener");
-		this.networkClientClassName = ClassName.get(packageName + ".generic.network", "NetworkClient");
-		this.networkRequestClassName = ClassName.get(packageName + ".generic.network", "NetworkRequest");
-		this.networkCallBackClassName = ClassName.get(packageName + ".generic.network", "NetworkCallback");
-		this.networkResponseClassName = ClassName.get(packageName + ".generic.network", "NetworkResponse");
+		this.networkClientClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkClient");
+		this.networkRequestClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkRequest");
+		this.networkCallBackClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkCallback");
+		this.networkResponseClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkResponse");
 
 		this.deleteDialogListener = FieldSpec.builder(deleteDialogListenerClassName, "deleteDialogListener", Modifier.PRIVATE).build();
+
+		addString();
+	}
+
+	private void addString() {
+		appDescription.setLibStrings("ok", "OK");
+		appDescription.setLibStrings("cancel", "Cancel");
+		appDescription.setLibStrings("delete_dialog_title", "Delete %s?");
 	}
 
 	@Override

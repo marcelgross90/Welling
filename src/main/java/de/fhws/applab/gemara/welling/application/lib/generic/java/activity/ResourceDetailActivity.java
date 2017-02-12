@@ -61,7 +61,7 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 	@Override
 	protected List<ClassName> getSuperInterfaces() {
 		List<ClassName> interfaces = new ArrayList<>();
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE))
+		if (stateHolder.contains(StateHolder.StateType.DELETE))
 			interfaces.add(deleteDialogListenerClassName);
 		return interfaces;
 	}
@@ -92,12 +92,12 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 		methods.add(getGetExitAnim());
 		methods.add(getExtractTitleFromIntent());
 		methods.add(getGetCallback());
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
+		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
 			methods.add(getOnDialogClosed());
 			methods.add(getGetIntentForClose());
 			methods.add(getGetDeleteErrorMessage());
 		}
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.PUT)) {
+		if (stateHolder.contains(StateHolder.StateType.PUT)) {
 			methods.add(getGetIntentForEdit());
 			methods.add(getPrepareBundle());
 		}
@@ -235,7 +235,7 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 		method.addStatement("overridePendingTransition($N(), $N())", getGetEnterAnim(), getGetExitAnim());
 		method.addStatement("return true");
 		method.endControlFlow();
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.PUT)){
+		if (stateHolder.contains(StateHolder.StateType.PUT)){
 			method.beginControlFlow("else if ($N == $T.id.edit_item)", "i", rClassName);
 			method.addStatement("$T $N = $N()", getIntentClassName(), "intent", getGetIntentForEdit());
 			method.addStatement("$N.putExtra($S, $N.getHref())", "intent", "url", updateLink);
@@ -244,7 +244,7 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 			method.addStatement("return true");
 			method.endControlFlow();
 		}
-		if (stateHolder.getNextStates().contains(StateHolder.StateType.DELETE)) {
+		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
 			method.beginControlFlow("else if ($N == $T.id.delete_item)", "i", rClassName);
 			method.addStatement("$T $N = $N()", getBundleClassName(), "bundle", getPrepareBundle());
 			method.addStatement("$N.putString($S, $N.getHref())", "bundle", "url", deleteLink);
