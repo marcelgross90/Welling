@@ -8,6 +8,8 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputViewAttribute;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView;
 import de.fhws.applab.gemara.welling.application.util.GetterSetterGenerator;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
+import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 public class InputViewsGenerator extends CustomView {
 
 	private final InputView inputView;
+	private final AppDescription appDescription;
 
 	private final ClassName rClassName;
 	private final ClassName attributeInputClassName;
@@ -26,17 +29,18 @@ public class InputViewsGenerator extends CustomView {
 	private final ClassName specificResourceClassName;
 	private final ClassName linkClassName;
 
-	public InputViewsGenerator(String packageName, InputView inputView) {
-		super(packageName + ".specific.customView", inputView.getResourceName() + "InputView",
-				ClassName.get(packageName + ".generic.customView", "ResourceInputView"));
+	public InputViewsGenerator(AppDescription appDescription, InputView inputView) {
+		super(appDescription.getLibPackageName() + ".specific.customView", inputView.getResourceName() + "InputView",
+				ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "ResourceInputView"));
 
 		this.inputView = inputView;
+		this.appDescription = appDescription;
 
-		this.rClassName = ClassName.get(packageName, "R");
-		this.attributeInputClassName = ClassName.get(packageName + ".generic.customView", "AttributeInput");
-		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
-		this.linkClassName = ClassName.get(packageName + ".generic.model", "Link");
-		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", inputView.getResourceName());
+		this.rClassName = ClassName.get(appDescription.getLibPackageName(), "R");
+		this.attributeInputClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "AttributeInput");
+		this.resourceClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Resource");
+		this.linkClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Link");
+		this.specificResourceClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.model", inputView.getResourceName());
 	}
 
 	@Override
@@ -144,9 +148,11 @@ public class InputViewsGenerator extends CustomView {
 					|| inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE) {
 				continue;
 			}
+			String stringName = replaceIllegalCharacters(inputViewAttribute.getAttributeName().toLowerCase());
+			String viewName = replaceIllegalCharacters(inputViewAttribute.getAttributeName());
 
-			String stringName = inputViewAttribute.getAttributeName().toLowerCase();
-			String viewName = inputViewAttribute.getAttributeName();
+			addString(viewName + "_missing", inputViewAttribute.getMissingText());
+
 			builder.addStatement("$T $N = $N.getText()", String.class, stringName + "String", viewName);
 			builder.beginControlFlow("if ($N.isEmpty())", stringName + "String");
 			builder.addStatement("$N.setError($N.getString($T.string.$N))", viewName, "context", rClassName, viewName + "_missing");
@@ -210,7 +216,17 @@ public class InputViewsGenerator extends CustomView {
 	}
 
 	private MethodSpec getGetStyleable() {
+		appDescription.setDeclareStyleables(new AppDeclareStyleable.DeclareStyleable(replaceIllegalCharacters(inputView.getResourceName() + "InputView")));
 		return MethodSpec.methodBuilder("getStyleable").addModifiers(Modifier.PROTECTED).addAnnotation(Override.class).returns(int[].class)
-				.addStatement("return $T.styleable.$N", rClassName, inputView.getResourceName() + "InputView").build();
+				.addStatement("return $T.styleable.$N", rClassName, replaceIllegalCharacters(inputView.getResourceName() + "InputView")).build();
+	}
+
+	private void addString(String key, String value) {
+		appDescription.setLibStrings(replaceIllegalCharacters(key), value);
+
+	}
+
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
 	}
 }

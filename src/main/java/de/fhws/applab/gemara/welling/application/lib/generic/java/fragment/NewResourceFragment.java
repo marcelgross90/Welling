@@ -11,7 +11,7 @@ import java.util.List;
 public class NewResourceFragment extends ResourceInputFragment {
 
 	public NewResourceFragment(String packageName) {
-		super(packageName, "NewSpecificResourceFragment");
+		super(packageName, "NewResourceFragment");
 	}
 
 	@Override

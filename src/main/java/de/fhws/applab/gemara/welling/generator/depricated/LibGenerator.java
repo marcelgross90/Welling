@@ -84,7 +84,6 @@ public class LibGenerator {
 
 		classes.addAll(getLayoutClasses());
 		classes.addAll(getValuesClasses());
-		classes.addAll(getMenuClasses());
 
 		return classes;
 	}
@@ -92,9 +91,7 @@ public class LibGenerator {
 	private List<GeneratedFile> getLayoutClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
 
-		classes.addAll(getSpecificLayoutClasses());
 		classes.addAll(getGenericLayoutClasses());
-		classes.addAll(getMenuClasses());
 
 		return classes;
 	}
@@ -109,60 +106,10 @@ public class LibGenerator {
 		return classes;
 	}
 
-	private List<GeneratedFile> getSpecificLayoutClasses() {
-		List<GeneratedFile> classes = new ArrayList<>();
-		classes.addAll(getInputViewClasses());
-		classes.addAll(getSpecificCardViewClasses());
-		classes.addAll(getCustomCardViewLayoutClasses());
-		classes.addAll(getDetailViewClasses());
-		return classes;
-	}
 
-	private List<GeneratedFile> getInputViewClasses() {
-		List<GeneratedFile> classes = new ArrayList<>();
 
-		classes.add(new InputLayoutGenerator(resDir, model.getPackageNameLib(), InputViewModelGenerator.lecturer()));
 
-		return classes;
-	}
 
-	private List<GeneratedFile> getDetailViewClasses() {
-		List<GeneratedFile> classes = new ArrayList<>();
-
-		/*for (AppResource appResource : model.getAppResources()) {
-			classes.add(new ViewResourceDetailActivityGenerator(resDir, appResource.getResourceName(), model.getPackageNameLib()));
-		}*/
-
-		return classes;
-	}
-
-	private List<GeneratedFile> getSpecificCardViewClasses() {
-		List<GeneratedFile> classes = new ArrayList<>();
-		/*for (AppResource appResource : model.getAppResources()) {
-			String resourceName = appResource.getResourceName();
-			//todo replace cardView
-			classes.add(new CardLayoutGenerator("view_" + resourceName.toLowerCase() + "_card", resDir,
-					CardViewModelGenerator.lecturer(), model.getPackageNameLib()));
-			//todo replace detailView
-			classes.add(new DetailCardLayoutGenerator("view_" + resourceName.toLowerCase() + "_detail_card", resDir, model.getPackageNameLib(), DetailViewModelGenerator
-					.lecturer()));
-
-		}*/
-
-		return classes;
-	}
-
-	private List<GeneratedFile> getCustomCardViewLayoutClasses() {
-		List<GeneratedFile> classes = new ArrayList<>();
-
-	/*	for (AppResource appResource : model.getAppResources()) {
-			String resourceName = appResource.getResourceName();
-			classes.add(new CustomCardViewLayoutGenerator(resDir, model.getPackageNameLib(), "card_" + resourceName.toLowerCase(), resourceName + "CardView", resourceName.toLowerCase() + "_card"));
-			classes.add(new CustomCardViewLayoutGenerator(resDir, model.getPackageNameLib(), "card_" + resourceName.toLowerCase() + "_detail", resourceName + "DetailCardView", resourceName.toLowerCase() + "_detail_card"));
-		}*/
-
-		return classes;
-	}
 
 	private List<GeneratedFile> getValuesClasses() {
 		List<GeneratedFile> classes = new ArrayList<>();
@@ -176,14 +123,6 @@ public class LibGenerator {
 		return classes;
 	}
 
-	private List<GeneratedFile> getMenuClasses() {
-		List<GeneratedFile> classes = new ArrayList<>();
-		//classes.add(new DetailMenu(resDir));
-//		classes.add(new ListMenu(resDir));
-//		classes.add(new SaveMenu(resDir));
-
-		return classes;
-	}
 
 	public List<AbstractModelClass> getGenericAndroidClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
@@ -215,7 +154,6 @@ public class LibGenerator {
 
 	private List<AbstractModelClass> getGenericCustomViews() {
 		List<AbstractModelClass> classes = new ArrayList<>();
-		classes.add(new AttributeInput(model.getPackageNameLib()));
 		classes.add(new AttributeView(model.getPackageNameLib()));
 		classes.add(new DateTimeView(model.getPackageNameLib()));
 		classes.add(new ProfileImageView(model.getPackageNameLib()));
@@ -248,36 +186,11 @@ public class LibGenerator {
 	private List<AbstractModelClass> getSpecificAndroidClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
-		classes.addAll(getSpecificAdapter());
-		classes.addAll(getSpecificCustomViews());
 		classes.addAll(getSpecificViewholder());
 
 		return classes;
 	}
 
-	private List<AbstractModelClass> getSpecificAdapter() {
-		List<AbstractModelClass> classes = new ArrayList<>();
-
-	/*	for (AppResource appResource : model.getAppResources()) {
-			classes.add(new ListAdapterGenerator(model.getPackageNameLib(), appResource.getResourceName()));
-			//todo detailview
-			classes.add(new DetailAdapterGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
-		}*/
-
-		return classes;
-	}
-
-	private List<AbstractModelClass> getSpecificCustomViews() {
-		List<AbstractModelClass> classes = new ArrayList<>();
-			//todo add right cardView
-			classes.add(new ResourceCardViewGenerator(model.getPackageNameLib(), CardViewModelGenerator.lecturer()));
-		//	classes.add(new DetailViewGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
-		//	classes.add(new DetailCardViewGenerator(model.getPackageNameLib(), DetailViewModelGenerator.lecturer()));
-		//todo add inputview instead of appResource
-				classes.add(new InputViewsGenerator(model.getPackageNameLib(), InputViewModelGenerator.lecturer()));
-
-		return classes;
-	}
 
 
 

@@ -4,6 +4,8 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
+import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
@@ -22,9 +24,18 @@ public class AttributeInput extends de.fhws.applab.gemara.welling.application.li
 	private final FieldSpec attribute = FieldSpec.builder(getEditTextClassName(), "attribute", Modifier.PRIVATE).build();
 	private final ClassName rClassName;
 
-	public AttributeInput(String packageName) {
-		super(packageName + ".generic.customView", "AttributeInput", getTextInputLayoutClassName());
-		rClassName = ClassName.get(packageName, "R");
+	public AttributeInput(AppDescription appDescription) {
+		super(appDescription.getLibPackageName() + ".generic.customView", "AttributeInput", getTextInputLayoutClassName());
+		rClassName = ClassName.get(appDescription.getLibPackageName(), "R");
+
+		addDeclareStyleable(appDescription);
+	}
+
+	private void addDeclareStyleable(AppDescription appDescription) {
+		AppDeclareStyleable.DeclareStyleable attributeInput = new AppDeclareStyleable.DeclareStyleable("AttributeInput");
+		attributeInput.setAttr("hintText", "integer");
+		attributeInput.setAttr("inputType", "string");
+		appDescription.setDeclareStyleables(attributeInput);
 	}
 
 	@Override

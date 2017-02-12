@@ -48,9 +48,8 @@ public class MyEnfieldModel {
 
 	private GetPrimaryCollectionResourceByQueryState getCollectionOfChargesState;
 
-	public MyEnfieldModel( )
-	{
-		this.metaModel = new Model( );
+	public MyEnfieldModel() {
+		this.metaModel = new Model();
 
 		this.metaModel.setProducerName("fhws");
 		this.metaModel.setPackagePrefix("de.fhws.applab.gemara");
@@ -58,135 +57,121 @@ public class MyEnfieldModel {
 
 	}
 
-	public Model create( )
-	{
-		createSingleResources( );
+	public Model create() {
+		createSingleResources();
 
+		createDispatcherState();
 
-		createDispatcherState( );
+		createGetLecturerByIdState();
 
+		createGetCollectionOfLecturersState();
 
-		createGetLecturerByIdState( );
+		createDeleteLecturerState();
 
-		createGetCollectionOfLecturersState( );
+		createPostNewLecturerState();
 
-		createDeleteLecturerState( );
+		createUpdateLecturerState();
 
-	//	createPostNewLecturerState( );
+		createPostLecturerImageState();
 
-		createUpdateLecturerState( );
+		createGetLecturerImageState();
 
-		createPostLecturerImageState( );
+		//	createGetCollectionOfChargesState( );
 
-		createGetLecturerImageState( );
+		//	createGetChargeByIdState( );
 
+		//	createPostNewChargeState( );
 
-	//	createGetCollectionOfChargesState( );
+		//	createUpdateChargeState( );
 
-	//	createGetChargeByIdState( );
-
-	//	createPostNewChargeState( );
-
-	//	createUpdateChargeState( );
-
-	//	createDeleteChargeState( );
+		//	createDeleteChargeState( );
 
 		return this.metaModel;
 	}
 
-	private void createSingleResources( )
-	{
-		createSingleResourceLecturer( );
+	private void createSingleResources() {
+		createSingleResourceLecturer();
 
-	//	createSingleResourceCharge( );
+		//	createSingleResourceCharge( );
 	}
 
-	private void createSingleResourceLecturer( )
-	{
-		this.metaModel.addSingleResource( "Lecturer" );
+	private void createSingleResourceLecturer() {
+		this.metaModel.addSingleResource("Lecturer");
 
-		this.lecturerResource = this.metaModel.getSingleResource( "Lecturer" );
+		this.lecturerResource = this.metaModel.getSingleResource("Lecturer");
 
-		this.lecturerResource.setModel( this.metaModel );
-		this.lecturerResource.setResourceName( "Lecturer" );
-		this.lecturerResource.setMediaType( "application/vnd.fhws-lecturer.default+json" );
+		this.lecturerResource.setModel(this.metaModel);
+		this.lecturerResource.setResourceName("Lecturer");
+		this.lecturerResource.setMediaType("application/vnd.fhws-lecturer.default+json");
 
-		final SimpleAttribute title = new SimpleAttribute( "title", SimpleDatatype.STRING );
-		final SimpleAttribute firstName = new SimpleAttribute( "firstName", SimpleDatatype.STRING );
-		final SimpleAttribute lastName = new SimpleAttribute( "lastName", SimpleDatatype.STRING );
-		final SimpleAttribute email = new SimpleAttribute( "email", SimpleDatatype.STRING );
-		final SimpleAttribute phone = new SimpleAttribute( "phone", SimpleDatatype.STRING );
-		final SimpleAttribute address = new SimpleAttribute( "address", SimpleDatatype.STRING );
-		final SimpleAttribute roomNumber = new SimpleAttribute( "roomNumber", SimpleDatatype.STRING );
-		final SimpleAttribute homepage = new SimpleAttribute( "homepage", SimpleDatatype.LINK );
+		final SimpleAttribute title = new SimpleAttribute("title", SimpleDatatype.STRING);
+		final SimpleAttribute firstName = new SimpleAttribute("firstName", SimpleDatatype.STRING);
+		final SimpleAttribute lastName = new SimpleAttribute("lastName", SimpleDatatype.STRING);
+		final SimpleAttribute email = new SimpleAttribute("email", SimpleDatatype.STRING);
+		final SimpleAttribute phone = new SimpleAttribute("phone", SimpleDatatype.STRING);
+		final SimpleAttribute address = new SimpleAttribute("address", SimpleDatatype.STRING);
+		final SimpleAttribute roomNumber = new SimpleAttribute("roomNumber", SimpleDatatype.STRING);
+		final SimpleAttribute homepage = new SimpleAttribute("homepage", SimpleDatatype.LINK);
 
-		this.lecturerResource.addAttribute( title );
-		this.lecturerResource.addAttribute( firstName );
-		this.lecturerResource.addAttribute( lastName );
-		this.lecturerResource.addAttribute( email );
-		this.lecturerResource.addAttribute( phone );
-		this.lecturerResource.addAttribute( address );
-		this.lecturerResource.addAttribute( roomNumber );
-		this.lecturerResource.addAttribute( homepage );
+		this.lecturerResource.addAttribute(title);
+		this.lecturerResource.addAttribute(firstName);
+		this.lecturerResource.addAttribute(lastName);
+		this.lecturerResource.addAttribute(email);
+		this.lecturerResource.addAttribute(phone);
+		this.lecturerResource.addAttribute(address);
+		this.lecturerResource.addAttribute(roomNumber);
+		this.lecturerResource.addAttribute(homepage);
 
-		addImageAttributeForLecturerResource( );
+		addImageAttributeForLecturerResource();
 
-	//	addLinkToChargeResource( );
+		//	addLinkToChargeResource( );
 	}
 
-	private void addImageAttributeForLecturerResource( )
-	{
-		final SimpleAttribute profileImage = new SimpleAttribute( "profileImageUrl", SimpleDatatype.IMAGE );
-		profileImage.setBelongsToResource( this.lecturerResource );
-		this.lecturerResource.addAttribute( profileImage );
-		this.lecturerResource.setCaching( new CachingByEtag( ) );
-		//Hier nochmal setModel?
+	private void addImageAttributeForLecturerResource() {
+		final SimpleAttribute profileImage = new SimpleAttribute("profileImageUrl", SimpleDatatype.IMAGE);
+		profileImage.setBelongsToResource(this.lecturerResource);
+		this.lecturerResource.addAttribute(profileImage);
+		this.lecturerResource.setCaching(new CachingByEtag());
 	}
 
-	private void addLinkToChargeResource( )
-	{
-		final LinkedResourceAttribute linkToCharges = new LinkedResourceAttribute( "chargeUrl",
-				this.lecturerResource );
-		this.lecturerResource.addAttribute( linkToCharges );
-		linkToCharges.setModel( this.metaModel );
+	private void addLinkToChargeResource() {
+		final LinkedResourceAttribute linkToCharges = new LinkedResourceAttribute("chargeUrl", this.lecturerResource);
+		this.lecturerResource.addAttribute(linkToCharges);
+		linkToCharges.setModel(this.metaModel);
 	}
 
-	private void createSingleResourceCharge( )
-	{
-		this.metaModel.addSingleResource( "charge" );
+	private void createSingleResourceCharge() {
+		this.metaModel.addSingleResource("charge");
 
-		this.chargeResource = this.metaModel.getSingleResource( "charge" );
+		this.chargeResource = this.metaModel.getSingleResource("charge");
 
-		this.chargeResource.setModel( this.metaModel );
-		this.chargeResource.setResourceName( "charge" );
-		this.chargeResource.setMediaType( "application/vnd.fhws-charge.default+json" );
+		this.chargeResource.setModel(this.metaModel);
+		this.chargeResource.setResourceName("charge");
+		this.chargeResource.setMediaType("application/vnd.fhws-charge.default+json");
 
-		final SimpleAttribute titleOfCharge = new SimpleAttribute( "title", SimpleDatatype.STRING );
-		final SimpleAttribute fromDate = new SimpleAttribute( "fromDate", SimpleDatatype.DATE );
-		final SimpleAttribute toDate = new SimpleAttribute( "toDate", SimpleDatatype.DATE );
+		final SimpleAttribute titleOfCharge = new SimpleAttribute("title", SimpleDatatype.STRING);
+		final SimpleAttribute fromDate = new SimpleAttribute("fromDate", SimpleDatatype.DATE);
+		final SimpleAttribute toDate = new SimpleAttribute("toDate", SimpleDatatype.DATE);
 
-		this.chargeResource.addAttribute( titleOfCharge );
-		this.chargeResource.addAttribute( fromDate );
-		this.chargeResource.addAttribute( toDate );
+		this.chargeResource.addAttribute(titleOfCharge);
+		this.chargeResource.addAttribute(fromDate);
+		this.chargeResource.addAttribute(toDate);
 	}
 
-	private void createDispatcherState( )
-	{
-		final GetDispatcherState dispatcherState = new GetDispatcherState( );
-		dispatcherState.setName( "Dispatcher" );
-		dispatcherState.setModel( this.metaModel );
-		this.metaModel.setDispatcherState( dispatcherState );
+	private void createDispatcherState() {
+		final GetDispatcherState dispatcherState = new GetDispatcherState();
+		dispatcherState.setName("Dispatcher");
+		dispatcherState.setModel(this.metaModel);
+		this.metaModel.setDispatcherState(dispatcherState);
 		this.dispatcherState = dispatcherState;
 	}
 
-	private void createGetLecturerByIdState( )
-	{
-		final GetPrimarySingleResourceByIdState getLecturerByIdState =
-				new GetPrimarySingleResourceByIdState( );
-		getLecturerByIdState.setName( "GetOneLecturer" );
-		getLecturerByIdState.setResourceType( this.lecturerResource );
-		getLecturerByIdState.setModel( this.metaModel );
-		this.lecturerResource.setDefaultStateForSelfUri( getLecturerByIdState );
+	private void createGetLecturerByIdState() {
+		final GetPrimarySingleResourceByIdState getLecturerByIdState = new GetPrimarySingleResourceByIdState();
+		getLecturerByIdState.setName("GetOneLecturer");
+		getLecturerByIdState.setResourceType(this.lecturerResource);
+		getLecturerByIdState.setModel(this.metaModel);
+		this.lecturerResource.setDefaultStateForSelfUri(getLecturerByIdState);
 
 		//        final StateEntryConstraint stateEntryConstraint = new StateEntryConstraint( );
 		//        stateEntryConstraint.setExpression( "${user.firstName.equals(model.firstName)}" );
@@ -194,206 +179,181 @@ public class MyEnfieldModel {
 		//        stateEntryConstraint.setModel( this.metaModel);
 		//getSingleUserPrimarySingleResource.addStateEntryConstraint( stateEntryConstraint );
 
-		this.metaModel.addState( getLecturerByIdState.getName( ), getLecturerByIdState );
+		this.metaModel.addState(getLecturerByIdState.getName(), getLecturerByIdState);
 
 		this.getLecturerByIdState = getLecturerByIdState;
 
-		addLecturerDetailView( );
+		addLecturerDetailView();
 	}
 
-	private void addLecturerDetailView( )
-	{
+	private void addLecturerDetailView() {
 		final DetailView lecturerDetailView = DetailViewModelGenerator.lecturer();
 
-		final SingleResourceView resourceView = new SingleResourceView( );
+		final SingleResourceView resourceView = new SingleResourceView();
 
-		resourceView.setDetailView( lecturerDetailView );
+		resourceView.setDetailView(lecturerDetailView);
 
-		this.getLecturerByIdState.setSingleResourceView( resourceView );
+		this.getLecturerByIdState.setSingleResourceView(resourceView);
 	}
 
-	private void createGetCollectionOfLecturersState( )
-	{
-		final GetPrimaryCollectionResourceByQueryState getAllLecturersCollectionState =
-				new GetPrimaryCollectionResourceByQueryState( );
-		getAllLecturersCollectionState.setName( "GetAllLecturers" );
-		getAllLecturersCollectionState.setModel( this.metaModel );
-		getAllLecturersCollectionState.setResourceType( this.lecturerResource );
+	private void createGetCollectionOfLecturersState() {
+		final GetPrimaryCollectionResourceByQueryState getAllLecturersCollectionState = new GetPrimaryCollectionResourceByQueryState();
+		getAllLecturersCollectionState.setName("GetAllLecturers");
+		getAllLecturersCollectionState.setModel(this.metaModel);
+		getAllLecturersCollectionState.setResourceType(this.lecturerResource);
 
-		this.dispatcherState.addTransition( new ActionTransition( getAllLecturersCollectionState, "getAllLecturers" ) );
-		getAllLecturersCollectionState.addTransition( this.getLecturerByIdState );
+		this.dispatcherState.addTransition(new ActionTransition(getAllLecturersCollectionState, "getAllLecturers"));
+		getAllLecturersCollectionState.addTransition(this.getLecturerByIdState);
 
-		this.metaModel.addState( getAllLecturersCollectionState.getName( ), getAllLecturersCollectionState );
+		this.metaModel.addState(getAllLecturersCollectionState.getName(), getAllLecturersCollectionState);
 
 		this.getCollectionOfLecturersState = getAllLecturersCollectionState;
 
-		addLecturerCardView( );
+		addLecturerCardView();
 	}
 
-	private void addLecturerCardView( )
-	{
+	private void addLecturerCardView() {
 		final CardView lecturerCardView = CardViewModelGenerator.lecturer();
 
-		final SingleResourceView resourceView = new SingleResourceView( );
+		final SingleResourceView resourceView = new SingleResourceView();
 
-		resourceView.setCardView( lecturerCardView );
+		resourceView.setCardView(lecturerCardView);
 
-		this.getCollectionOfLecturersState.setSingleResourceView( resourceView );
+		this.getCollectionOfLecturersState.setSingleResourceView(resourceView);
 	}
 
-	private void createDeleteLecturerState( )
-	{
-		final DeletePrimaryResourceState deleteLecturerState = new DeletePrimaryResourceState( );
-		deleteLecturerState.setName( "DeleteOneLecturer" );
-		deleteLecturerState.setResourceType( this.lecturerResource );
-		deleteLecturerState.setModel( this.metaModel );
-		deleteLecturerState.addTransition( this.getCollectionOfLecturersState, "getAllLecturers" );
+	private void createDeleteLecturerState() {
+		final DeletePrimaryResourceState deleteLecturerState = new DeletePrimaryResourceState();
+		deleteLecturerState.setName("DeleteOneLecturer");
+		deleteLecturerState.setResourceType(this.lecturerResource);
+		deleteLecturerState.setModel(this.metaModel);
+		deleteLecturerState.addTransition(this.getCollectionOfLecturersState, "getAllLecturers");
 
-		this.getLecturerByIdState.addTransition( deleteLecturerState, "deleteLecturer" );
+		this.getLecturerByIdState.addTransition(deleteLecturerState, "deleteLecturer");
 
-		this.metaModel.addState( deleteLecturerState.getName( ), deleteLecturerState );
+		this.metaModel.addState(deleteLecturerState.getName(), deleteLecturerState);
 	}
 
-	private void createPostNewLecturerState( )
-	{
-		final PostPrimaryResourceState postNewLecturerState = new PostPrimaryResourceState( );
-		postNewLecturerState.setName( "CreateOneLecturer" );
-		postNewLecturerState.setResourceType( this.lecturerResource );
-		postNewLecturerState.setModel( this.metaModel );
-		this.getCollectionOfLecturersState
-				.addTransition( new ActionTransition( postNewLecturerState, "createNewLecturer" ) );
+	private void createPostNewLecturerState() {
+		final PostPrimaryResourceState postNewLecturerState = new PostPrimaryResourceState();
+		postNewLecturerState.setName("CreateOneLecturer");
+		postNewLecturerState.setResourceType(this.lecturerResource);
+		postNewLecturerState.setModel(this.metaModel);
+		this.getCollectionOfLecturersState.addTransition(new ActionTransition(postNewLecturerState, "createNewLecturer"));
 
-		this.metaModel.addState( postNewLecturerState.getName( ), postNewLecturerState );
+		this.metaModel.addState(postNewLecturerState.getName(), postNewLecturerState);
 
-		addInputView( postNewLecturerState );
+		addInputView(postNewLecturerState);
 	}
 
-	private void addInputView( AbstractPrimaryState state )
-	{
+	private void addInputView(AbstractPrimaryState state) {
 		final InputView lecturerInputView = InputViewModelGenerator.lecturer();
 
-		final SingleResourceView resourceView = new SingleResourceView( );
+		final SingleResourceView resourceView = new SingleResourceView();
 
-		resourceView.setInputView( lecturerInputView );
+		resourceView.setInputView(lecturerInputView);
 
-		state.setSingleResourceView( resourceView );
+		state.setSingleResourceView(resourceView);
 	}
 
-	private void createUpdateLecturerState( )
-	{
-		final PutPrimaryResourceState updateLecturerState = new PutPrimaryResourceState( );
-		updateLecturerState.setName( "UpdateLecturer" );
-		updateLecturerState.setResourceType( this.lecturerResource );
-		updateLecturerState.setModel( this.metaModel );
+	private void createUpdateLecturerState() {
+		final PutPrimaryResourceState updateLecturerState = new PutPrimaryResourceState();
+		updateLecturerState.setName("UpdateLecturer");
+		updateLecturerState.setResourceType(this.lecturerResource);
+		updateLecturerState.setModel(this.metaModel);
 
-		this.getLecturerByIdState
-				.addTransition( new ActionTransition( updateLecturerState, "updateLecturer" ) );
+		this.getLecturerByIdState.addTransition(new ActionTransition(updateLecturerState, "updateLecturer"));
 
-		this.metaModel.addState( updateLecturerState.getName( ), updateLecturerState );
+		this.metaModel.addState(updateLecturerState.getName(), updateLecturerState);
 
-		addInputView( updateLecturerState );
+		addInputView(updateLecturerState);
 	}
 
-	private void createPostLecturerImageState( )
-	{
-		final PostImageState postProfileImageState = new PostImageState( );
-		postProfileImageState.setName( "PostProfileImage" );
-		postProfileImageState.setResourceType( this.lecturerResource );
-		postProfileImageState.setModel( this.metaModel );
-		postProfileImageState.setImageAttribute( ( SimpleAttribute ) this.lecturerResource.getAttributeByName(
-				"profileImageUrl" ) );
+	private void createPostLecturerImageState() {
+		final PostImageState postProfileImageState = new PostImageState();
+		postProfileImageState.setName("PostProfileImage");
+		postProfileImageState.setResourceType(this.lecturerResource);
+		postProfileImageState.setModel(this.metaModel);
+		postProfileImageState.setImageAttribute((SimpleAttribute) this.lecturerResource.getAttributeByName("profileImageUrl"));
 
-		this.getLecturerByIdState.addTransition( postProfileImageState, "postImage" );
-		postProfileImageState.setName( "PostProfileImage" );
-		postProfileImageState.setResourceType( this.lecturerResource );
-		postProfileImageState.setModel( this.metaModel );
-		postProfileImageState.setImageAttribute( ( SimpleAttribute ) this.lecturerResource.getAttributeByName(
-				"profileImageUrl" ) );
+		this.getLecturerByIdState.addTransition(postProfileImageState, "postImage");
+		postProfileImageState.setName("PostProfileImage");
+		postProfileImageState.setResourceType(this.lecturerResource);
+		postProfileImageState.setModel(this.metaModel);
+		postProfileImageState.setImageAttribute((SimpleAttribute) this.lecturerResource.getAttributeByName("profileImageUrl"));
 
-		this.metaModel.addState( postProfileImageState.getName( ), postProfileImageState );
+		this.metaModel.addState(postProfileImageState.getName(), postProfileImageState);
 	}
 
-	private void createGetLecturerImageState( )
-	{
-		final GetImageState getProfileImageState = new GetImageState( );
-		getProfileImageState.setName( "GetProfileImage" );
-		getProfileImageState.setResourceType( this.lecturerResource );
-		getProfileImageState.setModel( this.metaModel );
-		getProfileImageState.setImageAttribute( ( SimpleAttribute ) this.lecturerResource.getAttributeByName(
-				"profileImageUrl" ) );
+	private void createGetLecturerImageState() {
+		final GetImageState getProfileImageState = new GetImageState();
+		getProfileImageState.setName("GetProfileImage");
+		getProfileImageState.setResourceType(this.lecturerResource);
+		getProfileImageState.setModel(this.metaModel);
+		getProfileImageState.setImageAttribute((SimpleAttribute) this.lecturerResource.getAttributeByName("profileImageUrl"));
 
-		this.getLecturerByIdState.addTransition( getProfileImageState, "getProfileImage" );
+		this.getLecturerByIdState.addTransition(getProfileImageState, "getProfileImage");
 
-		this.metaModel.addState( getProfileImageState.getName( ), getProfileImageState );
+		this.metaModel.addState(getProfileImageState.getName(), getProfileImageState);
 	}
 
-	private void createGetCollectionOfChargesState( )
-	{
-		final GetPrimaryCollectionResourceByQueryState getCollectionOfChargesState =
-				new GetPrimaryCollectionResourceByQueryState( );
-		getCollectionOfChargesState.setName( "GetAllChargesOfLecturer" );
-		getCollectionOfChargesState.setModel( this.metaModel );
-		getCollectionOfChargesState.setResourceType( this.chargeResource );
+	private void createGetCollectionOfChargesState() {
+		final GetPrimaryCollectionResourceByQueryState getCollectionOfChargesState = new GetPrimaryCollectionResourceByQueryState();
+		getCollectionOfChargesState.setName("GetAllChargesOfLecturer");
+		getCollectionOfChargesState.setModel(this.metaModel);
+		getCollectionOfChargesState.setResourceType(this.chargeResource);
 
-		this.getLecturerByIdState.addTransition( new ContentTransition( getCollectionOfChargesState ) );
+		this.getLecturerByIdState.addTransition(new ContentTransition(getCollectionOfChargesState));
 
-		this.metaModel.addState( getCollectionOfChargesState.getName( ), getCollectionOfChargesState );
+		this.metaModel.addState(getCollectionOfChargesState.getName(), getCollectionOfChargesState);
 
 		this.getCollectionOfChargesState = getCollectionOfChargesState;
 	}
 
-	private void createGetChargeByIdState( )
-	{
-		final GetPrimarySingleResourceByIdState getChargeByIdState =
-				new GetPrimarySingleResourceByIdState( );
-		getChargeByIdState.setName( "GetOneChargeOfLecturer" );
-		getChargeByIdState.setResourceType( this.chargeResource );
-		getChargeByIdState.setModel( this.metaModel );
-		this.chargeResource.setDefaultStateForSelfUri( getChargeByIdState );
+	private void createGetChargeByIdState() {
+		final GetPrimarySingleResourceByIdState getChargeByIdState = new GetPrimarySingleResourceByIdState();
+		getChargeByIdState.setName("GetOneChargeOfLecturer");
+		getChargeByIdState.setResourceType(this.chargeResource);
+		getChargeByIdState.setModel(this.metaModel);
+		this.chargeResource.setDefaultStateForSelfUri(getChargeByIdState);
 
-		this.getCollectionOfChargesState.addTransition( getChargeByIdState );
+		this.getCollectionOfChargesState.addTransition(getChargeByIdState);
 
-		this.metaModel.addState( getChargeByIdState.getName( ),
-				getChargeByIdState );
+		this.metaModel.addState(getChargeByIdState.getName(), getChargeByIdState);
 
 		this.getChargeByIdState = getChargeByIdState;
 	}
 
-	private void createPostNewChargeState( )
-	{
-		final PostPrimaryResourceState createSingleChargePrimaryState = new PostPrimaryResourceState( );
-		createSingleChargePrimaryState.setName( "CreateOneCharge" );
-		createSingleChargePrimaryState.setResourceType( this.chargeResource );
-		createSingleChargePrimaryState.setModel( this.metaModel );
-		this.getCollectionOfChargesState
-				.addTransition( new ActionTransition( createSingleChargePrimaryState, "createChargeOfLecturer" ) );
+	private void createPostNewChargeState() {
+		final PostPrimaryResourceState createSingleChargePrimaryState = new PostPrimaryResourceState();
+		createSingleChargePrimaryState.setName("CreateOneCharge");
+		createSingleChargePrimaryState.setResourceType(this.chargeResource);
+		createSingleChargePrimaryState.setModel(this.metaModel);
+		this.getCollectionOfChargesState.addTransition(new ActionTransition(createSingleChargePrimaryState, "createChargeOfLecturer"));
 
-		this.metaModel.addState( createSingleChargePrimaryState.getName( ), createSingleChargePrimaryState );
+		this.metaModel.addState(createSingleChargePrimaryState.getName(), createSingleChargePrimaryState);
 	}
 
-	private void createUpdateChargeState( )
-	{
-		final PutPrimaryResourceState editSingleChargePrimaryState = new PutPrimaryResourceState( );
-		editSingleChargePrimaryState.setName( "UpdateOneChargeOfLecturer" );
-		editSingleChargePrimaryState.setResourceType( this.chargeResource );
-		editSingleChargePrimaryState.setModel( this.metaModel );
+	private void createUpdateChargeState() {
+		final PutPrimaryResourceState editSingleChargePrimaryState = new PutPrimaryResourceState();
+		editSingleChargePrimaryState.setName("UpdateOneChargeOfLecturer");
+		editSingleChargePrimaryState.setResourceType(this.chargeResource);
+		editSingleChargePrimaryState.setModel(this.metaModel);
 
-		this.getChargeByIdState
-				.addTransition( new ActionTransition( editSingleChargePrimaryState, "updateCharge" ) );
+		this.getChargeByIdState.addTransition(new ActionTransition(editSingleChargePrimaryState, "updateCharge"));
 
-		this.metaModel.addState( editSingleChargePrimaryState.getName( ), editSingleChargePrimaryState );
+		this.metaModel.addState(editSingleChargePrimaryState.getName(), editSingleChargePrimaryState);
 	}
 
-	private void createDeleteChargeState( )
-	{
-		final DeletePrimaryResourceState deleteSingleChargePrimaryState = new DeletePrimaryResourceState( );
-		deleteSingleChargePrimaryState.setName( "DeleteOneChargeOfLecturer" );
-		deleteSingleChargePrimaryState.setResourceType( this.chargeResource );
-		deleteSingleChargePrimaryState.setModel( this.metaModel );
+	private void createDeleteChargeState() {
+		final DeletePrimaryResourceState deleteSingleChargePrimaryState = new DeletePrimaryResourceState();
+		deleteSingleChargePrimaryState.setName("DeleteOneChargeOfLecturer");
+		deleteSingleChargePrimaryState.setResourceType(this.chargeResource);
+		deleteSingleChargePrimaryState.setModel(this.metaModel);
 
-		deleteSingleChargePrimaryState.addTransition( this.getCollectionOfChargesState, "getAllCharges" );
-		this.getChargeByIdState.addTransition( deleteSingleChargePrimaryState, "deleteCharge" );
+		deleteSingleChargePrimaryState.addTransition(this.getCollectionOfChargesState, "getAllCharges");
+		this.getChargeByIdState.addTransition(deleteSingleChargePrimaryState, "deleteCharge");
 
-		this.metaModel.addState( deleteSingleChargePrimaryState.getName( ), deleteSingleChargePrimaryState );
+		this.metaModel.addState(deleteSingleChargePrimaryState.getName(), deleteSingleChargePrimaryState);
 	}
 }

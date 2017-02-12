@@ -4,19 +4,22 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputViewAttribute;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InputLayoutGenerator extends AbstractLayoutGenerator {
 
+	private final AppDescription appDescription;
 	private final InputView inputView;
 	private final String packageName;
 
-	public InputLayoutGenerator(String directoryName, String packageName, InputView inputView) {
-		super("view_" + inputView.getResourceName().toLowerCase() + "_input" , directoryName);
+	public InputLayoutGenerator(AppDescription appDescription, InputView inputView) {
+		super("view_" + inputView.getResourceName().toLowerCase() + "_input" , appDescription.getLibResDirectory());
 		this.inputView = inputView;
-		this.packageName = packageName;
+		this.appDescription = appDescription;
+		this.packageName = appDescription.getLibPackageName() + ".generic.customView";
 	}
 
 	@Override
@@ -59,11 +62,13 @@ public class InputLayoutGenerator extends AbstractLayoutGenerator {
 					inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE) {
 				continue;
 			}
+			addString(inputViewAttribute.getAttributeName() + "_hint", inputViewAttribute.getHintText());
+
 			List<String> viewAttributes = new ArrayList<>();
 			viewAttributes.add("android:id=\"@+id/" + inputViewAttribute.getAttributeName() + "\"");
 			viewAttributes.add("android:layout_width=\"match_parent\"");
 			viewAttributes.add("android:layout_height=\"wrap_content\"");
-			viewAttributes.add("custom:hintText=\"@string/" + inputViewAttribute.getAttributeName() + "\"");
+			viewAttributes.add("custom:hintText=\"@string/" + replaceIllegalCharacters(inputViewAttribute.getAttributeName()) + "_hint" + "\"");
 			viewAttributes.add(getInputType(inputViewAttribute.getAttributeType()));
 
 			View inputView = new View(packageName + ".AttributeInput");
@@ -76,13 +81,20 @@ public class InputLayoutGenerator extends AbstractLayoutGenerator {
 	}
 
 	private String getInputType(ViewAttribute.AttributeType attributeType) {
-		if (attributeType == ViewAttribute.AttributeType.TEXT) {
-			return "custom:inputType=\"text\"";
-		} else if (attributeType == ViewAttribute.AttributeType.MAIL) {
+		if (attributeType == ViewAttribute.AttributeType.MAIL) {
 			return "custom:inputType=\"mail\"";
 		} else if (attributeType == ViewAttribute.AttributeType.PHONE_NUMBER) {
 			return "custom:inputType=\"phone\"";
 		}
-		return "";
+		return "custom:inputType=\"text\"";
+	}
+
+	private void addString(String key, String value) {
+		appDescription.setLibStrings(replaceIllegalCharacters(key), value);
+
+	}
+
+	private String replaceIllegalCharacters(String input) {
+		return input.replace("-", "_").replace(" ", "_");
 	}
 }

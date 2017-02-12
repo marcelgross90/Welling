@@ -52,6 +52,10 @@ public class StateVisitorImpl implements IStateVisitor {
 
 	public void visit(PostPrimaryResourceState postPrimaryResourceState) {
 		SingleResource resource = postPrimaryResourceState.getResourceType();
+		FileWriter.writeJavaFiles(new ResourceGenerator(appDescription, resource), appDescription.getLibJavaDirectory());
+
+		SingleResourceView resourceView = postPrimaryResourceState.getSingleResourceView();
+		resourceView.getInputView().accept(new ResourceViewVisitorImpl(appDescription, stateHolder));
 	}
 
 	public void visit(PutPrimaryResourceState putPrimaryResourceState) {

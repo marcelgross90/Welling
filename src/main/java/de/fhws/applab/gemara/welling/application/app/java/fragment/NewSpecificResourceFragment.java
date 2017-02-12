@@ -30,7 +30,7 @@ public class NewSpecificResourceFragment extends AbstractModelClass {
 		this.specificResourceInputView = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.customView", resourceName + "InputView");
 		this.networkCallBackClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkCallback");
 		this.networkResponseClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkResponse");
-		this.newResourceFragmentClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.fragment", "NewSpecificResourceFragment");
+		this.newResourceFragmentClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.fragment", "NewResourceFragment");
 		this.detailActivityClassName = ClassName.get(packageName, resourceName + "DetailActivity");
 	}
 

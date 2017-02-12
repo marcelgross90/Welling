@@ -23,6 +23,7 @@ public class ResourceViewVisitorImpl implements ResourceViewVisitor {
 	@Override
 	public void visit(InputView inputView) {
 		InputViewGenerator inputViewsGenerator = new InputViewGenerator(inputView, appDescription, stateHolder);
+		inputViewsGenerator.generate();
 	}
 
 	@Override
