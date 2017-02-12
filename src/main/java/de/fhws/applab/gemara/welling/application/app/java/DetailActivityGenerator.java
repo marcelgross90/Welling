@@ -26,6 +26,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 	private final StateHolder stateHolder;
 
 	private final ClassName resourceDetailActivityClassName;
+	private final ClassName resourceActivityClassName;
 	private final ClassName specificResourceDetailViewClassName;
 	private final ClassName mainActivityClassName;
 	private final ClassName rClassName;
@@ -42,18 +43,17 @@ public class DetailActivityGenerator extends AbstractModelClass {
 		this.appDescription = appDescription;
 		this.stateHolder = stateHolder;
 
-		String appName = appDescription.getAppName();
-
-		this.resourceDetailActivityClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.generic.activity", "ResourceDetailActivity");
-		this.specificResourceDetailViewClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.specific.customView", detailView.getResourceName() + "DetailView");
+		this.resourceActivityClassName = ClassName.get(appDescription.getAppPackageName(), detailView.getResourceName() + "Activity");
+		this.resourceDetailActivityClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.activity", "ResourceDetailActivity");
+		this.specificResourceDetailViewClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.customView", detailView.getResourceName() + "DetailView");
 		this.mainActivityClassName = ClassName.get(appDescription.getAppPackageName(), "MainActivity");
 		this.rClassName = ClassName.get(appDescription.getAppPackageName(), "R");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
-		this.specificResourceClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.specific.model",
+		this.specificResourceClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.model",
 				detailView.getResourceName());
-		this.networkCallbackClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkCallback");
-		this.networkResponseClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkResponse");
-		this.linkClassName = ClassName.get(appDescription.getAppPackageName() + "." + appName.toLowerCase() + "_lib.generic.model", "Link");
+		this.networkCallbackClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkCallback");
+		this.networkResponseClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkResponse");
+		this.linkClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Link");
 		addActivityToManifest();
 	}
 
@@ -148,13 +148,11 @@ public class DetailActivityGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getGetIntentForEdit() {
-		//todo
 		return MethodSpec.methodBuilder("getIntentForEdit")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(getIntentClassName())
-				.addStatement("return null")
-				//.addStatement("return new $T($T.this, $T.class)", getIntentClassName(), thisClassName, appResource.getAttributeName() + "Activity")
+				.addStatement("return new $T($T.this, $T.class)", getIntentClassName(), thisClassName, resourceActivityClassName)
 				.build();
 	}
 
