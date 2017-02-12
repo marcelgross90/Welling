@@ -1,27 +1,26 @@
 package de.fhws.applab.gemara.welling.metaModel;
 
+import javafx.util.Pair;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class AppRestAPI {
 
-	private final Map<String, String> restApi = new HashMap<>();
+	private final Map<String, Pair<String, String>> restApi = new HashMap<>();
+
 
 	public AppRestAPI(String baseUrl) {
-		restApi.put("entry_url", baseUrl);
-		restApi.put("rel_type_next", "next");
-		restApi.put("rel_type_self", "self");
+		restApi.put("baseUrl", new Pair<>("entry_url", baseUrl));
+		restApi.put("next", new Pair<>("rel_type_next", "next"));
+		restApi.put("self", new Pair<>("rel_type_self", "self"));
 	}
 
-	public Map<String, String> getRestApi() {
+	public Map<String, Pair<String, String>> getRestApi() {
 		return restApi;
 	}
 
-	public void setRestApi(Map<String, String> api) {
-		restApi.putAll(api);
-	}
-
-	public void setRestApi(String relTypeKey, String relType) {
-		restApi.put(relTypeKey, relType);
+	public void setRestApi(String stateKey, String relTypeKey, String relType) {
+		this.restApi.put(stateKey, new Pair<>(relTypeKey, relType));
 	}
 }

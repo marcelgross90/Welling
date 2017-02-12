@@ -40,7 +40,8 @@ public class StateVisitorImpl implements IStateVisitor {
 		SingleResource resource = getPrimarySingleResourceByIdState.getResourceType();
 		FileWriter.writeJavaFiles(new ResourceGenerator(appDescription, resource), appDescription.getLibJavaDirectory());
 
-		StateHolder stateHolder = getStateHolder(getTransitionFromState(getPrimarySingleResourceByIdState));
+		StateHolder stateHolder = getStateHolder(getPrimarySingleResourceByIdState, getTransitionFromState(
+				getPrimarySingleResourceByIdState));
 
 		SingleResourceView resourceView = getPrimarySingleResourceByIdState.getSingleResourceView();
 		resourceView.getDetailView().accept(new ResourceViewVisitorImpl(appDescription, stateHolder, ResourceViewVisitorImpl.InputType.NONE));
@@ -51,7 +52,8 @@ public class StateVisitorImpl implements IStateVisitor {
 		SingleResource resource = getPrimaryCollectionResourceByQueryState.getResourceType();
 		FileWriter.writeJavaFiles(new ResourceGenerator(appDescription, resource), appDescription.getLibJavaDirectory());
 
-		StateHolder stateHolder = getStateHolder(getTransitionFromState(getPrimaryCollectionResourceByQueryState));
+		StateHolder stateHolder = getStateHolder(getPrimaryCollectionResourceByQueryState, getTransitionFromState(
+				getPrimaryCollectionResourceByQueryState));
 
 		SingleResourceView resourceView = getPrimaryCollectionResourceByQueryState.getSingleResourceView();
 		resourceView.getCardView().accept(new ResourceViewVisitorImpl(appDescription, stateHolder, ResourceViewVisitorImpl.InputType.NONE));
@@ -63,7 +65,7 @@ public class StateVisitorImpl implements IStateVisitor {
 		SingleResource resource = postPrimaryResourceState.getResourceType();
 		FileWriter.writeJavaFiles(new ResourceGenerator(appDescription, resource), appDescription.getLibJavaDirectory());
 
-		StateHolder stateHolder = getStateHolder(getTransitionFromState(postPrimaryResourceState));
+		StateHolder stateHolder = getStateHolder(postPrimaryResourceState, getTransitionFromState(postPrimaryResourceState));
 
 		SingleResourceView resourceView = postPrimaryResourceState.getSingleResourceView();
 		resourceView.getInputView().accept(new ResourceViewVisitorImpl(appDescription, stateHolder, ResourceViewVisitorImpl.InputType.POST));
@@ -73,7 +75,7 @@ public class StateVisitorImpl implements IStateVisitor {
 		SingleResource resource = putPrimaryResourceState.getResourceType();
 		FileWriter.writeJavaFiles(new ResourceGenerator(appDescription, resource), appDescription.getLibJavaDirectory());
 
-		StateHolder stateHolder = getStateHolder(getTransitionFromState(putPrimaryResourceState));
+		StateHolder stateHolder = getStateHolder(putPrimaryResourceState, getTransitionFromState(putPrimaryResourceState));
 
 		SingleResourceView resourceView = putPrimaryResourceState.getSingleResourceView();
 		resourceView.getInputView().accept(new ResourceViewVisitorImpl(appDescription, stateHolder, ResourceViewVisitorImpl.InputType.PUT));
@@ -121,7 +123,7 @@ public class StateVisitorImpl implements IStateVisitor {
 		return state.getTransitions().stream().collect(Collectors.toList());
 	}
 
-	private StateHolder getStateHolder(List<AbstractTransition> abstractTransitions) {
+	private StateHolder getStateHolder(AbstractState state, List<AbstractTransition> abstractTransitions) {
 		StateHolder stateHolder = new StateHolder();
 
 		for (AbstractTransition abstractTransition : abstractTransitions) {
@@ -133,7 +135,8 @@ public class StateVisitorImpl implements IStateVisitor {
 			String relType = "";
 			if (abstractTransition instanceof ActionTransition) {
 				relType = ((ActionTransition) abstractTransition).getRelationType();
-				generateRestApi(relType);
+
+				generateRestApi(stateIdentifierVisitor1.getStateType() + "_" + state.getResourceType().getResourceName(), relType);
 			}
 			stateHolder.setNextStates(stateIdentifierVisitor1.getStateType(), relType);
 		}
@@ -142,8 +145,8 @@ public class StateVisitorImpl implements IStateVisitor {
 	}
 
 
-	private void generateRestApi(String relType) {
+	private void generateRestApi(String stateKey, String relType) {
 
-		appDescription.setRestApi("rel_type_" + relType.toLowerCase(), relType);
+		appDescription.setRestApi(stateKey, "rel_type_" + relType.toLowerCase(), relType);
 	}
 }

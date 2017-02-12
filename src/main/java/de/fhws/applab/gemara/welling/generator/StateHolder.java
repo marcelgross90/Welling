@@ -27,15 +27,11 @@ public class StateHolder {
 		}
 	}
 
-	private String relType;
 	private final List<State> nextStates = new ArrayList<>();
 
 	public StateHolder() {
 	}
 
-	public String getRelType() {
-		return relType;
-	}
 
 	public boolean contains(StateType stateType) {
 		for (State nextState : nextStates) {
@@ -57,6 +53,5 @@ public class StateHolder {
 
 	public void setNextStates(StateType nextState, String relType) {
 		this.nextStates.add(new State(nextState, relType));
-		this.relType = relType;
 	}
 }

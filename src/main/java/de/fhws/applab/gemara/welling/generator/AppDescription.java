@@ -108,12 +108,9 @@ public class AppDescription {
 		return appRestAPI;
 	}
 
-	public void setRestApi(Map<String, String> api) {
-		this.appRestAPI.setRestApi(api);
-	}
 
-	public void setRestApi(String relTypeKey, String relType) {
-		this.appRestAPI.setRestApi(relTypeKey, relType);
+	public void setRestApi(String stateKey, String relTypeKey, String relType) {
+		this.appRestAPI.setRestApi(stateKey, relTypeKey, relType);
 	}
 
 	public AppAndroidManifest getAppManifest() {

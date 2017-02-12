@@ -25,6 +25,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 public class ListFragmentGenerator extends AbstractModelClass {
 
 	private final StateHolder stateHolder;
+	private final AppDescription appDescription;
 	private final String resourceName;
 	private final CardView cardView;
 
@@ -50,6 +51,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 
 	public ListFragmentGenerator(StateHolder stateHolder, AppDescription appDescription, CardView cardView) {
 		super(appDescription.getAppPackageName() + ".fragment", cardView.getResourceName() + "ListFragment");
+		this.appDescription = appDescription;
 		this.stateHolder = stateHolder;
 		this.resourceName = cardView.getResourceName();
 		this.cardView = cardView;
@@ -226,10 +228,11 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		onSuccessMethod.endControlFlow();
 		onSuccessMethod.addStatement("$T $N = $N.getLinkHeader()", linkMap, "linkHeader", "response");
 		onSuccessMethod.addStatement("$T $N = $N.get(getActivity().getString($T.string.$N))",
-						linkClassName, "nextLink", "linkHeader", rClassName, "rel_type_next");
+						linkClassName, "nextLink", "linkHeader", rClassName, appDescription.getAppRestAPI().getRestApi().get("next").getKey());
 		if (stateHolder.contains(StateHolder.StateType.POST)) {
+
 			onSuccessMethod.addStatement("$N = $N.get(getActivity().getString($T.string.$N))",
-					"createNewResourceLink", "linkHeader", rClassName, "rel_type_" + stateHolder.getRelType().toLowerCase());
+					"createNewResourceLink", "linkHeader", rClassName, appDescription.getAppRestAPI().getRestApi().get(StateHolder.StateType.POST + "_" + resourceName).getKey());
 		}
 		onSuccessMethod.beginControlFlow("if ($N != null)", "nextLink");
 		onSuccessMethod.addStatement("$N = $N.getHref()", "nextUrl", "nextLink");

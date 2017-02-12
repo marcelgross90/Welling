@@ -106,7 +106,7 @@ public class ApplicationGenerator {
 
 	private void getFirstRelType(GetDispatcherState dispatcherState) {
 		for (ActionTransition actionTransition : getAllActionTransitionsFromState(dispatcherState)) {
-			appDescription.setRestApi("rel_type_first_state", actionTransition.getRelationType());
+			appDescription.setRestApi("entry_relType", "rel_type_first_state", actionTransition.getRelationType());
 		}
 	}
 

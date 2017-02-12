@@ -1,6 +1,7 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.values;
 
 import de.fhws.applab.gemara.welling.metaModel.AppRestAPI;
+import javafx.util.Pair;
 
 import java.util.Map;
 
@@ -15,9 +16,9 @@ public class RestApi extends ValueGenerator {
 
 	@Override
 	public void generateBody() {
-		Map<String, String> api = appRestAPI.getRestApi();
-		for (String key : api.keySet()) {
-			appendln("<string name=\"" + key + "\">" + api.get(key) + "</string>");
+		for (String states : appRestAPI.getRestApi().keySet()) {
+			Pair<String, String> rel = appRestAPI.getRestApi().get(states);
+			appendln("<string name=\"" + rel.getKey() + "\">" + rel.getValue() + "</string>");
 		}
 	}
 }

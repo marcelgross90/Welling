@@ -27,7 +27,6 @@ public class MetaModelGenerator {
 
 		AndroidMetaModel model = new AndroidMetaModel(packageName, "LecturerGen");
 		AppRestAPI appRestAPI = new AppRestAPI("https://apistaging.fiw.fhws.de/mig/api/");
-		appRestAPI.setRestApi(generateRestAPI());
 
 		model.setAppColor(new AppColor("#3F51B5", "#303F9F", "#FF4081", "#fff", "#8080FF"));
 		model.setAppRestAPI(appRestAPI);
@@ -37,22 +36,7 @@ public class MetaModelGenerator {
 	}
 
 
-	private static Map<String, String> generateRestAPI() {
-		Map<String, String> api = new HashMap<>();
-		api.put("rel_type_first_state", "getAllLecturers");
 
-		api.put("rel_type_create_new_lecturer", "createNewLecturer");
-		api.put("rel_type_update_lecturer", "updateLecturer");
-		api.put("rel_type_delete_lecturer", "deleteLecturer");
-		api.put("rel_type_delete_charge", "deleteCharge");
-
-		api.put("rel_type_update_charge", "updateCharge");
-		api.put("rel_type_get_all_charges", "getAllCharges");
-		api.put("rel_type_get_one_charge_of_lecturer", "getOneChargeOfLecturer");
-		api.put("rel_type_create_charge_of_lecturer", "createChargeOfLecturer");
-
-		return api;
-	}
 
 	private static AppString getAppStrings() {
 		Map<String, String> stringMap = new HashMap<>();
@@ -118,36 +102,9 @@ public class MetaModelGenerator {
 		stringMap.put("load_charges_error", "Could not load charges");
 		stringMap.put("lecturer_delete_error", "Could not delete lecturer");
 		stringMap.put("charge_delete_error", "Could not delete charge");
-		//static strings
-		stringMap.put("delete_dialog_title", "Delete %s");
-		stringMap.put("ok", "OK");
-		stringMap.put("cancel", "Cancel");
-		stringMap.put("add", "Add");
-		stringMap.put("save", "Save");
-		stringMap.put("edit", "Edit");
-		stringMap.put("delete", "Delete");
+
 
 		return new AppString(stringMap);
-	}
-
-
-
-
-	private static List<Attribute> getLecturerAttributes() {
-		List<Attribute> attributes = new ArrayList<>();
-		attributes.add(new SimpleAttribute("id", SimpleAttribute.DataType.INT, Modifier.PRIVATE));
-		attributes.add(new SimpleAttribute("title", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
-		attributes.add(new SimpleAttribute("firstName", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
-		attributes.add(new SimpleAttribute("lastName", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
-		attributes.add(new SimpleAttribute("email", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
-		attributes.add(new SimpleAttribute("phone", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
-		attributes.add(new SimpleAttribute("roomNumber", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
-		attributes.add(new SimpleAttribute("address", SimpleAttribute.DataType.STRING, Modifier.PRIVATE));
-		attributes.add(new LinkAttribute("homepage", packageNameLib, Modifier.PRIVATE));
-		attributes.add(new LinkAttribute("profileImageUrl", packageNameLib, Modifier.PRIVATE));
-		attributes.add(new LinkAttribute("self", packageNameLib, Modifier.PRIVATE));
-		attributes.add(new LinkAttribute("chargeUrl", packageNameLib, Modifier.PRIVATE));
-		return attributes;
 	}
 
 }

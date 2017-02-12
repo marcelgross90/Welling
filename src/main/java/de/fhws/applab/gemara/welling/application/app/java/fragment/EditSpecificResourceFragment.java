@@ -109,7 +109,7 @@ public class EditSpecificResourceFragment extends AbstractModelClass {
 						resourceName.toLowerCase(), "genson", "response", specificResourceClassName)
 				.addStatement("$T $N = $N.getLinkHeader()", linkMap, "linkHeader", "response")
 				.addStatement("$N = $N.get(getActivity().getString($T.string.$N))", "resourceEditLink", "linkHeader", rClassName,
-						"rel_type_update_" + resourceName.toLowerCase())
+						appDescription.getAppRestAPI().getRestApi().get("PUT_" + resourceName).getKey())
 				.addStatement("getActivity().runOnUiThread($L)", runnable)
 				.build();
 

@@ -222,10 +222,10 @@ public class DetailActivityGenerator extends AbstractModelClass {
 		builder.addStatement("$N = $N.deserialize($N.getResponseReader(), $T.class)", "currentResource", "genson", response, specificResourceClassName);
 		builder.addStatement("$T $N = $N.getLinkHeader()", stringLinkMap, "linkHeader", response);
 		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
-			builder.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "deleteLink", "linkHeader", thisClassName, rClassName, "rel_type_" + stateHolder.getRelType(StateHolder.StateType.DELETE).toLowerCase());
+			builder.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "deleteLink", "linkHeader", thisClassName, rClassName, appDescription.getAppRestAPI().getRestApi().get(StateHolder.StateType.DELETE + "_" + detailView.getResourceName()).getKey());
 		}
 		if (stateHolder.contains(StateHolder.StateType.PUT)) {
-			builder.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "updateLink", "linkHeader", thisClassName, rClassName, "rel_type_" + stateHolder.getRelType(StateHolder.StateType.PUT).toLowerCase());
+			builder.addStatement("$N = $N.get($T.this.getString($T.string.$N))", "updateLink", "linkHeader", thisClassName, rClassName, appDescription.getAppRestAPI().getRestApi().get(StateHolder.StateType.PUT + "_" + detailView.getResourceName()).getKey());
 		}
 		builder.addStatement("runOnUiThread($L)", runnable);
 		return builder.build();
