@@ -76,7 +76,7 @@ public class MyEnfieldModel {
 
 		createGetLecturerImageState();
 
-		//	createGetCollectionOfChargesState( );
+		createGetCollectionOfChargesState( );
 
 		//	createGetChargeByIdState( );
 
@@ -92,7 +92,7 @@ public class MyEnfieldModel {
 	private void createSingleResources() {
 		createSingleResourceLecturer();
 
-		//	createSingleResourceCharge( );
+		createSingleResourceCharge( );
 	}
 
 	private void createSingleResourceLecturer() {
@@ -124,7 +124,7 @@ public class MyEnfieldModel {
 
 		addImageAttributeForLecturerResource();
 
-		//	addLinkToChargeResource( );
+		addLinkToChargeResource( );
 	}
 
 	private void addImageAttributeForLecturerResource() {
@@ -135,18 +135,19 @@ public class MyEnfieldModel {
 	}
 
 	private void addLinkToChargeResource() {
+		//todo add link to charge
 		final LinkedResourceAttribute linkToCharges = new LinkedResourceAttribute("chargeUrl", this.lecturerResource);
 		this.lecturerResource.addAttribute(linkToCharges);
 		linkToCharges.setModel(this.metaModel);
 	}
 
 	private void createSingleResourceCharge() {
-		this.metaModel.addSingleResource("charge");
+		this.metaModel.addSingleResource("Charge");
 
-		this.chargeResource = this.metaModel.getSingleResource("charge");
+		this.chargeResource = this.metaModel.getSingleResource("Charge");
 
 		this.chargeResource.setModel(this.metaModel);
-		this.chargeResource.setResourceName("charge");
+		this.chargeResource.setResourceName("Charge");
 		this.chargeResource.setMediaType("application/vnd.fhws-charge.default+json");
 
 		final SimpleAttribute titleOfCharge = new SimpleAttribute("title", SimpleDatatype.STRING);
@@ -308,6 +309,18 @@ public class MyEnfieldModel {
 		this.metaModel.addState(getCollectionOfChargesState.getName(), getCollectionOfChargesState);
 
 		this.getCollectionOfChargesState = getCollectionOfChargesState;
+
+		addChargeCardView();
+	}
+
+	private void addChargeCardView() {
+		final CardView chargeCardView = CardViewModelGenerator.charges();
+
+		final SingleResourceView resourceView = new SingleResourceView();
+
+		resourceView.setCardView(chargeCardView);
+
+		this.getCollectionOfChargesState.setSingleResourceView(resourceView);
 	}
 
 	private void createGetChargeByIdState() {

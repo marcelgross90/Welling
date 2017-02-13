@@ -103,13 +103,13 @@ public class ResourceGenerator extends AbstractModelClass {
 			if (i == attributes.size()-1) {
 				if (attributes.get(i).dataType == Attribute.DataType.INT) {
 					builder.addStatement("return $N == $N.$N", attributeName, resourceName, attributeName);
-				} else if (attributes.get(i).dataType == Attribute.DataType.STRING) {
+				} else if (attributes.get(i).dataType == Attribute.DataType.STRING || attributes.get(i).dataType == Attribute.DataType.DATE) {
 					builder.addStatement("return $N != null ? $N.equals($N.$N) : $N.$N == null", attributeName, attributeName, resourceName, attributeName, resourceName, attributeName);
 				}
 			} else {
 				if (attributes.get(i).dataType == Attribute.DataType.INT) {
 					builder.addStatement("if ($N != $N.$N) return false", attributeName, resourceName, attributeName);
-				} else if (attributes.get(i).dataType == Attribute.DataType.STRING) {
+				} else if (attributes.get(i).dataType == Attribute.DataType.STRING || attributes.get(i).dataType == Attribute.DataType.DATE) {
 					builder.addStatement("if ($N != null ? !$N.equals($N.$N) : $N.$N != null) return false", attributeName, attributeName, resourceName, attributeName, resourceName, attributeName);
 				}
 			}
@@ -127,14 +127,14 @@ public class ResourceGenerator extends AbstractModelClass {
 		for (Attribute attribute: attributes) {
 			String attributeName = attribute.getName();
 			if (firstAttempt) {
-				if (attribute.getDataType() == Attribute.DataType.STRING) {
+				if (attribute.getDataType() == Attribute.DataType.STRING || attribute.getDataType() == Attribute.DataType.DATE) {
 					builder.addStatement("$T $N = $N != null ? $N.hashCode() : 0", int.class, "result", attributeName, attributeName);
 				} else if (attribute.getDataType() == Attribute.DataType.INT) {
 					builder.addStatement("$T $N = $N", int.class, "result", attributeName);
 				}
 				firstAttempt = false;
 			} else {
-				if (attribute.getDataType() == Attribute.DataType.STRING) {
+				if (attribute.getDataType() == Attribute.DataType.STRING || attribute.getDataType() == Attribute.DataType.DATE) {
 					builder.addStatement("$N = 31 * $N + ($N != null ? $N.hashCode() : 0)", "result", "result", attributeName, attributeName);
 				} else if (attribute.getDataType() == Attribute.DataType.INT) {
 					builder.addStatement("$N = 31 * $N + $N", "result", "result", attributeName);

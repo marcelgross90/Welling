@@ -8,6 +8,7 @@ import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
+import de.fhws.applab.gemara.welling.visitors.ContainsDateVisitor;
 import de.fhws.applab.gemara.welling.visitors.FieldVisitor;
 import de.fhws.applab.gemara.welling.visitors.HideViewsVisitor;
 import de.fhws.applab.gemara.welling.visitors.InitializeViewVisitor;
@@ -15,8 +16,11 @@ import de.fhws.applab.gemara.welling.visitors.SetTextVisitor;
 
 import javax.lang.model.element.Modifier;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
@@ -48,20 +52,28 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
-		TypeSpec type = TypeSpec.classBuilder(this.className)
-				.addFields(getFields())
-				.superclass(resourceCardViewClassName)
-				.addModifiers(Modifier.PUBLIC)
-				.addMethod(getConstructorOne())
-				.addMethod(getConstructorTwo())
-				.addMethod(getConstructorThree())
-				.addMethod(getGetStyleable())
-				.addMethod(getGetLayout())
-				.addMethod(getInitializeView())
-				.addMethod(getSetupView())
-				.addMethod(getHideUnnecessaryViews())
-				.build();
-		return JavaFile.builder(this.packageName, type).build();
+		TypeSpec.Builder type = TypeSpec.classBuilder(this.className);
+		type.addFields(getFields());
+		type.superclass(resourceCardViewClassName);
+		type.addModifiers(Modifier.PUBLIC);
+		type.addMethod(getConstructorOne());
+		type.addMethod(getConstructorTwo());
+		type.addMethod(getConstructorThree());
+		type.addMethod(getGetStyleable());
+		type.addMethod(getGetLayout());
+		type.addMethod(getInitializeView());
+		type.addMethod(getSetupView());
+		type.addMethod(getHideUnnecessaryViews());
+
+		ContainsDateVisitor visitor = new ContainsDateVisitor();
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(visitor);
+			if (visitor.isContainsDate()) {
+				type.addMethod(getConvertDate());
+			}
+		}
+
+		return JavaFile.builder(this.packageName, type.build()).build();
 	}
 
 	private List<FieldSpec> getFields() {
@@ -166,5 +178,15 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 		}
 
 		return method.build();
+	}
+
+	private MethodSpec getConvertDate() {
+		return MethodSpec.methodBuilder("convertDate")
+				.addModifiers(Modifier.PRIVATE)
+				.returns(String.class)
+				.addParameter(Date.class, "date")
+				.addStatement("$T $N = new $T($S, $T.GERMANY)", SimpleDateFormat.class, "formatter", SimpleDateFormat.class, "dd.MM.yyyy HH:mm",
+						Locale.class)
+				.addStatement("return $N.format($N)", "formatter", "date").build();
 	}
 }

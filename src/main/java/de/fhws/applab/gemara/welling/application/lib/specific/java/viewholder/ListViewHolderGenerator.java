@@ -88,16 +88,11 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		constructor.addStatement("$N = ($T) $N.findViewById($T.id.$N)", cardViewField, resourceCardView, itemViewParam, rClassName, this.resourceName.toLowerCase() + "_card");
 
 		ContainsImageVisitor visitor = new ContainsImageVisitor();
-		boolean containsImage = false;
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
 			resourceViewAttribute.accept(visitor);
-			containsImage = visitor.isContainsImage();
-			if (containsImage) {
-				break;
+			if (visitor.isContainsImage()) {
+				constructor.addStatement("$N = ($T) $N.findViewById($T.id.profileImg)", profileImg, profileImgClassName, itemViewParam, rClassName);
 			}
-		}
-		if (containsImage) {
-			constructor.addStatement("$N = ($T) $N.findViewById($T.id.profileImg)", profileImg, profileImgClassName, itemViewParam, rClassName);
 		}
 
 		return constructor.build();
@@ -116,19 +111,32 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 	}
 
 	private TypeSpec getOnClick() {
-		MethodSpec onClick = MethodSpec.methodBuilder("onClick")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
-				.addAnnotation(Override.class)
-				.addParameter(getViewClassName(), "view")
-				.beginControlFlow("if ($N != null)", onResourceClickListener)
-				.addStatement("$N.onResourceClickWithView($N, $N)", onResourceClickListener, resourceName.toLowerCase(), profileImg)
-				.addStatement("$N.onResourceClick($N)", onResourceClickListener, resourceName.toLowerCase())
-				.endControlFlow()
-				.build();
+		MethodSpec.Builder onClick = MethodSpec.methodBuilder("onClick");
+		onClick.addModifiers(Modifier.PUBLIC).returns(void.class);
+		onClick.addAnnotation(Override.class);
+		onClick.addParameter(getViewClassName(), "view");
+		onClick.beginControlFlow("if ($N != null)", onResourceClickListener);
+
+		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		boolean containsImage = false;
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(visitor);
+			containsImage = visitor.isContainsImage();
+			if (containsImage) {
+				break;
+			}
+		}
+		if (containsImage) {
+			onClick.addStatement("$N.onResourceClickWithView($N, $N)", onResourceClickListener, resourceName.toLowerCase(), profileImg);
+		} else {
+			onClick.addStatement("$N.onResourceClickWithView($N, $N)", onResourceClickListener, resourceName.toLowerCase(), "null");
+		}
+		onClick.addStatement("$N.onResourceClick($N)", onResourceClickListener, resourceName.toLowerCase());
+		onClick.endControlFlow();
 
 		return TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(getViewOnClickListenerClassName())
-				.addMethod(onClick)
+				.addMethod(onClick.build())
 				.build();
 	}
 }

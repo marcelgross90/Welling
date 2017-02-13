@@ -2,6 +2,8 @@ package de.fhws.applab.gemara.welling.generator.resourceViewGenerator;
 
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
+import de.fhws.applab.gemara.welling.application.app.java.NoPictureActivityGenerator;
+import de.fhws.applab.gemara.welling.application.app.java.PictureActivityGenerator;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.application.app.java.fragment.ListFragmentGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.adapter.ResourceListAdapter;
@@ -19,6 +21,7 @@ import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.visitors.ContainsImageVisitor;
 import de.fhws.applab.gemara.welling.visitors.LinkDescriptionVisitor;
 
 import java.util.ArrayList;
@@ -85,6 +88,7 @@ public class CardViewGenerator extends ResourceViewGenerator<CardView> {
 	private List<AbstractModelClass> getLibSpecificJavaClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
+
 		classes.add(getLibSpecificListAdapter());
 		classes.add(getLibSpecificCardView());
 		classes.add(getLibSpecificViewHolder());
@@ -132,6 +136,23 @@ public class CardViewGenerator extends ResourceViewGenerator<CardView> {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
 		classes.add(new ListFragmentGenerator(stateHolder, appDescription, resourceView));
+
+		ContainsImageVisitor containsImageVisitor = new ContainsImageVisitor();
+
+		boolean containsImage = false;
+		for (ResourceViewAttribute resourceViewAttribute : resourceView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(containsImageVisitor);
+			if (containsImageVisitor.isContainsImage()) {
+				containsImage = true;
+				break;
+			}
+		}
+
+		if (containsImage) {
+			classes.add(new PictureActivityGenerator(appDescription, resourceName));
+		} else {
+			classes.add(new NoPictureActivityGenerator(appDescription, resourceName));
+		}
 
 		return classes;
 	}

@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class Attribute {
 
 	public enum DataType {
-		INT, STRING, LINK
+		INT, STRING, LINK, DATE
 	}
 
 	protected abstract void addReturnValue(MethodSpec.Builder builder);

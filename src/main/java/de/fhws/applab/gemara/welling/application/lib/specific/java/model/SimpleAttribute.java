@@ -5,6 +5,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
+import java.util.Date;
 
 public class SimpleAttribute extends Attribute {
 
@@ -18,6 +19,9 @@ public class SimpleAttribute extends Attribute {
 	@Override
 	protected void addReturnValue(MethodSpec.Builder builder) {
 		switch (type) {
+			case DATE:
+				builder.returns(Date.class);
+				break;
 			case INT:
 				builder.returns(int.class);
 				break;
@@ -39,6 +43,9 @@ public class SimpleAttribute extends Attribute {
 			case STRING:
 				builder.addParameter(String.class, this.name);
 				break;
+			case DATE:
+				builder.addParameter(Date.class, this.name);
+				break;
 			default:
 				break;
 		}
@@ -52,6 +59,9 @@ public class SimpleAttribute extends Attribute {
 				break;
 			case STRING:
 				builder.addField(FieldSpec.builder(String.class, this.name, this.modifiers).build());
+				break;
+			case DATE:
+				builder.addField(FieldSpec.builder(Date.class, this.name, this.modifiers).build());
 				break;
 			default:
 				break;

@@ -9,6 +9,7 @@ import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
+import de.fhws.applab.gemara.welling.application.util.GetterSetterGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
@@ -263,9 +264,17 @@ public class DetailActivityGenerator extends AbstractModelClass {
 			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
 				resourceViewAttribute.accept(visitor);
 				if (visitor.isContainsImage()) {
+					TitleVisitor titleVisitor = new TitleVisitor("current" + detailView.getResourceName());
+					detailView.getTitle().accept(titleVisitor);
 					method.addCode("case $T.id.$N:\n", rClassName, "tv" + getInputWithCapitalStart(visitor.getViewName()) + "Value");
-					//todo add transition to charge fragment;
-					method.addStatement("$T.makeText(this, \"Geht\", Toast.LENGTH_SHORT).show()", getToastClassName());
+
+					method.addStatement("$T $N = new $T($T.this, $T.class)", getIntentClassName(), "intent3", getIntentClassName(), thisClassName, getSubResourceActivityClassname(visitor.getViewName()));
+					method.addStatement("$N.putExtra($S, $N)", "intent3", "name", titleVisitor.getTitle());
+					//todo use right getter
+					method.addStatement("$N.putExtra($S, $N)", "intent3", "url", "currentLecturer.getChargeUrl().getHref()");
+					method.addStatement("$N.putExtra($S, $N)", "intent3", "mediaType", "currentLecturer.getChargeUrl().getType()");
+					//todo use right getter end
+					method.addStatement("startActivity($N)", "intent3");
 					method.addStatement("break");
 				}
 
@@ -276,6 +285,12 @@ public class DetailActivityGenerator extends AbstractModelClass {
 		method.endControlFlow();
 
 		return method.build();
+	}
+
+	private ClassName getSubResourceActivityClassname(String subResourceName) {
+
+		//todo watchout resourcename can be differ from attributeName;
+		return ClassName.get(packageName, getInputWithCapitalStart(subResourceName) + "Activity");
 	}
 
 	private String replaceIllegalCharacters(String input) {

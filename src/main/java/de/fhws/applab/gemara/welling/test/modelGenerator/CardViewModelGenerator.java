@@ -86,4 +86,41 @@ public class CardViewModelGenerator {
 
 		return cardView;
 	}
+
+	public static CardView charges() {
+		List<ResourceViewAttribute> resourceViewAttributes = new ArrayList<>();
+
+		DisplayViewAttribute titleAttributes = new DisplayViewAttribute("title", ViewAttribute.AttributeType.TEXT);
+		titleAttributes.setAttributeLabel("Title");
+		SingleResourceViewAttribute title = new SingleResourceViewAttribute(titleAttributes);
+		resourceViewAttributes.add(title);
+
+		DisplayViewAttribute dateAttribute = new DisplayViewAttribute("date", ViewAttribute.AttributeType.TEXT);
+
+		List<DisplayViewAttribute> dateAttributes = new ArrayList<>();
+		DisplayViewAttribute startDateAttributes = new DisplayViewAttribute("fromDate", ViewAttribute.AttributeType.DATE);
+		startDateAttributes.setAttributeLabel("Startdate");
+		dateAttributes.add(startDateAttributes);
+		DisplayViewAttribute endDateAttributes = new DisplayViewAttribute("toDate", ViewAttribute.AttributeType.DATE);
+		endDateAttributes.setAttributeLabel("Enddate");
+		dateAttributes.add(endDateAttributes);
+
+		GroupResourceViewAttribute date;
+		try {
+			date = new GroupResourceViewAttribute(dateAttribute, dateAttributes);
+		} catch (DisplayViewException ex) {
+			date = null;
+		}
+		resourceViewAttributes.add(date);
+
+		CardView cardView;
+
+		try {
+			cardView = new CardView("Charge", resourceViewAttributes, title);
+		} catch (DisplayViewException ex) {
+			cardView = null;
+		}
+
+		return cardView;
+	}
 }

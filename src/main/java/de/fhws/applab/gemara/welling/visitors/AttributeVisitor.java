@@ -31,6 +31,9 @@ public class AttributeVisitor implements IAttributeVisitor {
 	public void visit(SimpleAttribute simpleAttribute) {
 		if (simpleAttribute.getDatatype() == SimpleDatatype.LINK || simpleAttribute.getDatatype() == SimpleDatatype.IMAGE) {
 			this.attribute = new LinkAttribute(simpleAttribute.getAttributeName(), packageName, Modifier.PRIVATE);
+		} else if (simpleAttribute.getDatatype() == SimpleDatatype.DATE) {
+			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(simpleAttribute.getAttributeName(),
+					Attribute.DataType.DATE, Modifier.PRIVATE);
 		} else {
 			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(simpleAttribute.getAttributeName(),
 					Attribute.DataType.STRING, Modifier.PRIVATE);
@@ -50,7 +53,7 @@ public class AttributeVisitor implements IAttributeVisitor {
 
 	@Override
 	public void visit(LinkedResourceAttribute linkedResourceAttribute) {
-
+		this.attribute = new LinkAttribute(linkedResourceAttribute.getAttributeName(), packageName, Modifier.PRIVATE);
 	}
 
 	@Override

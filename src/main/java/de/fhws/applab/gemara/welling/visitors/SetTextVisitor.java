@@ -35,6 +35,9 @@ public class SetTextVisitor implements ResourceViewAttributeVisitor {
 			} else if (displayViewAttribute.getAttributeType() == AttributeType.URL) {
 				builder.addStatement("$N.setText(getResources().getText($T.string.$N))", displayViewAttribute.getAttributeName(),
 						rClassName, displayViewAttribute.getLinkDescription().toLowerCase());
+			} else if (displayViewAttribute.getAttributeType() == AttributeType.DATE) {
+				builder.addStatement("$N.setText(convertDate($N.$L()))", displayViewAttribute.getAttributeName(), specificResourceName,
+						GetterSetterGenerator.getGetter(displayViewAttribute.getAttributeName()));
 			} else {
 				builder.addStatement("$N.setText($N.$L())", displayViewAttribute.getAttributeName(), specificResourceName,
 						GetterSetterGenerator.getGetter(displayViewAttribute.getAttributeName()));
@@ -48,11 +51,22 @@ public class SetTextVisitor implements ResourceViewAttributeVisitor {
 		String literal = "";
 		for (int i = 0; i < displayViewAttributes.size(); i++) {
 			if (i == 0) {
-				literal += specificResourceName + "." + GetterSetterGenerator.getGetter(displayViewAttributes.get(i).getAttributeName())
-						+ "()";
+				if (displayViewAttributes.get(i).getAttributeType() == AttributeType.DATE) {
+					literal += "convertDate(" + specificResourceName + "." + GetterSetterGenerator.getGetter(displayViewAttributes.get(i).getAttributeName())
+							+ "())";
+				} else {
+					literal += specificResourceName + "." + GetterSetterGenerator.getGetter(displayViewAttributes.get(i).getAttributeName())
+							+ "()";
+				}
+
 			} else {
-				literal += "+ \" \" + " + specificResourceName + "." + GetterSetterGenerator
-						.getGetter(displayViewAttributes.get(i).getAttributeName()) + "()";
+				if (displayViewAttributes.get(i).getAttributeType() == AttributeType.DATE) {
+					literal += " + \" \" + convertDate(" + specificResourceName + "." + GetterSetterGenerator
+							.getGetter(displayViewAttributes.get(i).getAttributeName()) + "())";
+				} else {
+					literal += " + \" \" + " + specificResourceName + "." + GetterSetterGenerator
+							.getGetter(displayViewAttributes.get(i).getAttributeName()) + "()";
+				}
 			}
 		}
 

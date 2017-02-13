@@ -69,7 +69,7 @@ public class HideViewsVisitor implements ResourceViewAttributeVisitor {
 
 	private void addStatement(MethodSpec.Builder builder, AttributeType attributeType, String viewName) {
 		if (attributeType != AttributeType.PICTURE && attributeType != AttributeType.SUBRESOURCE) {
-			if (attributeType == AttributeType.URL) {
+			if (attributeType == AttributeType.URL || attributeType == AttributeType.DATE) {
 				builder.beginControlFlow("if ($N.$L() == null)", specificResourceName, GetterSetterGenerator.getGetter(viewName));
 			} else {
 				builder.beginControlFlow("if ($N.$L().trim().isEmpty())", specificResourceName, GetterSetterGenerator.getGetter(viewName));
@@ -84,7 +84,7 @@ public class HideViewsVisitor implements ResourceViewAttributeVisitor {
 
 	private String generateIfCondition(AttributeType attributeType, String viewName) {
 		if (attributeType != AttributeType.PICTURE) {
-			if (attributeType == AttributeType.URL) {
+			if (attributeType == AttributeType.URL || attributeType == AttributeType.DATE) {
 				return specificResourceName + "." + GetterSetterGenerator.getGetter(viewName) + "() == null";
 			} else {
 				return specificResourceName + "." + GetterSetterGenerator.getGetter(viewName) + "().trim().isEmpty()";

@@ -26,7 +26,7 @@ public class GensonBuilder  extends AbstractModelClass {
 				.addModifiers(Modifier.PUBLIC).returns(gensonClassName)
 				.addCode("return new com.owlike.genson.GensonBuilder()\n"
 						+ ".useDateAsTimestamp(false)\n"
-						+ ".useDateFormat(new $T(\"yyyy-MM-dd'T'HH:mm.ss\", $T.GERMANY)) \n"
+						+ ".useDateFormat(new $T(\"yyyy-MM-dd'T'HH:mm:ss\", $T.GERMANY)) \n"
 						+ ".create();\n", simpleDateFormatClassName, localeClassName)
 				.build();
 
