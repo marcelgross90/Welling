@@ -33,7 +33,7 @@ public class InitializeDetailViewVisitor implements ResourceViewAttributeVisitor
 	}
 
 	private void addStatement(String viewName, ViewAttribute.AttributeType attributeType) {
-		if (attributeType != ViewAttribute.AttributeType.PICTURE) {
+		if (attributeType != ViewAttribute.AttributeType.PICTURE && attributeType != ViewAttribute.AttributeType.SUBRESOURCE) {
 			builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, attributeViewClassName, rClassName, "tv" + getNameWithCapitalStart(viewName) + "Value");
 		}
 	}

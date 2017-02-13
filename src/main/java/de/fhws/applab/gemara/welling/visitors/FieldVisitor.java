@@ -31,7 +31,7 @@ public class FieldVisitor implements ResourceViewAttributeVisitor {
 		if (displayViewAttribute.getAttributeType() == AttributeType.PICTURE) {
 			this.fieldSpec =  FieldSpec.builder(profileImageViewClassName, viewName, Modifier.PRIVATE).build();
 		} else {
-			addField(viewName);
+			addField(displayViewAttribute, viewName);
 		}
 	}
 
@@ -39,11 +39,15 @@ public class FieldVisitor implements ResourceViewAttributeVisitor {
 	public void visit(GroupResourceViewAttribute groupResourceViewAttribute) {
 		DisplayViewAttribute displayViewAttribute = groupResourceViewAttribute.getGroupResouceViewAttribute();
 		String viewName = displayViewAttribute.getAttributeName();
-		addField(viewName);
+		addField(displayViewAttribute, viewName);
 	}
 
-	private void addField(String viewName) {
-		this.fieldSpec = FieldSpec.builder(attributeViewClassName, viewName, Modifier.PRIVATE).build();
+	private void addField(DisplayViewAttribute displayViewAttribute, String viewName) {
+		if (displayViewAttribute.getAttributeType() == AttributeType.SUBRESOURCE) {
+			this.fieldSpec = null;
+		} else {
+			this.fieldSpec = FieldSpec.builder(attributeViewClassName, viewName, Modifier.PRIVATE).build();
+		}
 	}
 
 	public FieldSpec getFieldSpec() {

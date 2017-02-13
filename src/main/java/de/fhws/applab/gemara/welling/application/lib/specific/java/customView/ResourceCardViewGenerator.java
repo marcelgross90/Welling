@@ -68,7 +68,9 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 		List<FieldSpec> fieldSpecs = new ArrayList<>();
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
 			resourceViewAttribute.accept(visitor);
-			fieldSpecs.add(visitor.getFieldSpec());
+			if (visitor.getFieldSpec() != null) {
+				fieldSpecs.add(visitor.getFieldSpec());
+			}
 		}
 		return fieldSpecs;
 	}

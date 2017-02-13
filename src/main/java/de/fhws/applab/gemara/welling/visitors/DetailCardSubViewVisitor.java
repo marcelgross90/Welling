@@ -44,7 +44,14 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 
 
 	private void  _visitForDetailCardSubView(DisplayViewAttribute displayViewAttribute,  String packageName) {
-		AbstractLayoutGenerator.View view = getAttributeView(displayViewAttribute, packageName);
+		AbstractLayoutGenerator.View view;
+
+		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE) {
+			view = getButton(displayViewAttribute);
+		} else {
+			view = getAttributeView(displayViewAttribute, packageName);
+		}
+
 		view.addViewAttribute("android:layout_weight=\"1\"");
 
 		AbstractLayoutGenerator.View linearLayout = new AbstractLayoutGenerator.View("LinearLayout");
@@ -112,6 +119,23 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 		if (displayViewAttribute.getFontSize() == DisplayViewAttribute.FontSize.SMALL) {
 			viewAttributes.add("android:textSize=\"9sp\"");
 		}
+
+		view.setViewAttributes(viewAttributes);
+
+		return view;
+	}
+
+	private AbstractLayoutGenerator.View getButton(DisplayViewAttribute displayViewAttribute) {
+		addString(replaceIllegalCharacters(displayViewAttribute.getAttributeName()) + "_btn", displayViewAttribute.getAttributeLabel());
+		String viewName = "tv" + getInputWithCapitalStart(displayViewAttribute.getAttributeName()) + "Value";
+
+		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View("Button");
+
+		List<String> viewAttributes = new ArrayList<>();
+		viewAttributes.add("android:layout_width=\"match_parent\"");
+		viewAttributes.add("android:layout_height=\"wrap_content\"");
+		viewAttributes.add("android:text=\"@string/" + replaceIllegalCharacters(displayViewAttribute.getAttributeName()) + "_btn" + "\"");
+		viewAttributes.add("android:id=\"@+id/" + viewName + "\"");
 
 		view.setViewAttributes(viewAttributes);
 

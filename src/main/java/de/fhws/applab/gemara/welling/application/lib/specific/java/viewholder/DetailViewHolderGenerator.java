@@ -5,8 +5,11 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
+import de.fhws.applab.gemara.welling.visitors.ContainsSubResourceVisitor;
 
 import javax.lang.model.element.Modifier;
 
@@ -20,6 +23,7 @@ public class DetailViewHolderGenerator extends AbstractModelClass {
 	private final ClassName resourceDetailCardViewClassName;
 	private final ClassName rClassName;
 	private final ClassName specificResourceClassName;
+	private final ClassName buttonClassName;
 
 	private final FieldSpec resourceDetailCardView;
 
@@ -31,6 +35,7 @@ public class DetailViewHolderGenerator extends AbstractModelClass {
 		this.resourceDetailCardViewClassName = ClassName.get(packageName + ".specific.customView", resourceName + "DetailCardView");
 		this.rClassName = ClassName.get(packageName, "R");
 		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", resourceName);
+		this.buttonClassName = getButtonClassName();
 
 		this.resourceDetailCardView = FieldSpec.builder(resourceDetailCardViewClassName, "cardView", Modifier.PRIVATE, Modifier.FINAL).build();
 	}
@@ -49,22 +54,42 @@ public class DetailViewHolderGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec constructor() {
+
+		ContainsSubResourceVisitor visitor = new ContainsSubResourceVisitor();
+
+
 		//todo add onclicklistener for items
-		return MethodSpec.constructorBuilder()
-				.addModifiers(Modifier.PUBLIC)
-				.addParameter(getViewClassName(), "itemView")
-				.addParameter(getViewOnClickListenerClassName(), "listener")
-				.addStatement("super($N)", "itemView")
-				.addStatement("this.$N = ($T) $N.findViewById($T.id.$N)", resourceDetailCardView, resourceDetailCardViewClassName, "itemView", rClassName, resourceName.toLowerCase() + "_detail_card")
-				.build();
+		MethodSpec.Builder method =  MethodSpec.constructorBuilder();
+		method.addModifiers(Modifier.PUBLIC);
+		method.addParameter(getViewClassName(), "itemView");
+		method.addParameter(getViewOnClickListenerClassName(), "listener");
+		method.addStatement("super($N)", "itemView");
+		method.addStatement("this.$N = ($T) $N.findViewById($T.id.$N)", resourceDetailCardView, resourceDetailCardViewClassName, "itemView", rClassName, resourceName.toLowerCase() + "_detail_card");
+
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				resourceViewAttribute.accept(visitor);
+				if (visitor.isContainsImage()) {
+					method.addStatement("$T $N = ($T) $N.findViewById($T.id.$N)", buttonClassName, visitor.getViewName() + "_btn", buttonClassName, "itemView", rClassName, "tv" + getInputWithCapitalStart(visitor.getViewName()) + "Value");
+					method.addStatement("$N.setOnClickListener($N)", visitor.getViewName() + "_btn", "listener");
+				}
+			}
+		}
+
+
+		return method.build();
 	}
 
 	private MethodSpec getAssignData() {
-		return MethodSpec.methodBuilder("assignData")
-				.addModifiers(Modifier.PUBLIC)
-				.returns(void.class)
-				.addParameter(specificResourceClassName, resourceName.toLowerCase())
-				.addStatement("this.$N.setUpView($N)", resourceDetailCardView, resourceName.toLowerCase())
-				.build();
+		MethodSpec.Builder method = MethodSpec.methodBuilder("assignData");
+		method.addModifiers(Modifier.PUBLIC);
+		method.returns(void.class);
+		method.addParameter(specificResourceClassName, resourceName.toLowerCase());
+		method.addStatement("this.$N.setUpView($N)", resourceDetailCardView, resourceName.toLowerCase());
+		return method.build();
+	}
+
+	private String getInputWithCapitalStart(String input) {
+		return Character.toUpperCase(input.charAt(0)) + input.substring(1);
 	}
 }

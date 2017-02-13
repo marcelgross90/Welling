@@ -36,12 +36,14 @@ public class InitializeViewVisitor implements ResourceViewAttributeVisitor {
 	}
 
 	private void addStatement(String viewName, AttributeType attributeType) {
-		if (attributeType == AttributeType.PICTURE) {
-			builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, profileImageViewClassName, rClassName,
-					"profileImg");
-		} else {
-			builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, attributeViewClassName, rClassName,
-					viewName);
+		if (attributeType != AttributeType.SUBRESOURCE) {
+			if (attributeType == AttributeType.PICTURE) {
+				builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, profileImageViewClassName, rClassName,
+						"profileImg");
+			} else {
+				builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, attributeViewClassName, rClassName,
+						viewName);
+			}
 		}
 	}
 }

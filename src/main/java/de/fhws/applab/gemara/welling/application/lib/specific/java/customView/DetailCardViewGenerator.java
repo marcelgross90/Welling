@@ -83,7 +83,9 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 		for (Category category : detailView.getCategories()) {
 			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
 				resourceViewAttribute.accept(fieldVisitor);
-				fieldSpecs.add(fieldVisitor.getFieldSpec());
+				if (fieldVisitor.getFieldSpec() != null) {
+					fieldSpecs.add(fieldVisitor.getFieldSpec());
+				}
 			}
 		}
 		return fieldSpecs;

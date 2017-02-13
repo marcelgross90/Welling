@@ -2,12 +2,12 @@ package de.fhws.applab.gemara.welling.visitors;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute.AttributeType;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.DisplayViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.GroupResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttributeVisitor;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResourceViewAttribute;
 import de.fhws.applab.gemara.welling.application.util.GetterSetterGenerator;
-import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute.AttributeType;
 
 import java.util.List;
 
@@ -27,14 +27,18 @@ public class SetTextVisitor implements ResourceViewAttributeVisitor {
 	public void visit(SingleResourceViewAttribute singleResourceViewAttribute) {
 		DisplayViewAttribute displayViewAttribute = singleResourceViewAttribute.getDisplayViewAttribute();
 
-		if (displayViewAttribute.getAttributeType() == AttributeType.PICTURE) {
-			builder.addStatement("$N.loadImage($N.$L(), $T.dimen.picture_width, $T.dimen.picture_height)", displayViewAttribute.getAttributeName(),
-					specificResourceName, GetterSetterGenerator.getGetter(displayViewAttribute.getAttributeName()), rClassName, rClassName);
-		} else if (displayViewAttribute.getAttributeType() == AttributeType.URL) {
-			builder.addStatement("$N.setText(getResources().getText($T.string.$N))", displayViewAttribute.getAttributeName(), rClassName,
-					displayViewAttribute.getLinkDescription().toLowerCase());
-		} else {
-			builder.addStatement("$N.setText($N.$L())", displayViewAttribute.getAttributeName(), specificResourceName, GetterSetterGenerator.getGetter(displayViewAttribute.getAttributeName()));
+		if (displayViewAttribute.getAttributeType() != AttributeType.SUBRESOURCE) {
+			if (displayViewAttribute.getAttributeType() == AttributeType.PICTURE) {
+				builder.addStatement("$N.loadImage($N.$L(), $T.dimen.picture_width, $T.dimen.picture_height)",
+						displayViewAttribute.getAttributeName(), specificResourceName,
+						GetterSetterGenerator.getGetter(displayViewAttribute.getAttributeName()), rClassName, rClassName);
+			} else if (displayViewAttribute.getAttributeType() == AttributeType.URL) {
+				builder.addStatement("$N.setText(getResources().getText($T.string.$N))", displayViewAttribute.getAttributeName(),
+						rClassName, displayViewAttribute.getLinkDescription().toLowerCase());
+			} else {
+				builder.addStatement("$N.setText($N.$L())", displayViewAttribute.getAttributeName(), specificResourceName,
+						GetterSetterGenerator.getGetter(displayViewAttribute.getAttributeName()));
+			}
 		}
 	}
 
@@ -44,10 +48,11 @@ public class SetTextVisitor implements ResourceViewAttributeVisitor {
 		String literal = "";
 		for (int i = 0; i < displayViewAttributes.size(); i++) {
 			if (i == 0) {
-				literal += specificResourceName + "." + GetterSetterGenerator.getGetter(displayViewAttributes.get(i).getAttributeName()) + "()";
+				literal += specificResourceName + "." + GetterSetterGenerator.getGetter(displayViewAttributes.get(i).getAttributeName())
+						+ "()";
 			} else {
-				literal += "+ \" \" + " + specificResourceName + "." + GetterSetterGenerator.getGetter(
-						displayViewAttributes.get(i).getAttributeName()) + "()";
+				literal += "+ \" \" + " + specificResourceName + "." + GetterSetterGenerator
+						.getGetter(displayViewAttributes.get(i).getAttributeName()) + "()";
 			}
 		}
 

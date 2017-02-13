@@ -7,19 +7,19 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResour
 
 public class ContainsImageVisitor implements ResourceViewAttributeVisitor {
 
-	private boolean containsImage;
+private boolean containsImage;
 
-	@Override
-	public void visit(SingleResourceViewAttribute singleResourceViewAttribute) {
+@Override
+public void visit(SingleResourceViewAttribute singleResourceViewAttribute) {
 		this.containsImage = singleResourceViewAttribute.getDisplayViewAttribute().getAttributeType() == ViewAttribute.AttributeType.PICTURE;
-	}
+		}
 
-	@Override
-	public void visit(GroupResourceViewAttribute groupResourceViewAttribute) {
+@Override
+public void visit(GroupResourceViewAttribute groupResourceViewAttribute) {
 		this.containsImage = groupResourceViewAttribute.getGroupResouceViewAttribute().getAttributeType() == ViewAttribute.AttributeType.PICTURE;
-	}
+		}
 
-	public boolean isContainsImage() {
+public boolean isContainsImage() {
 		return containsImage;
-	}
-}
+		}
+		}

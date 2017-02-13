@@ -37,6 +37,10 @@ public class AndroidSpecificClasses {
 		return ClassName.get("android.os", "Bundle");
 	}
 
+	public static ClassName getButtonClassName() {
+		return ClassName.get("android.widget", "Button");
+	}
+
 	public static ClassName getFragmentManagerClassName() {
 		return ClassName.get("android.support.v4.app", "FragmentManager");
 	}

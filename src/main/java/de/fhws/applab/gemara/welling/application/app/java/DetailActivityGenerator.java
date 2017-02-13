@@ -6,11 +6,14 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
+import de.fhws.applab.gemara.welling.visitors.ContainsSubResourceVisitor;
 import de.fhws.applab.gemara.welling.visitors.TitleVisitor;
 
 import javax.lang.model.element.Modifier;
@@ -72,6 +75,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 	public JavaFile javaFile() {
 		TypeSpec.Builder typeSpec = TypeSpec.classBuilder(this.className);
 		typeSpec.superclass(resourceDetailActivityClassName);
+		typeSpec.addSuperinterface(getViewOnClickListenerClassName());
 		typeSpec.addModifiers(Modifier.PUBLIC);
 		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
 			typeSpec.addMethod(getGetIntentForClose());
@@ -88,6 +92,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 		typeSpec.addMethod(getExtractTitleFromIntent());
 		typeSpec.addMethod(getGetCallback());
 		typeSpec.addMethod(getSetUp());
+		typeSpec.addMethod(getOnClick());
 
 		return JavaFile.builder(this.packageName, typeSpec.build()).build();
 	}
@@ -237,11 +242,40 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				.returns(void.class)
 				.addParameter(specificResourceClassName, detailView.getResourceName().toLowerCase())
 				.addStatement("invalidateOptionsMenu()")
-						//todo add clickListener
-						//.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView", appResource.getAttributeName().toLowerCase(), "this")
 				.addStatement("(($T) $N).setUpView($N, $N)", specificResourceDetailViewClassName, "resourceDetailView",
-						detailView.getResourceName().toLowerCase(), "null")
+						detailView.getResourceName().toLowerCase(), "this")
 				.build();
+	}
+
+	private MethodSpec getOnClick() {
+		ContainsSubResourceVisitor visitor = new ContainsSubResourceVisitor();
+		MethodSpec.Builder method = MethodSpec.methodBuilder("onClick");
+		method.addAnnotation(Override.class);
+		method.addModifiers(Modifier.PUBLIC);
+		method.returns(void.class);
+		method.addParameter(getViewClassName(), "view");
+
+		method.addStatement("$T $N = ($T) $N", specificResourceClassName, "current" + detailView.getResourceName(), specificResourceClassName, "currentResource");
+
+		method.beginControlFlow("switch ($N.getId())", "view");
+
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				resourceViewAttribute.accept(visitor);
+				if (visitor.isContainsImage()) {
+					method.addCode("case $T.id.$N:\n", rClassName, "tv" + getInputWithCapitalStart(visitor.getViewName()) + "Value");
+					//todo add transition to charge fragment;
+					method.addStatement("$T.makeText(this, \"Geht\", Toast.LENGTH_SHORT).show()", getToastClassName());
+					method.addStatement("break");
+				}
+
+			}
+		}
+		method.addCode("default:\n");
+		method.addStatement("break");
+		method.endControlFlow();
+
+		return method.build();
 	}
 
 	private String replaceIllegalCharacters(String input) {
@@ -250,6 +284,10 @@ public class DetailActivityGenerator extends AbstractModelClass {
 
 	private void addString(String key, String value) {
 		appDescription.setLibStrings(key, value);
+	}
+
+	private String getInputWithCapitalStart(String input) {
+		return Character.toUpperCase(input.charAt(0)) + input.substring(1);
 	}
 
 }

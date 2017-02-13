@@ -25,6 +25,7 @@ public class DetailViewModelGenerator {
 
 			categories.add(new Category("Office", getOfficeResourceViewAttributes()));
 			categories.add(new Category("Contact", getContactResourceViewAttributes()));
+			categories.add(new Category("Charges", getChangeResourceViewAttributes()));
 
 			detailView = new DetailView("Lecturer", name, categories);
 			detailView.setImage(getImage());
@@ -92,5 +93,19 @@ public class DetailViewModelGenerator {
 		SingleResourceViewAttribute welearn = new SingleResourceViewAttribute(welearnAttribute);
 		contactAttributes.add(welearn);
 		return contactAttributes;
+	}
+
+	private static List<ResourceViewAttribute> getChangeResourceViewAttributes() {
+		List<ResourceViewAttribute> chargeAttributes = new ArrayList<>();
+
+		DisplayViewAttribute charge = new DisplayViewAttribute("charge", ViewAttribute.AttributeType.SUBRESOURCE);
+		charge.setAttributeLabel("Charge");
+		charge.setClickActionAndroid(true);
+		SingleResourceViewAttribute chargeResourceViewAttribute = new SingleResourceViewAttribute(charge);
+		chargeAttributes.add(chargeResourceViewAttribute);
+
+
+		return chargeAttributes;
+
 	}
 }
