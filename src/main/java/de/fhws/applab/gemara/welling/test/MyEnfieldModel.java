@@ -78,9 +78,9 @@ public class MyEnfieldModel {
 
 		createGetCollectionOfChargesState( );
 
-		//	createGetChargeByIdState( );
+//		createGetChargeByIdState( );
 
-		//	createPostNewChargeState( );
+//		createPostNewChargeState( );
 
 		//	createUpdateChargeState( );
 
@@ -135,7 +135,6 @@ public class MyEnfieldModel {
 	}
 
 	private void addLinkToChargeResource() {
-		//todo add link to charge
 		final LinkedResourceAttribute linkToCharges = new LinkedResourceAttribute("chargeUrl", this.lecturerResource);
 		this.lecturerResource.addAttribute(linkToCharges);
 		linkToCharges.setModel(this.metaModel);

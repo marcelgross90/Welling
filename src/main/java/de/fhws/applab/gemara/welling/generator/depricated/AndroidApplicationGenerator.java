@@ -1,7 +1,5 @@
 package de.fhws.applab.gemara.welling.generator.depricated;
 
-import de.fhws.applab.gemara.welling.generator.depricated.AppGenerator;
-import de.fhws.applab.gemara.welling.generator.depricated.LibGenerator;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.metaModel.AndroidMetaModel;
@@ -16,26 +14,18 @@ public class AndroidApplicationGenerator {
 	
 	private final String startDir = "gemara/android/src-gen/generated/";
 	private final LibGenerator libGenerator;
-	private final AppGenerator appGenerator;
 
 	public AndroidApplicationGenerator(AndroidMetaModel model) {
 		this.model = model;
 
 		this.libGenerator = new LibGenerator(model);
-		this.appGenerator = new AppGenerator(model);
 	}
 
 	public void generate() {
-		generateApp();
 		generateLib();
 	}
 
 
-	private void generateApp() {
-		writeJavaAppClasses();
-		writeXMLAppClasses();
-		writeGradleAppClasses();
-	}
 
 	private void generateLib() {
 		writeJavaLibClasses();
@@ -51,17 +41,6 @@ public class AndroidApplicationGenerator {
 		writeJavaFiles(libGenerator.getJavaClasses(), startDir + model.getApplicationName().toLowerCase() + "_lib/src/main/java/");
 	}
 
-	private void writeJavaAppClasses() {
-		writeJavaFiles(appGenerator.getJavaClasses(), startDir + "app/src/main/java/");
-	}
-
-	private void writeGradleAppClasses() {
-		writeGeneratedFiles(appGenerator.getGradleClasses());
-	}
-
-	private void writeXMLAppClasses() {
-		writeGeneratedFiles(appGenerator.getXMLClasses());
-	}
 
 	private void writeJavaFiles(List<AbstractModelClass> classes, String dir) {
 		for (AbstractModelClass aClass : classes) {

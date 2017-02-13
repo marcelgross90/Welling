@@ -26,8 +26,6 @@ import java.util.List;
 
 public class InputViewGenerator extends ResourceViewGenerator<InputView> {
 
-	//todo find out if post or put
-
 	private final String appPackageName;
 	private final String appResDirectory;
 	private final String appName;
@@ -104,8 +102,4 @@ public class InputViewGenerator extends ResourceViewGenerator<InputView> {
 	protected void addStrings() {
 
 	}
-
-
-
-	//todo implement me
 }

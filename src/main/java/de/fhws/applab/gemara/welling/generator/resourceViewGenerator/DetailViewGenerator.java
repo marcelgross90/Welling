@@ -84,8 +84,6 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 			classes.add(new DetailActivityGenerator(appDescription, resourceView, stateHolder));
 		}
 
-		//todo implement and add LecturerActivity
-
 		return classes;
 	}
 
