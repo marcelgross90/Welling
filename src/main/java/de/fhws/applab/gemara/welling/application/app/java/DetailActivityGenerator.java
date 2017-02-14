@@ -9,7 +9,6 @@ import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
-import de.fhws.applab.gemara.welling.application.util.GetterSetterGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;

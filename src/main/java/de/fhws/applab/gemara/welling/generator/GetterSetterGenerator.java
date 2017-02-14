@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.application.util;
+package de.fhws.applab.gemara.welling.generator;
 
 
 public class GetterSetterGenerator {

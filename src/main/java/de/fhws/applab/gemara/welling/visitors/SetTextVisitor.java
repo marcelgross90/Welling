@@ -7,7 +7,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.DisplayViewA
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.GroupResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttributeVisitor;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResourceViewAttribute;
-import de.fhws.applab.gemara.welling.application.util.GetterSetterGenerator;
+import de.fhws.applab.gemara.welling.generator.GetterSetterGenerator;
 
 import java.util.List;
 
