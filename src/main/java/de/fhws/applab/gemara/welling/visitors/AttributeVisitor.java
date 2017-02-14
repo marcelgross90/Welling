@@ -63,6 +63,6 @@ public class AttributeVisitor implements IAttributeVisitor {
 
 	@Override
 	public void visit(ResourceCollectionAttribute resourceCollectionAttribute) {
-
+		this.attribute = new LinkAttribute(resourceCollectionAttribute.getAttributeName(), packageName, Modifier.PRIVATE);
 	}
 }

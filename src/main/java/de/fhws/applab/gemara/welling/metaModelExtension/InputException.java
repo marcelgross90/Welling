@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.metaModel;
+package de.fhws.applab.gemara.welling.metaModelExtension;
 
 public class InputException extends Exception {
 

@@ -1,6 +1,6 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.values;
 
-import de.fhws.applab.gemara.welling.metaModel.AppColor;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppColor;
 
 public class Colors extends ValueGenerator {
 
@@ -17,7 +17,6 @@ public class Colors extends ValueGenerator {
 		appendln("<color name=\"colorPrimaryDark\">" + appColor.getColorPrimaryDark() + "</color>");
 		appendln("<color name=\"colorAccent\">" + appColor.getColorAccent() + "</color>");
 		appendln("<color name=\"toolbar_text\">" + appColor.getToolbarTextColor() + "</color>");
-		appendln("<color name=\"card_link_color\">" + appColor.getCardLinkColor() + "</color>");
 	}
 
 }

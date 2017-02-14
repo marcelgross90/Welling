@@ -1,6 +1,6 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.values;
 
-import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
 
 import java.util.Map;
 

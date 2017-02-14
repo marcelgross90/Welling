@@ -11,7 +11,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.C
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
 import de.fhws.applab.gemara.welling.visitors.FieldVisitor;
 import de.fhws.applab.gemara.welling.visitors.HideViewsVisitor;
 import de.fhws.applab.gemara.welling.visitors.InitializeDetailViewVisitor;

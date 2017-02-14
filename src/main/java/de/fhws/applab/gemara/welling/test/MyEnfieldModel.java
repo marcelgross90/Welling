@@ -4,6 +4,7 @@ import de.fhws.applab.gemara.enfield.metamodel.Model;
 import de.fhws.applab.gemara.enfield.metamodel.attributes.linked.LinkedResourceAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.attributes.simple.SimpleAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.attributes.simple.SimpleDatatype;
+import de.fhws.applab.gemara.enfield.metamodel.attributes.sub.ResourceCollectionAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.caching.CachingByEtag;
 import de.fhws.applab.gemara.enfield.metamodel.resources.SingleResource;
 import de.fhws.applab.gemara.enfield.metamodel.states.GetDispatcherState;
@@ -20,6 +21,9 @@ import de.fhws.applab.gemara.enfield.metamodel.transitions.ContentTransition;
 import de.fhws.applab.gemara.enfield.metamodel.views.SingleResourceView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.frondentSpecifics.AppSpecifics;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.frondentSpecifics.FrontendColor;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.frondentSpecifics.InputException;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
 import de.fhws.applab.gemara.welling.test.modelGenerator.CardViewModelGenerator;
 import de.fhws.applab.gemara.welling.test.modelGenerator.DetailViewModelGenerator;
@@ -55,10 +59,12 @@ public class MyEnfieldModel {
 		this.metaModel.setPackagePrefix("de.fhws.applab.gemara");
 		this.metaModel.setProjectName("Lecturer");
 
+		this.metaModel.setAppSpecifics(getAppSpecifics());
+
 	}
 
 	public Model create() {
-		createSingleResources();
+		createSingleResourceLecturer();
 
 		createDispatcherState();
 
@@ -89,10 +95,20 @@ public class MyEnfieldModel {
 		return this.metaModel;
 	}
 
-	private void createSingleResources() {
-		createSingleResourceLecturer();
+	private AppSpecifics getAppSpecifics() {
+		AppSpecifics appSpecifics = new AppSpecifics("https://apistaging.fiw.fhws.de/mig/api/");
+		appSpecifics.setFrontendColor(getFrontendColor());
 
-		createSingleResourceCharge( );
+		return appSpecifics;
+
+	}
+
+	private FrontendColor getFrontendColor() {
+		try {
+			return new FrontendColor("#3F51B5", "#303F9F", "#FF4081", "#fff");
+		} catch (InputException ex) {
+			return null;
+		}
 	}
 
 	private void createSingleResourceLecturer() {
@@ -113,6 +129,10 @@ public class MyEnfieldModel {
 		final SimpleAttribute roomNumber = new SimpleAttribute("roomNumber", SimpleDatatype.STRING);
 		final SimpleAttribute homepage = new SimpleAttribute("homepage", SimpleDatatype.LINK);
 
+		createSingleResourceCharge();
+		final ResourceCollectionAttribute charge = new ResourceCollectionAttribute("chargeUrl", this.chargeResource);
+
+
 		this.lecturerResource.addAttribute(title);
 		this.lecturerResource.addAttribute(firstName);
 		this.lecturerResource.addAttribute(lastName);
@@ -122,9 +142,12 @@ public class MyEnfieldModel {
 		this.lecturerResource.addAttribute(roomNumber);
 		this.lecturerResource.addAttribute(homepage);
 
+		this.lecturerResource.addAttribute(charge);
+
+
 		addImageAttributeForLecturerResource();
 
-		addLinkToChargeResource( );
+	//	addLinkToChargeResource( );
 	}
 
 	private void addImageAttributeForLecturerResource() {
@@ -134,11 +157,11 @@ public class MyEnfieldModel {
 		this.lecturerResource.setCaching(new CachingByEtag());
 	}
 
-	private void addLinkToChargeResource() {
+	/*private void addLinkToChargeResource() {
 		final LinkedResourceAttribute linkToCharges = new LinkedResourceAttribute("chargeUrl", this.lecturerResource);
 		this.lecturerResource.addAttribute(linkToCharges);
 		linkToCharges.setModel(this.metaModel);
-	}
+	}*/
 
 	private void createSingleResourceCharge() {
 		this.metaModel.addSingleResource("Charge");

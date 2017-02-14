@@ -1,10 +1,12 @@
 package de.fhws.applab.gemara.welling.generator;
 
 import de.fhws.applab.gemara.enfield.metamodel.Model;
-import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
-import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
-import de.fhws.applab.gemara.welling.metaModel.AppRestAPI;
-import de.fhws.applab.gemara.welling.metaModel.AppString;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppAndroidManifest;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppResource;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppRestAPI;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppString;
+import de.fhws.applab.gemara.welling.metaModelExtension.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ public class AppDescription {
 	private AppAndroidManifest appManifest;
 	private AppString appString;
 	private AppString libString;
+	private AppResource appResources;
 
 	public AppDescription(Model metaModel, String startDir, String baseUrl) {
 		this.appName = metaModel.getProjectName();
@@ -151,6 +154,18 @@ public class AppDescription {
 
 	public void setLibStrings(String key, String value) {
 		this.libString.setStrings(key, value);
+	}
+
+	public AppResource getAppResources() {
+		return appResources;
+	}
+
+	public Resource getResource(String resourceName) {
+		return appResources.getResource(resourceName);
+	}
+
+	public void setAppResources(AppResource appResources) {
+		this.appResources = appResources;
 	}
 
 	private void prepareManifest() {

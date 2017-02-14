@@ -1,9 +1,7 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.values;
 
-import de.fhws.applab.gemara.welling.metaModel.AppRestAPI;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppRestAPI;
 import javafx.util.Pair;
-
-import java.util.Map;
 
 public class RestApi extends ValueGenerator {
 

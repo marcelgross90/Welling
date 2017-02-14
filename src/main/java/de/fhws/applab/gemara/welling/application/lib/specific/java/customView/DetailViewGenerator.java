@@ -10,7 +10,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.D
 import de.fhws.applab.gemara.welling.generator.GetterSetterGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
 
 import javax.lang.model.element.Modifier;
 

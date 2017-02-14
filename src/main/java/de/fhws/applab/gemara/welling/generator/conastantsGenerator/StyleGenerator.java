@@ -1,6 +1,6 @@
 package de.fhws.applab.gemara.welling.generator.conastantsGenerator;
 
-import de.fhws.applab.gemara.welling.metaModel.AppStyle;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppStyle;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,7 +9,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputViewAttrib
 import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView;
 import de.fhws.applab.gemara.welling.generator.GetterSetterGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
-import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;

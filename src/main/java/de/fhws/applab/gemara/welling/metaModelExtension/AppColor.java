@@ -1,4 +1,6 @@
-package de.fhws.applab.gemara.welling.metaModel;
+package de.fhws.applab.gemara.welling.metaModelExtension;
+
+import de.fhws.applab.gemara.enfield.metamodel.wembley.frondentSpecifics.FrontendColor;
 
 public class AppColor {
 
@@ -6,14 +8,12 @@ public class AppColor {
 	private String colorPrimaryDark;
 	private String colorAccent;
 	private String toolbarTextColor;
-	private String cardLinkColor;
 
-	public AppColor(String colorPrimary, String colorPrimaryDark, String colorAccent, String toolbarTextColor, String cardLinkColor) throws InputException {
-		setColorPrimary(colorPrimary);
-		setColorPrimaryDark(colorPrimaryDark);
-		setColorAccent(colorAccent);
-		setToolbarTextColor(toolbarTextColor);
-		setCardLinkColor(cardLinkColor);
+	public AppColor(FrontendColor frontendColor) throws InputException {
+		setColorPrimary(frontendColor.getColorPrimary());
+		setColorPrimaryDark(frontendColor.getColorPrimaryDark());
+		setColorAccent(frontendColor.getColorAccent());
+		setToolbarTextColor(frontendColor.getToolbarTextColor());
 	}
 
 	public String getColorPrimary() {
@@ -50,15 +50,6 @@ public class AppColor {
 	public void setToolbarTextColor(String toolbarTextColor) throws InputException {
 		validateInput(toolbarTextColor);
 		this.toolbarTextColor = toolbarTextColor;
-	}
-
-	public String getCardLinkColor() {
-		return cardLinkColor;
-	}
-
-	public void setCardLinkColor(String cardLinkColor) throws InputException {
-		validateInput(cardLinkColor);
-		this.cardLinkColor = cardLinkColor;
 	}
 
 	private void validateInput(String input) throws InputException {

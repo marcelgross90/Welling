@@ -6,13 +6,15 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.attributes.sub.ResourceCollectionAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.resources.SingleResource;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppAndroidManifest;
 import de.fhws.applab.gemara.welling.visitors.ContainsSubResourceVisitor;
 import de.fhws.applab.gemara.welling.visitors.TitleVisitor;
 
@@ -262,17 +264,16 @@ public class DetailActivityGenerator extends AbstractModelClass {
 		for (Category category : detailView.getCategories()) {
 			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
 				resourceViewAttribute.accept(visitor);
-				if (visitor.isContainsImage()) {
+				if (visitor.isContainsSubResource()) {
 					TitleVisitor titleVisitor = new TitleVisitor("current" + detailView.getResourceName());
 					detailView.getTitle().accept(titleVisitor);
 					method.addCode("case $T.id.$N:\n", rClassName, "tv" + getInputWithCapitalStart(visitor.getViewName()) + "Value");
 
 					method.addStatement("$T $N = new $T($T.this, $T.class)", getIntentClassName(), "intent3", getIntentClassName(), thisClassName, getSubResourceActivityClassname(visitor.getViewName()));
 					method.addStatement("$N.putExtra($S, $N)", "intent3", "name", titleVisitor.getTitle());
-					//todo use right getter
-					method.addStatement("$N.putExtra($S, $N)", "intent3", "url", "currentLecturer.getChargeUrl().getHref()");
-					method.addStatement("$N.putExtra($S, $N)", "intent3", "mediaType", "currentLecturer.getChargeUrl().getType()");
-					//todo use right getter end
+					method.addStatement("$N.putExtra($S, $N)", "intent3", "url", "current" + detailView.getResourceName() + ".get" + getInputWithCapitalStart(
+							visitor.getViewName()) + "().getHref()");
+					method.addStatement("$N.putExtra($S, $N)", "intent3", "mediaType", "current" + detailView.getResourceName() + ".get" + getInputWithCapitalStart(visitor.getViewName()) + "().getType()");
 					method.addStatement("startActivity($N)", "intent3");
 					method.addStatement("break");
 				}
@@ -286,10 +287,12 @@ public class DetailActivityGenerator extends AbstractModelClass {
 		return method.build();
 	}
 
-	private ClassName getSubResourceActivityClassname(String subResourceName) {
+	private ClassName getSubResourceActivityClassname(String attributeName) {
+		SingleResource resource = appDescription.getResource(detailView.getResourceName()).getResource();
 
-		//todo watchout resourcename can be differ from attributeName;
-		return ClassName.get(packageName, getInputWithCapitalStart(subResourceName) + "Activity");
+		ResourceCollectionAttribute collectionAttribute = (ResourceCollectionAttribute) resource.getAttributeByName(attributeName);
+
+		return ClassName.get(packageName, getInputWithCapitalStart(collectionAttribute.getDatatype().getResourceName()) + "Activity");
 	}
 
 	private String replaceIllegalCharacters(String input) {

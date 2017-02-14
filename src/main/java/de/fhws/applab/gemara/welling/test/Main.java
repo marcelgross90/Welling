@@ -1,7 +1,7 @@
 package de.fhws.applab.gemara.welling.test;
 
 import de.fhws.applab.gemara.welling.ApplicationGenerator;
-import de.fhws.applab.gemara.welling.metaModel.InputException;
+import de.fhws.applab.gemara.welling.metaModelExtension.InputException;
 
 public class Main {
 

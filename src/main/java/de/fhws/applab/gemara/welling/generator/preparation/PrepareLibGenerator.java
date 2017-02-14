@@ -25,9 +25,8 @@ import de.fhws.applab.gemara.welling.generator.FileWriter;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.generator.conastantsGenerator.StyleGenerator;
-import de.fhws.applab.gemara.welling.generator.preparation.Preparation;
-import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
-import de.fhws.applab.gemara.welling.metaModel.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppAndroidManifest;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
 
 import java.util.ArrayList;
 import java.util.List;

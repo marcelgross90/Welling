@@ -98,7 +98,7 @@ public class DetailViewModelGenerator {
 	private static List<ResourceViewAttribute> getChangeResourceViewAttributes() {
 		List<ResourceViewAttribute> chargeAttributes = new ArrayList<>();
 
-		DisplayViewAttribute charge = new DisplayViewAttribute("charge", ViewAttribute.AttributeType.SUBRESOURCE);
+		DisplayViewAttribute charge = new DisplayViewAttribute("chargeUrl", ViewAttribute.AttributeType.SUBRESOURCE);
 		charge.setAttributeLabel("Charge");
 		charge.setClickActionAndroid(true);
 		SingleResourceViewAttribute chargeResourceViewAttribute = new SingleResourceViewAttribute(charge);

@@ -2,9 +2,12 @@ package de.fhws.applab.gemara.welling;
 
 import de.fhws.applab.gemara.dalston.generator.utils.VisitStatesOnlyOnce;
 import de.fhws.applab.gemara.enfield.metamodel.Model;
+import de.fhws.applab.gemara.enfield.metamodel.attributes.sub.ResourceCollectionAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.resources.SingleResource;
 import de.fhws.applab.gemara.enfield.metamodel.states.AbstractState;
 import de.fhws.applab.gemara.enfield.metamodel.states.GetDispatcherState;
 import de.fhws.applab.gemara.enfield.metamodel.transitions.ActionTransition;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.frondentSpecifics.AppSpecifics;
 import de.fhws.applab.gemara.welling.application.lib.generic.ManifestGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Attr;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Colors;
@@ -15,8 +18,9 @@ import de.fhws.applab.gemara.welling.generator.FileWriter;
 import de.fhws.applab.gemara.welling.generator.preparation.PrepareGradleGenerator;
 import de.fhws.applab.gemara.welling.generator.preparation.PrepareAppGenerator;
 import de.fhws.applab.gemara.welling.generator.preparation.PrepareLibGenerator;
-import de.fhws.applab.gemara.welling.metaModel.AppColor;
-import de.fhws.applab.gemara.welling.metaModel.InputException;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppColor;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppResource;
+import de.fhws.applab.gemara.welling.metaModelExtension.InputException;
 import de.fhws.applab.gemara.welling.visitors.StateVisitorImpl;
 
 import java.util.Collection;
@@ -24,8 +28,6 @@ import java.util.LinkedList;
 
 public class ApplicationGenerator {
 
-	//todo add baseUrl to metamodel
-	private final String baseUrl = "https://apistaging.fiw.fhws.de/mig/api/";
 	private final String startDir = "gemara/android/src-gen/generated/";
 	private final AppDescription appDescription;
 
@@ -33,17 +35,34 @@ public class ApplicationGenerator {
 	private final PrepareLibGenerator prepareLibGenerator;
 	private final PrepareAppGenerator prepareAppGenerator;
 
-	private Model metaModel;
+	private final Model metaModel;
+	private final AppSpecifics appSpecifics;
 
 	public ApplicationGenerator(Model metaModel) {
 		this.metaModel = metaModel;
+		this.appSpecifics = metaModel.getAppSpecifics();
 
-		this.appDescription = new AppDescription(metaModel, startDir, baseUrl);
+		this.appDescription = new AppDescription(metaModel, startDir, appSpecifics.getBaseUrl());
+		addResources();
 
 		prepareLibGenerator = new PrepareLibGenerator(appDescription);
 		prepareAppGenerator = new PrepareAppGenerator(appDescription, getNameOfStartResource(metaModel.getDispatcherState()));
 		prepareGradleGenerator = new PrepareGradleGenerator(appDescription);
+	}
 
+	public void  addResources() {
+		AppResource appResource = new AppResource();
+		for (SingleResource singleResource : metaModel.getSingleResources()) {
+			appResource.setResources(singleResource);
+			singleResource.getAllAttributes().stream().filter(attribute -> attribute instanceof ResourceCollectionAttribute)
+					.forEach(attribute -> {
+						ResourceCollectionAttribute resourceCollectionAttribute = (ResourceCollectionAttribute) attribute;
+						appResource.addSubResource(singleResource, resourceCollectionAttribute.getDatatype());
+
+					});
+		}
+
+		appDescription.setAppResources(appResource);
 	}
 
 	public void generate() {
@@ -56,7 +75,6 @@ public class ApplicationGenerator {
 
 		writeDeclareStyleables();
 		writeRestApi();
-//todo add colors to metamodel
 		writeColors();
 		writeAppManifest();
 		writeStrings();
@@ -81,10 +99,9 @@ public class ApplicationGenerator {
 
 	private void writeColors() {
 		try {
-			AppColor app = new AppColor("#3F51B5", "#303F9F", "#FF4081", "#fff", "#8080FF");
-			AppColor lib = new AppColor("#3F51B5", "#303F9F", "#FF4081", "#fff", "#8080FF");
-			Colors appColor = new Colors(appDescription.getAppResDirectory(), app);
-			Colors libColor = new Colors(appDescription.getLibResDirectory(), lib);
+			AppColor colors = new AppColor(appSpecifics.getFrontendColor());
+			Colors appColor = new Colors(appDescription.getAppResDirectory(), colors);
+			Colors libColor = new Colors(appDescription.getLibResDirectory(), colors);
 
 			FileWriter.writeGeneratedFiles(appColor);
 			FileWriter.writeGeneratedFiles(libColor);

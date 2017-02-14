@@ -7,7 +7,7 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppAndroidManifest;
 
 import javax.lang.model.element.Modifier;
 

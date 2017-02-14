@@ -1,6 +1,6 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.values;
 
-import de.fhws.applab.gemara.welling.metaModel.AppString;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppString;
 
 import java.util.Map;
 

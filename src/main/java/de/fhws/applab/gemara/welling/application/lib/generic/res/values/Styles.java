@@ -1,10 +1,10 @@
 package de.fhws.applab.gemara.welling.application.lib.generic.res.values;
 
-import de.fhws.applab.gemara.welling.metaModel.AppStyle;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppStyle;
 
 import java.util.Map;
 
-import static de.fhws.applab.gemara.welling.metaModel.AppStyle.Style;
+import static de.fhws.applab.gemara.welling.metaModelExtension.AppStyle.Style;
 
 public class Styles extends ValueGenerator {
 

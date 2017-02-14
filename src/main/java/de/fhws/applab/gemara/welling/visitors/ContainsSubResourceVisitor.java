@@ -7,23 +7,23 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResour
 
 public class ContainsSubResourceVisitor implements ResourceViewAttributeVisitor {
 
-	private boolean containsImage;
+	private boolean containsSubResource;
 	private String viewName;
 
 	@Override
 	public void visit(SingleResourceViewAttribute singleResourceViewAttribute) {
-		this.containsImage = singleResourceViewAttribute.getDisplayViewAttribute().getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE;
+		this.containsSubResource = singleResourceViewAttribute.getDisplayViewAttribute().getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE;
 		this.viewName = singleResourceViewAttribute.getDisplayViewAttribute().getAttributeName();
 	}
 
 	@Override
 	public void visit(GroupResourceViewAttribute groupResourceViewAttribute) {
-		this.containsImage = groupResourceViewAttribute.getGroupResouceViewAttribute().getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE;
+		this.containsSubResource = groupResourceViewAttribute.getGroupResouceViewAttribute().getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE;
 		this.viewName = groupResourceViewAttribute.getGroupResouceViewAttribute().getAttributeName();
 	}
 
-	public boolean isContainsImage() {
-		return containsImage;
+	public boolean isContainsSubResource() {
+		return containsSubResource;
 	}
 
 	public String getViewName() {

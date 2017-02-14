@@ -69,7 +69,7 @@ public class DetailViewHolderGenerator extends AbstractModelClass {
 		for (Category category : detailView.getCategories()) {
 			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
 				resourceViewAttribute.accept(visitor);
-				if (visitor.isContainsImage()) {
+				if (visitor.isContainsSubResource()) {
 					method.addStatement("$T $N = ($T) $N.findViewById($T.id.$N)", buttonClassName, visitor.getViewName() + "_btn", buttonClassName, "itemView", rClassName, "tv" + getInputWithCapitalStart(visitor.getViewName()) + "Value");
 					method.addStatement("$N.setOnClickListener($N)", visitor.getViewName() + "_btn", "listener");
 				}

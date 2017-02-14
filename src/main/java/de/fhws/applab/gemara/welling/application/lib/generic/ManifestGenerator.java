@@ -1,7 +1,7 @@
 package de.fhws.applab.gemara.welling.application.lib.generic;
 
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
-import de.fhws.applab.gemara.welling.metaModel.AppAndroidManifest;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppAndroidManifest;
 
 import java.util.List;
 
