@@ -84,7 +84,7 @@ public class MyEnfieldModel {
 
 		createGetCollectionOfChargesState( );
 
-//		createGetChargeByIdState( );
+		createGetChargeByIdState( );
 
 //		createPostNewChargeState( );
 
@@ -147,7 +147,6 @@ public class MyEnfieldModel {
 
 		addImageAttributeForLecturerResource();
 
-	//	addLinkToChargeResource( );
 	}
 
 	private void addImageAttributeForLecturerResource() {
@@ -157,11 +156,6 @@ public class MyEnfieldModel {
 		this.lecturerResource.setCaching(new CachingByEtag());
 	}
 
-	/*private void addLinkToChargeResource() {
-		final LinkedResourceAttribute linkToCharges = new LinkedResourceAttribute("chargeUrl", this.lecturerResource);
-		this.lecturerResource.addAttribute(linkToCharges);
-		linkToCharges.setModel(this.metaModel);
-	}*/
 
 	private void createSingleResourceCharge() {
 		this.metaModel.addSingleResource("Charge");
@@ -357,6 +351,18 @@ public class MyEnfieldModel {
 		this.metaModel.addState(getChargeByIdState.getName(), getChargeByIdState);
 
 		this.getChargeByIdState = getChargeByIdState;
+
+		addChargeDetailView();
+	}
+
+	private void addChargeDetailView() {
+		final DetailView chargeDetailView = DetailViewModelGenerator.charge();
+
+		final SingleResourceView resourceView = new SingleResourceView();
+
+		resourceView.setDetailView(chargeDetailView);
+
+		this.getChargeByIdState.setSingleResourceView(resourceView);
 	}
 
 	private void createPostNewChargeState() {

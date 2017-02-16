@@ -6,6 +6,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods;
 
@@ -14,6 +15,8 @@ import javax.lang.model.element.Modifier;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
 public class DetailResourceFragment extends AbstractModelClass {
+
+	private final StateHolder stateHolder;
 
 	private final ClassName rClassName;
 	private final ClassName thisClassName;
@@ -33,8 +36,10 @@ public class DetailResourceFragment extends AbstractModelClass {
 	private final FieldSpec deleteLink;
 	private final FieldSpec updateLink;
 
-	public DetailResourceFragment(String packageName) {
+	public DetailResourceFragment(String packageName, StateHolder stateHolder) {
 		super(packageName + ".generic.fragment", "DetailResourceFragment");
+
+		this.stateHolder = stateHolder;
 
 		this.rClassName = ClassName.get(packageName, "R");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
@@ -62,33 +67,46 @@ public class DetailResourceFragment extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
-		TypeSpec type = TypeSpec.classBuilder(this.className)
-				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-				.superclass(getFragmentClassName())
-				.addSuperinterface(deleteDialogListenerClassName)
-				.addField(resourceUrl)
-				.addField(mediaTyp)
-				.addField(genson)
-				.addField(currentResource)
-				.addField(resourceDetailView)
-				.addField(deleteLink)
-				.addField(updateLink)
-				.addMethod(getGetResourceDeleteError())
-				.addMethod(getGetLayout())
-				.addMethod(getInitializeView())
-				.addMethod(getGetEditFragment())
-				.addMethod(getPrepareDeleteBundle())
-				.addMethod(getGetCallback())
-				.addMethod(getOnDialogClosed())
-				.addMethod(getOnCreate())
-				.addMethod(getOnSaveInstanceState())
-				.addMethod(getOnCreateView())
-				.addMethod(getOnCreateOptionsMenu())
-				.addMethod(getOnOptionsItemSelected())
-				.addMethod(getLoadResource())
-				.build();
+		TypeSpec.Builder type = TypeSpec.classBuilder(this.className);
+		type.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
+		type.superclass(getFragmentClassName());
 
-		return JavaFile.builder(this.packageName, type).build();
+
+		if (stateHolder.contains(StateHolder.StateType.PUT)) {
+			type.addField(updateLink);
+			type.addMethod(getGetEditFragment());
+		}
+
+		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
+			type.addSuperinterface(deleteDialogListenerClassName);
+			type.addField(deleteLink);
+			type.addMethod(getGetResourceDeleteError());
+			type.addMethod(getPrepareDeleteBundle());
+			type.addMethod(getOnDialogClosed());
+		}
+
+
+		type.addField(resourceUrl);
+		type.addField(mediaTyp);
+		type.addField(genson);
+		type.addField(currentResource);
+		type.addField(resourceDetailView);
+
+
+
+		type.addMethod(getGetLayout());
+		type.addMethod(getInitializeView());
+
+		type.addMethod(getGetCallback());
+
+		type.addMethod(getOnCreate());
+		type.addMethod(getOnSaveInstanceState());
+		type.addMethod(getOnCreateView());
+		type.addMethod(getOnCreateOptionsMenu());
+		type.addMethod(getOnOptionsItemSelected());
+		type.addMethod(getLoadResource());
+
+		return JavaFile.builder(this.packageName, type.build()).build();
 	}
 
 	private MethodSpec getGetResourceDeleteError() {
@@ -203,45 +221,54 @@ public class DetailResourceFragment extends AbstractModelClass {
 	}
 
 	private MethodSpec getOnCreateOptionsMenu() {
-		return MethodSpec.methodBuilder("onCreateOptionsMenu")
-				.addAnnotation(Override.class)
-				.addModifiers(Modifier.PUBLIC)
-				.returns(void.class)
-				.addParameter(getMenuClassName(), "menu")
-				.addParameter(getMenuInflaterClassName(), "inflater")
-				.addStatement("$N.inflate($T.menu.$N, $N)", "inflater", rClassName, "detail_menu", "menu")
-				.addStatement("$T $N = $N.findItem($T.id.$N)", getMenuItemClassName(), "deleteItem", "menu", rClassName, "delete_item")
-				.addStatement("$T $N = $N.findItem($T.id.$N)", getMenuItemClassName(), "editItem", "menu", rClassName, "edit_item")
-				.addStatement("$N.setVisible($N != null)", "deleteItem", deleteLink)
-				.addStatement("$N.setVisible($N != null)", "editItem", updateLink)
-				.build();
+		MethodSpec.Builder method =  MethodSpec.methodBuilder("onCreateOptionsMenu");
+		method.addAnnotation(Override.class);
+		method.addModifiers(Modifier.PUBLIC);
+		method.returns(void.class);
+		method.addParameter(getMenuClassName(), "menu");
+		method.addParameter(getMenuInflaterClassName(), "inflater");
+		method.addStatement("$N.inflate($T.menu.$N, $N)", "inflater", rClassName, "detail_menu", "menu");
+
+		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
+			method.addStatement("$T $N = $N.findItem($T.id.$N)", getMenuItemClassName(), "deleteItem", "menu", rClassName, "delete_item");
+			method.addStatement("$N.setVisible($N != null)", "deleteItem", deleteLink);
+		}
+		if (stateHolder.contains(StateHolder.StateType.PUT)) {
+			method.addStatement("$T $N = $N.findItem($T.id.$N)", getMenuItemClassName(), "editItem", "menu", rClassName, "edit_item");
+			method.addStatement("$N.setVisible($N != null)", "editItem", updateLink);
+		}
+		return  method.build();
 	}
 
 	private MethodSpec getOnOptionsItemSelected() {
-		return MethodSpec.methodBuilder("onOptionsItemSelected")
-				.addAnnotation(Override.class)
-				.addModifiers(Modifier.PUBLIC)
-				.returns(boolean.class)
-				.addParameter(getMenuItemClassName(), "item")
-				.addStatement("$T $N = $N.getItemId()", int.class, "i", "item")
-				.beginControlFlow("if ($N == $T.id.$N)", "i", rClassName, "edit_item")
-				.addStatement("$T $N = new $T()", bundleClassName, "editBundle", bundleClassName)
-				.addStatement("$N.putString($S, $N.getHref())", "editBundle", "url", updateLink)
-				.addStatement("$N.putString($S, $N.getType())", "editBundle", "mediaType", updateLink)
-				.addStatement("$T $N = $N()", getFragmentClassName(), "fragment", getGetEditFragment())
-				.addStatement("$N.setArguments($N)", "fragment", "editBundle")
-				.addStatement("$T.replaceFragmentPopBackStack(getFragmentManager(), $N)", fragmentHandlerClassName, "fragment")
-				.endControlFlow()
-				.beginControlFlow("else if ($N == $T.id.$N)", "i", rClassName, "delete_item")
-				.addStatement("$T $N = $N()", bundleClassName, "bundle", getPrepareDeleteBundle())
-				.addStatement("$N.putString($S, $N.getHref())", "bundle", "url", deleteLink)
-				.addStatement("$T $N = new $T()", deleteDialogFragmentClassName, "deleteDialogFragment", deleteDialogFragmentClassName)
-				.addStatement("$N.setArguments($N)", "deleteDialogFragment", "bundle")
-				.addStatement("$N.setTargetFragment($T.this, 0)", "deleteDialogFragment", thisClassName)
-				.addStatement("$N.show(getFragmentManager(), null)", "deleteDialogFragment")
-				.endControlFlow()
-				.addStatement("return super.onOptionsItemSelected($N)", "item")
-				.build();
+		MethodSpec.Builder method = MethodSpec.methodBuilder("onOptionsItemSelected");
+		method.addAnnotation(Override.class);
+		method.addModifiers(Modifier.PUBLIC);
+		method.returns(boolean.class);
+		method.addParameter(getMenuItemClassName(), "item");
+		method.addStatement("$T $N = $N.getItemId()", int.class, "i", "item");
+		if (stateHolder.contains(StateHolder.StateType.PUT)) {
+			method.beginControlFlow("if ($N == $T.id.$N)", "i", rClassName, "edit_item");
+			method.addStatement("$T $N = new $T()", bundleClassName, "editBundle", bundleClassName);
+			method.addStatement("$N.putString($S, $N.getHref())", "editBundle", "url", updateLink);
+			method.addStatement("$N.putString($S, $N.getType())", "editBundle", "mediaType", updateLink);
+			method.addStatement("$T $N = $N()", getFragmentClassName(), "fragment", getGetEditFragment());
+			method.addStatement("$N.setArguments($N)", "fragment", "editBundle");
+			method.addStatement("$T.replaceFragmentPopBackStack(getFragmentManager(), $N)", fragmentHandlerClassName, "fragment");
+			method.endControlFlow();
+		}
+		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
+			method.beginControlFlow(" if ($N == $T.id.$N)", "i", rClassName, "delete_item");
+			method.addStatement("$T $N = $N()", bundleClassName, "bundle", getPrepareDeleteBundle());
+			method.addStatement("$N.putString($S, $N.getHref())", "bundle", "url", deleteLink);
+			method.addStatement("$T $N = new $T()", deleteDialogFragmentClassName, "deleteDialogFragment", deleteDialogFragmentClassName);
+			method.addStatement("$N.setArguments($N)", "deleteDialogFragment", "bundle");
+			method.addStatement("$N.setTargetFragment($T.this, 0)", "deleteDialogFragment", thisClassName);
+			method.addStatement("$N.show(getFragmentManager(), null)", "deleteDialogFragment");
+			method.endControlFlow();
+		}
+		method.addStatement("return super.onOptionsItemSelected($N)", "item");
+		return method.build();
 	}
 
 	private MethodSpec getLoadResource() {

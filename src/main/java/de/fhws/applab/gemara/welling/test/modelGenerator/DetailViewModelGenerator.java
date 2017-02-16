@@ -36,6 +36,41 @@ public class DetailViewModelGenerator {
 		return detailView;
 	}
 
+	public static DetailView charge() {
+		DetailView detailView;
+
+		try {
+			List<Category> categories = new ArrayList<>();
+			DisplayViewAttribute titleAttribute = new DisplayViewAttribute("title", ViewAttribute.AttributeType.TEXT);
+			SingleResourceViewAttribute title = new SingleResourceViewAttribute(titleAttribute);
+
+			categories.add(new Category("Tenure", getTenureResourceViewAttributes()));
+
+			detailView = new DetailView("Charge", title, categories);
+		} catch (DisplayViewException ex) {
+			detailView = null;
+		}
+
+		return detailView;
+
+	}
+
+
+	private static List<ResourceViewAttribute> getTenureResourceViewAttributes() {
+		List<ResourceViewAttribute> tenureAttributes = new ArrayList<>();
+
+		DisplayViewAttribute fromDateAttribute = new DisplayViewAttribute("fromDate", ViewAttribute.AttributeType.DATE);
+		fromDateAttribute.setAttributeLabel("Startdate");
+		SingleResourceViewAttribute fromDate = new SingleResourceViewAttribute(fromDateAttribute);
+		tenureAttributes.add(fromDate);
+
+		DisplayViewAttribute toDateAttribute = new DisplayViewAttribute("toDate", ViewAttribute.AttributeType.DATE);
+		toDateAttribute.setAttributeLabel("Enddate");
+		SingleResourceViewAttribute toDate = new SingleResourceViewAttribute(toDateAttribute);
+		tenureAttributes.add(toDate);
+		return tenureAttributes;
+	}
+
 	private static SingleResourceViewAttribute getImage() {
 		DisplayViewAttribute imageAttribute = new DisplayViewAttribute("profileImageUrl", ViewAttribute.AttributeType.PICTURE);
 		imageAttribute.setAttributeLabel("ProfileImage");

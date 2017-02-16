@@ -2,10 +2,12 @@ package de.fhws.applab.gemara.welling.generator.resourceViewGenerator;
 
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.application.app.java.DetailActivityGenerator;
+import de.fhws.applab.gemara.welling.application.app.java.fragment.DetailFragmentGenerator;
 import de.fhws.applab.gemara.welling.application.app.res.layout.ActivityDetailViewGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.activity.ResourceDetailActivity;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.ResourceDetailView;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.DeleteDialogFragment;
+import de.fhws.applab.gemara.welling.application.lib.generic.java.fragment.DetailResourceFragment;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.CustomCardViewLayoutGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.menu.DetailMenu;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.adapter.DetailAdapterGenerator;
@@ -45,6 +47,8 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 			classes.add(new DetailAdapterGenerator(libPackageName, resourceView));
 			classes.add(new DetailViewHolderGenerator(libPackageName, resourceView));
 
+		} else {
+			classes.add(new DetailResourceFragment(libPackageName, stateHolder));
 		}
 		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
 			classes.add(new DeleteDialogFragment(appDescription));
@@ -65,14 +69,17 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 			classes.add(new ActivityDetailViewGenerator(appResDirectory, resourceName, libPackageName));
 			classes.add(new DetailCardLayoutGenerator(appDescription, "view_" + resourceName.toLowerCase() + "_detail_card", resourceView));
 			classes.add(new ViewResourceDetailActivityGenerator(appDescription, resourceView));
+			classes.add(new CustomCardViewLayoutGenerator(libResDirectory, libPackageName, "card_" + resourceName.toLowerCase() + "_detail",
+					resourceName + "DetailCardView", resourceName.toLowerCase() + "_detail_card"));
+		} else {
+			classes.add(new DetailCardLayoutGenerator(appDescription, "view_" + resourceName.toLowerCase() + "_detail", resourceView));
+
 		}
 		if (stateHolder.contains(StateHolder.StateType.DELETE) ||
 				stateHolder.contains(StateHolder.StateType.PUT)) {
 			classes.add(new DetailMenu(appDescription));
 		}
 
-		classes.add(new CustomCardViewLayoutGenerator(libResDirectory, libPackageName, "card_" + resourceName.toLowerCase() + "_detail",
-				resourceName + "DetailCardView", resourceName.toLowerCase() + "_detail_card"));
 
 		return classes;
 	}
@@ -82,6 +89,8 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 		List<AbstractModelClass> classes = new ArrayList<>();
 		if (containsImage()) {
 			classes.add(new DetailActivityGenerator(appDescription, resourceView, stateHolder));
+		} else {
+			classes.add(new DetailFragmentGenerator(appDescription, resourceView, stateHolder));
 		}
 
 		return classes;
