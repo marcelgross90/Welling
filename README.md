@@ -31,8 +31,7 @@ You can find the REST-API under https://apistaging.fiw.fhws.de/mig/api/.
 **Step by Step:**
 
 1. Checkout the repository
-2. Build the project
-3. Execute the project
+2. Run `mvn test`
 
 Continue with Step 6. from the introduction.
 

@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.test;
+package de.fhws.applab.gemara.welling;
 
 import de.fhws.applab.gemara.enfield.metamodel.Model;
 import de.fhws.applab.gemara.enfield.metamodel.attributes.simple.SimpleAttribute;
@@ -24,9 +24,9 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.frondentSpecifics.AppSpec
 import de.fhws.applab.gemara.enfield.metamodel.wembley.frondentSpecifics.FrontendColor;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.frondentSpecifics.InputException;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
-import de.fhws.applab.gemara.welling.test.modelGenerator.CardViewModelGenerator;
-import de.fhws.applab.gemara.welling.test.modelGenerator.DetailViewModelGenerator;
-import de.fhws.applab.gemara.welling.test.modelGenerator.InputViewModelGenerator;
+import de.fhws.applab.gemara.welling.modelGenerator.CardViewModelGenerator;
+import de.fhws.applab.gemara.welling.modelGenerator.DetailViewModelGenerator;
+import de.fhws.applab.gemara.welling.modelGenerator.InputViewModelGenerator;
 
 /**
  * Created by marcelgross on 11.02.17.

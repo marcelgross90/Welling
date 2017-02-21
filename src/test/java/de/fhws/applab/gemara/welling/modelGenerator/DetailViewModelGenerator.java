@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.test.modelGenerator;
+package de.fhws.applab.gemara.welling.modelGenerator;
 
 import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.DisplayViewAttribute;
