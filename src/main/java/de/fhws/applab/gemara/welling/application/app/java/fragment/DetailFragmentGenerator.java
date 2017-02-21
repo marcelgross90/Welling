@@ -67,7 +67,6 @@ public class DetailFragmentGenerator extends AbstractModelClass {
 		}
 		if (stateHolder.contains(StateHolder.StateType.PUT)) {
 			typeSpec.addMethod(getGetEditFragment());
-			typeSpec.addMethod(getPrepareBundle());
 		}
 		typeSpec.addMethod(getOnCreateOptionsMenu());
 		typeSpec.addMethod(getGetLayout());
@@ -130,6 +129,7 @@ public class DetailFragmentGenerator extends AbstractModelClass {
 				.build();
 	}
 
+	//todo delete
 	private MethodSpec getPrepareBundle() {
 		TitleVisitor titleVisitor = new TitleVisitor(detailView.getResourceName());
 		detailView.getTitle().accept(titleVisitor);

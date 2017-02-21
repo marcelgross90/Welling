@@ -5,6 +5,7 @@ import de.fhws.applab.gemara.enfield.metamodel.resources.SingleResource;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputViewAttribute;
+import de.fhws.applab.gemara.welling.application.app.java.NoPictureActivityGenerator;
 import de.fhws.applab.gemara.welling.application.app.java.PictureActivityGenerator;
 import de.fhws.applab.gemara.welling.application.app.java.fragment.EditSpecificResourceFragment;
 import de.fhws.applab.gemara.welling.application.app.java.fragment.NewSpecificResourceWithPictureFragment;
@@ -104,7 +105,12 @@ public class InputViewGenerator extends ResourceViewGenerator<InputView> {
 			}
 		}
 		if (inputType == ResourceViewVisitorImpl.InputType.PUT) {
-			classes.add(new PictureActivityGenerator(appDescription, resourceView.getResourceName()));
+			if (containsImage()) {
+				classes.add(new PictureActivityGenerator(appDescription, resourceView.getResourceName()));
+			} else {
+				classes.add(new NoPictureActivityGenerator(appDescription, resourceView.getResourceName()));
+			}
+
 			classes.add(new EditSpecificResourceFragment(appDescription, resourceView));
 		}
 

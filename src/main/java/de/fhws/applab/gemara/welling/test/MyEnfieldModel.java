@@ -87,7 +87,7 @@ public class MyEnfieldModel {
 
 		createPostNewChargeState( );
 
-		//	createUpdateChargeState( );
+		createUpdateChargeState( );
 
 		createDeleteChargeState( );
 
@@ -397,6 +397,8 @@ public class MyEnfieldModel {
 		this.getChargeByIdState.addTransition(new ActionTransition(editSingleChargePrimaryState, "updateCharge"));
 
 		this.metaModel.addState(editSingleChargePrimaryState.getName(), editSingleChargePrimaryState);
+
+		addChargeInputView(editSingleChargePrimaryState);
 	}
 
 	private void createDeleteChargeState() {
