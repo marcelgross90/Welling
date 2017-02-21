@@ -24,15 +24,10 @@ Alternatively to Step 6. Import the generated Android sources to your IDE and co
 Testing:
 --------
 
-For testing proposals you can use the `main()` - method in the `Main` - class.
-This test-case will generate an application which fits to the GeMARA generated project `Lecturer`.
+The test-case will generate an application which fits to the GeMARA generated project `Lecturer`.
 You can find the REST-API under https://apistaging.fiw.fhws.de/mig/api/.
 
 **Step by Step:**
 
 1. Checkout the repository
-2. Run `mvn test`
-
-Continue with Step 6. from the introduction.
-
-If there occurs any problems with copying some files please execute the project again.
+2. Run `make test`
