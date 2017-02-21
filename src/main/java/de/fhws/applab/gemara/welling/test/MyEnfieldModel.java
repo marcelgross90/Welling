@@ -90,7 +90,7 @@ public class MyEnfieldModel {
 
 		//	createUpdateChargeState( );
 
-		//	createDeleteChargeState( );
+		createDeleteChargeState( );
 
 		return this.metaModel;
 	}

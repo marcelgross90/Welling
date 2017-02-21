@@ -63,6 +63,7 @@ public class DetailFragmentGenerator extends AbstractModelClass {
 		typeSpec.addModifiers(Modifier.PUBLIC);
 		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
 			typeSpec.addMethod(getGetResourceDeleteError());
+			typeSpec.addMethod(getPrepareDeleteBundle());
 		}
 		if (stateHolder.contains(StateHolder.StateType.PUT)) {
 			typeSpec.addMethod(getGetEditFragment());
@@ -82,6 +83,21 @@ public class DetailFragmentGenerator extends AbstractModelClass {
 		return MethodSpec.methodBuilder("getResourceDeleteError").addAnnotation(Override.class).addModifiers(Modifier.PROTECTED)
 				.returns(int.class)
 				.addStatement("return $T.string.$N", rClassName, replaceIllegalCharacters(detailView.getResourceName().toLowerCase()) + "_delete_error")
+				.build();
+	}
+
+	private MethodSpec getPrepareDeleteBundle() {
+		TitleVisitor titleVisitor = new TitleVisitor(detailView.getResourceName());
+		detailView.getTitle().accept(titleVisitor);
+
+		return MethodSpec.methodBuilder("prepareDeleteBundle")
+				.addAnnotation(Override.class)
+				.addModifiers(Modifier.PROTECTED)
+				.returns(getBundleClassName())
+				.addStatement("$T $N = ($T) $N", specificResourceClassName, detailView.getResourceName().toLowerCase(), specificResourceClassName, "currentResource")
+				.addStatement("$T $N = new $T()", getBundleClassName(), "bundle", getBundleClassName())
+				.addStatement("$N.putString($S, $N)", "bundle", "name", titleVisitor.getTitle())
+				.addStatement("return $N", "bundle")
 				.build();
 	}
 
@@ -177,7 +193,6 @@ public class DetailFragmentGenerator extends AbstractModelClass {
 	}
 
 
-//todo here
 private MethodSpec getOnCreateOptionsMenu() {
 	ParameterSpec menu = ParameterSpec.builder(getMenuClassName(), "menu").build();
 	ParameterSpec inflater = ParameterSpec.builder(getMenuInflaterClassName(), "inflater").build();
@@ -197,7 +212,8 @@ private MethodSpec getOnCreateOptionsMenu() {
 
 	private MethodSpec getSetUp() {
 		return MethodSpec.methodBuilder("setUp").addModifiers(Modifier.PRIVATE).returns(void.class)
-				.addParameter(specificResourceClassName, detailView.getResourceName().toLowerCase()).addStatement("getActivity().invalidateOptionsMenu()")
+				.addParameter(specificResourceClassName, detailView.getResourceName().toLowerCase()).addStatement(
+						"getActivity().invalidateOptionsMenu()")
 				.addStatement("(($T) $N).setUpView($N)", specificResourceDetailViewClassName, "resourceDetailView",
 						detailView.getResourceName().toLowerCase())
 				.build();
