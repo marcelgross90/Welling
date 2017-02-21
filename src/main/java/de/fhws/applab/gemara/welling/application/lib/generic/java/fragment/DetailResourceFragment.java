@@ -253,7 +253,7 @@ public class DetailResourceFragment extends AbstractModelClass {
 			method.addStatement("$N.putString($S, $N.getType())", "editBundle", "mediaType", updateLink);
 			method.addStatement("$T $N = $N()", getFragmentClassName(), "fragment", getGetEditFragment());
 			method.addStatement("$N.setArguments($N)", "fragment", "editBundle");
-			method.addStatement("$T.replaceFragmentPopBackStack(getFragmentManager(), $N)", fragmentHandlerClassName, "fragment");
+			method.addStatement("$T.replaceFragment(getFragmentManager(), $N)", fragmentHandlerClassName, "fragment");
 			method.endControlFlow();
 		}
 		if (stateHolder.contains(StateHolder.StateType.DELETE)) {

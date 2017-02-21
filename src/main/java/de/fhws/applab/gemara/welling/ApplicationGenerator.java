@@ -65,9 +65,7 @@ public class ApplicationGenerator {
 						String subResourceName = resourceCollectionAttribute.getDatatype().getResourceName();
 						appDescription.setRestApi(
 								StateHolder.StateType.GET_SINGLE + "_" + subResourceName, "rel_type_get_single_" + subResourceName, "getOne" + subResourceName + "Of" + singleResource.getResourceName());
-						appDescription.setRestApi(
-								StateHolder.StateType.GET_COLLECTION + "_" + subResourceName, "rel_type_get_all_" + subResourceName.toLowerCase(), "getAll" + subResourceName + "s"
-						);
+
 					});
 		}
 

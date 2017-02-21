@@ -10,7 +10,6 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputViewAttribute;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
-import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
@@ -18,8 +17,6 @@ import javax.lang.model.element.Modifier;
 import java.util.Date;
 import java.util.Map;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBundleClassName;
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getToastClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewOnClickListenerClassName;
@@ -36,14 +33,9 @@ public class NewSpecificResourceWithoutPictureFragment extends AbstractModelClas
 	private final ClassName networkResponseClassName;
 	private final ClassName newResourceFragmentClassName;
 	private final ClassName dateTimeViewClassName;
-	private final ClassName fragmentHandlerClassName;
 	private final ClassName onDateTimeSetListenerClassName;
-	private final ClassName resourceListFragmentClassName;
 	private final ClassName dateTimePickerFragmentClassName;
 	private final ClassName thisClassName;
-	private final ClassName linkClassName;
-
-	private final ParameterizedTypeName linkMap;
 
 	public NewSpecificResourceWithoutPictureFragment(AppDescription appDescription, InputView inputView) {
 		super(appDescription.getAppPackageName() + ".fragment", "New" + inputView.getResourceName() + "Fragment");
@@ -57,14 +49,9 @@ public class NewSpecificResourceWithoutPictureFragment extends AbstractModelClas
 		this.networkResponseClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkResponse");
 		this.newResourceFragmentClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.fragment", "NewResourceFragment");
 		this.dateTimeViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "DateTimeView");
-		this.fragmentHandlerClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.util", "FragmentHandler");
 		this.onDateTimeSetListenerClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.fragment.DateTimePickerFragment", "OnDateTimeSetListener");
-		this.resourceListFragmentClassName = ClassName.get(appDescription.getAppPackageName() + ".fragment", resourceName + "ListFragment");
 		this.dateTimePickerFragmentClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.fragment", "DateTimePickerFragment");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
-		this.linkClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Link");
-
-		this.linkMap = ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), linkClassName);
 
 		addString();
 	}
@@ -147,24 +134,16 @@ public class NewSpecificResourceWithoutPictureFragment extends AbstractModelClas
 
 								.addStatement("$T.makeText(getActivity(), $T.string.$N, $T.LENGTH_SHORT).show()", getToastClassName(),
 										rClassName, resourceName.toLowerCase() + "_saved", getToastClassName())
-								.addStatement("$T $N = new $T()", getBundleClassName(), "bundle", getBundleClassName())
-								.addStatement("$N.putString($S, $N.getHrefWithoutQueryParams())", "bundle", "url",
-										"all" + resourceName + "Link")
-								.addStatement("$N.putString($S, $N.getType())", "bundle", "mediaType", "all" + resourceName + "Link")
-								.addStatement("$T $N = new $T()", getFragmentClassName(), "fragment", resourceListFragmentClassName)
-								.addStatement("$N.setArguments($N)", "fragment", "bundle")
-								.addStatement("$T.replaceFragmentPopBackStack(getFragmentManager(), $N)", fragmentHandlerClassName, "fragment")
-								.build()).build();
+
+								.addStatement("getFragmentManager().popBackStack()")
+								.build()
+				).build();
 
 		MethodSpec onSuccess = MethodSpec.methodBuilder("onSuccess")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC)
 				.returns(void.class)
 				.addParameter(networkResponseClassName, "response", Modifier.FINAL)
-				.addStatement("$T $N = $N.getLinkHeader()", linkMap, "linkHeader", "response")
-				.addStatement("final $T $N = $N.get(getActivity().getString($T.string.$N))", linkClassName, "all" + resourceName + "Link",
-						"linkHeader", rClassName,
-						appDescription.getAppRestAPI().getRestApi().get(StateHolder.StateType.GET_COLLECTION + "_" + resourceName).getKey())
 				.addStatement("getActivity().runOnUiThread($L)", runnable)
 				.build();
 
