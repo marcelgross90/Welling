@@ -55,4 +55,30 @@ public class InputViewModelGenerator {
 
 		return inputView;
 	}
+
+	public static InputView charge() {
+
+		List<InputViewAttribute> inputViewAttributes = new ArrayList<>();
+
+		InputViewAttribute title = new InputViewAttribute("title", ViewAttribute.AttributeType.TEXT, "Title", "Title is missing!");
+		title.setAttributeLabel("Title");
+		inputViewAttributes.add(title);
+
+		InputViewAttribute fromDate = new InputViewAttribute("fromDate", ViewAttribute.AttributeType.DATE, "Startdate", "Startdate is missing!");
+		fromDate.setAttributeLabel("Startdate");
+		inputViewAttributes.add(fromDate);
+
+		InputViewAttribute endDate = new InputViewAttribute("toDate", ViewAttribute.AttributeType.DATE, "EndDate", "Enddate is missing!");
+		endDate.setAttributeLabel("Enddate");
+		inputViewAttributes.add(endDate);
+
+		InputView inputView;
+		try {
+			inputView = new InputView("Charge", inputViewAttributes);
+		} catch (InputViewException ex) {
+			inputView = null;
+		}
+
+		return inputView;
+	}
 }

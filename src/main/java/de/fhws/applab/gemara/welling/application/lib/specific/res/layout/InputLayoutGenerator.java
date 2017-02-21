@@ -62,22 +62,68 @@ public class InputLayoutGenerator extends AbstractLayoutGenerator {
 					inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE) {
 				continue;
 			}
-			addString(inputViewAttribute.getAttributeName() + "_hint", inputViewAttribute.getHintText());
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.DATE) {
+				View innerLinearLayout = getInnerLinearLayout(inputViewAttribute);
 
-			List<String> viewAttributes = new ArrayList<>();
-			viewAttributes.add("android:id=\"@+id/" + inputViewAttribute.getAttributeName() + "\"");
-			viewAttributes.add("android:layout_width=\"match_parent\"");
-			viewAttributes.add("android:layout_height=\"wrap_content\"");
-			viewAttributes.add("custom:hintText=\"@string/" + replaceIllegalCharacters(inputViewAttribute.getAttributeName()) + "_hint" + "\"");
-			viewAttributes.add(getInputType(inputViewAttribute.getAttributeType()));
+				List<String> viewAttributes = new ArrayList<>();
+				viewAttributes.add("android:id=\"@+id/" + inputViewAttribute.getAttributeName() + "\"");
+				viewAttributes.add("android:layout_width=\"match_parent\"");
+				viewAttributes.add("android:layout_height=\"wrap_content\"");
+				viewAttributes.add("android:layout_weight=\"0.5\"");
 
-			View inputView = new View(packageName + ".AttributeInput");
-			inputView.setViewAttributes(viewAttributes);
+				View dateTimeView = new View(packageName + ".DateTimeView");
+				dateTimeView.setViewAttributes(viewAttributes);
 
-			attributeInputViews.add(inputView);
+				innerLinearLayout.addSubView(dateTimeView);
+
+				attributeInputViews.add(innerLinearLayout);
+
+			} else {
+				addString(inputViewAttribute.getAttributeName() + "_hint", inputViewAttribute.getHintText());
+
+				List<String> viewAttributes = new ArrayList<>();
+				viewAttributes.add("android:id=\"@+id/" + inputViewAttribute.getAttributeName() + "\"");
+				viewAttributes.add("android:layout_width=\"match_parent\"");
+				viewAttributes.add("android:layout_height=\"wrap_content\"");
+				viewAttributes.add("custom:hintText=\"@string/" + replaceIllegalCharacters(inputViewAttribute.getAttributeName()) + "_hint" + "\"");
+				viewAttributes.add(getInputType(inputViewAttribute.getAttributeType()));
+
+				View inputView = new View(packageName + ".AttributeInput");
+				inputView.setViewAttributes(viewAttributes);
+
+				attributeInputViews.add(inputView);
+			}
 		}
 
 		return attributeInputViews;
+	}
+
+	private View getInnerLinearLayout(InputViewAttribute inputViewAttribute) {
+		List<String> viewAttributes = new ArrayList<>();
+		viewAttributes.add("android:layout_width=\"match_parent\"");
+		viewAttributes.add("android:layout_height=\"wrap_content\"");
+		viewAttributes.add("android:orientation=\"horizontal\"");
+
+		View view = new View("LinearLayout");
+		view.setViewAttributes(viewAttributes);
+		view.addSubView(getInnerTextView(inputViewAttribute));
+
+		return view;
+	}
+
+	private View getInnerTextView(InputViewAttribute inputViewAttribute) {
+		addString(inputViewAttribute.getHintText().toLowerCase(), inputViewAttribute.getHintText());
+
+		List<String> viewAttributes = new ArrayList<>();
+		viewAttributes.add("android:layout_width=\"match_parent\"");
+		viewAttributes.add("android:layout_height=\"wrap_content\"");
+		viewAttributes.add("android:layout_weight=\"0.5\"");
+		viewAttributes.add("android:text=\"@string/" + inputViewAttribute.getHintText().toLowerCase() + "\"");
+
+		View view = new View("TextView");
+		view.setViewAttributes(viewAttributes);
+
+		return view;
 	}
 
 	private String getInputType(ViewAttribute.AttributeType attributeType) {

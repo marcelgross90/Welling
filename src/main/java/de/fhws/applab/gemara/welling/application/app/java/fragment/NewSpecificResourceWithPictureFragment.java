@@ -5,13 +5,14 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
 
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
-public class NewSpecificResourceFragment extends AbstractModelClass {
+public class NewSpecificResourceWithPictureFragment extends AbstractModelClass {
 
 	private final String resourceName;
 
@@ -22,16 +23,16 @@ public class NewSpecificResourceFragment extends AbstractModelClass {
 	private final ClassName detailActivityClassName;
 	private final ClassName newResourceFragmentClassName;
 
-	public NewSpecificResourceFragment(String packageName, InputView inputView, String appName) {
-		super(packageName + ".fragment", "New" + inputView.getResourceName() + "Fragment");
+	public NewSpecificResourceWithPictureFragment(AppDescription appDescription, InputView inputView) {
+		super(appDescription.getAppPackageName() + ".fragment", "New" + inputView.getResourceName() + "Fragment");
 		this.resourceName = inputView.getResourceName();
 
-		this.rClassName = ClassName.get(packageName, "R");
-		this.specificResourceInputView = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.customView", resourceName + "InputView");
-		this.networkCallBackClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkCallback");
-		this.networkResponseClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkResponse");
-		this.newResourceFragmentClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.fragment", "NewResourceFragment");
-		this.detailActivityClassName = ClassName.get(packageName, resourceName + "DetailActivity");
+		this.rClassName = ClassName.get(appDescription.getAppPackageName(), "R");
+		this.specificResourceInputView = ClassName.get(appDescription.getLibPackageName() + ".specific.customView", resourceName + "InputView");
+		this.networkCallBackClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkCallback");
+		this.networkResponseClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkResponse");
+		this.newResourceFragmentClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.fragment", "NewResourceFragment");
+		this.detailActivityClassName = ClassName.get(appDescription.getAppPackageName(), resourceName + "DetailActivity");
 	}
 
 	@Override

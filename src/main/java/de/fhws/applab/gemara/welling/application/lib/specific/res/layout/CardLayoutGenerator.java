@@ -5,6 +5,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.Car
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.visitors.CardAttributeVisitor;
+import de.fhws.applab.gemara.welling.visitors.ContainsImageVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +59,18 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 
 		List<String> viewAttributes = getLayoutAttributes("wrap_content", "wrap_content");
 		viewAttributes.add("android:layout_alignParentTop=\"true\"");
-		viewAttributes.add("android:layout_toRightOf=\"@+id/border\"");
-		viewAttributes.add("android:layout_toEndOf=\"@+id/border\"");
+		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		boolean containsImage = false;
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(visitor);
+			containsImage = visitor.isContainsImage();
+		}
+
+		if (containsImage) {
+			viewAttributes.add("android:layout_toRightOf=\"@+id/border\"");
+			viewAttributes.add("android:layout_toEndOf=\"@+id/border\"");
+		}
+
 		viewAttributes.add("android:orientation=\"vertical\"");
 
 		linearLayout.setViewAttributes(viewAttributes);

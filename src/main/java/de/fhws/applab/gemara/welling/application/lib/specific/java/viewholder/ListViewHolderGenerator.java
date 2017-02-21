@@ -105,7 +105,7 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 				.addAnnotation(Override.class)
 				.addParameter(resource)
 				.addStatement("final $T $N = ($T) $N", resourceTypeClassName, resourceName.toLowerCase(), resourceTypeClassName, resource)
-				.addStatement("$N.setOnClickListener($L);", cardViewField, getOnClick())
+				.addStatement("$N.setOnClickListener($L)", cardViewField, getOnClick())
 				.addStatement("$N.setUpView($N)", cardViewField, resourceName.toLowerCase())
 				.build();
 	}

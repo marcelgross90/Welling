@@ -163,7 +163,7 @@ public class DetailResourceFragment extends AbstractModelClass {
 						.addStatement("getFragmentManager().popBackStackImmediate()")
 						.endControlFlow()
 						.beginControlFlow("else")
-						.addStatement("$T.makeText(getActivity(), $N(), $T.LENGTH_SHORT).show();", getToastClassName(), getGetResourceDeleteError(), getToastClassName())
+						.addStatement("$T.makeText(getActivity(), $N(), $T.LENGTH_SHORT).show()", getToastClassName(), getGetResourceDeleteError(), getToastClassName())
 						.endControlFlow()
 						.build()
 				).build();

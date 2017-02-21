@@ -4,6 +4,8 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
 
 import javax.lang.model.element.Modifier;
 import java.text.SimpleDateFormat;
@@ -18,11 +20,14 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 
+	private final AppDescription appDescription;
+
 	private final ClassName rClassName;
 
-	public DateTimeView(String packageName) {
-		super(packageName + ".generic.customView", "DateTimeView", getTextViewClassName());
-		this.rClassName = ClassName.get(packageName, "R");
+	public DateTimeView(AppDescription appDescription) {
+		super(appDescription.getLibPackageName() + ".generic.customView", "DateTimeView", getTextViewClassName());
+		this.appDescription = appDescription;
+		this.rClassName = ClassName.get(appDescription.getLibPackageName(), "R");
 	}
 
 	@Override
@@ -42,9 +47,10 @@ public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.
 
 	@Override
 	public MethodSpec getInitMethod() {
+		appDescription.setDeclareStyleables("dateTimeView", new AppDeclareStyleable.DeclareStyleable("DateTimeView"));
 		ClassName calendar = ClassName.get(Calendar.class);
 		return getInitMethodSignature()
-				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.AttributeInput, $N, 0)",
+				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.DateTimeView, $N, 0)",
 				getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr)
 				.beginControlFlow("try")
 				.addStatement("$T $N = $T.getInstance()", calendar, "calendar", calendar)

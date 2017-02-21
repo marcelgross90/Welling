@@ -1,5 +1,7 @@
 package de.fhws.applab.gemara.welling.metaModelExtension;
 
+import com.google.common.base.Objects;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +59,8 @@ public class AppAndroidManifest {
 			this.activities.addAll(activities);
 		}
 
-		public void addActivities(Activity activitie) {
-			this.activities.add(activitie);
+		public void addActivities(Activity activity) {
+			this.activities.add(activity);
 		}
 
 		public List<String> getApplicationAttributes() {
@@ -88,6 +90,21 @@ public class AppAndroidManifest {
 
 		public List<IntentFilter> getIntentFilters() {
 			return intentFilters;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			Activity activity = (Activity) o;
+			return Objects.equal(name, activity.name) && Objects.equal(intentFilters, activity.intentFilters);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(name, intentFilters);
 		}
 	}
 

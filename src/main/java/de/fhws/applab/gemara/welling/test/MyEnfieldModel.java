@@ -1,7 +1,6 @@
 package de.fhws.applab.gemara.welling.test;
 
 import de.fhws.applab.gemara.enfield.metamodel.Model;
-import de.fhws.applab.gemara.enfield.metamodel.attributes.linked.LinkedResourceAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.attributes.simple.SimpleAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.attributes.simple.SimpleDatatype;
 import de.fhws.applab.gemara.enfield.metamodel.attributes.sub.ResourceCollectionAttribute;
@@ -86,7 +85,7 @@ public class MyEnfieldModel {
 
 		createGetChargeByIdState( );
 
-//		createPostNewChargeState( );
+		createPostNewChargeState( );
 
 		//	createUpdateChargeState( );
 
@@ -262,10 +261,10 @@ public class MyEnfieldModel {
 
 		this.metaModel.addState(postNewLecturerState.getName(), postNewLecturerState);
 
-		addInputView(postNewLecturerState);
+		addLecturerInputView(postNewLecturerState);
 	}
 
-	private void addInputView(AbstractPrimaryState state) {
+	private void addLecturerInputView(AbstractPrimaryState state) {
 		final InputView lecturerInputView = InputViewModelGenerator.lecturer();
 
 		final SingleResourceView resourceView = new SingleResourceView();
@@ -285,7 +284,7 @@ public class MyEnfieldModel {
 
 		this.metaModel.addState(updateLecturerState.getName(), updateLecturerState);
 
-		addInputView(updateLecturerState);
+		addLecturerInputView(updateLecturerState);
 	}
 
 	private void createPostLecturerImageState() {
@@ -375,6 +374,18 @@ public class MyEnfieldModel {
 		this.getCollectionOfChargesState.addTransition(new ActionTransition(createSingleChargePrimaryState, "createChargeOfLecturer"));
 
 		this.metaModel.addState(createSingleChargePrimaryState.getName(), createSingleChargePrimaryState);
+
+		addChargeInputView(createSingleChargePrimaryState);
+	}
+
+	private void addChargeInputView(AbstractPrimaryState state) {
+		final InputView chargeInputView = InputViewModelGenerator.charge();
+
+		final SingleResourceView resourceView = new SingleResourceView();
+
+		resourceView.setInputView(chargeInputView);
+
+		state.setSingleResourceView(resourceView);
 	}
 
 	private void createUpdateChargeState() {

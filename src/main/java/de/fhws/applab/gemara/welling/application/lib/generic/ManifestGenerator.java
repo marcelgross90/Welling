@@ -3,6 +3,7 @@ package de.fhws.applab.gemara.welling.application.lib.generic;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.metaModelExtension.AppAndroidManifest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ManifestGenerator extends GeneratedFile {
@@ -47,8 +48,17 @@ public class ManifestGenerator extends GeneratedFile {
 
 	private void appendActivities(AppAndroidManifest.Application application) {
 		List<AppAndroidManifest.Activity> activities = application.getActivities();
+		List<AppAndroidManifest.Activity> noDuplicates = new ArrayList<>();
 
 		for (AppAndroidManifest.Activity activity : activities) {
+			if (noDuplicates.contains(activity)) {
+				continue;
+			} else {
+				noDuplicates.add(activity);
+			}
+		}
+
+		for (AppAndroidManifest.Activity activity : noDuplicates) {
 			appendln("<activity android:name=\"" + activity.getName() + "\">");
 			appendIntentFilter(activity);
 			appendln("</activity>");
