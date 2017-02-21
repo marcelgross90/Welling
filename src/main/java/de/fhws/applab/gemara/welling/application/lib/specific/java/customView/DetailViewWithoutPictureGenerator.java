@@ -6,49 +6,50 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.Category;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
-import de.fhws.applab.gemara.welling.generator.GetterSetterGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.visitors.FieldVisitor;
+import de.fhws.applab.gemara.welling.visitors.InitializeDetailViewVisitor;
+import de.fhws.applab.gemara.welling.visitors.SetTextVisitor;
 
 import javax.lang.model.element.Modifier;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
-public class DetailViewGenerator extends AbstractModelClass {
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getAttributeSetClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
+
+public class DetailViewWithoutPictureGenerator extends AbstractModelClass {
 
 	private final DetailView detailView;
 	private final AppDescription appDescription;
 
 	private final ClassName rClassName;
-	private final ClassName recyclerViewClassName;
-	private final ClassName profileImageViewClassName;
-	private final ClassName specificResourceClassName;
 	private final ClassName resourceDetailViewClassName;
-	private final ClassName specificResourceDetailAdapterClassName;
-
-	private final FieldSpec profileImageView;
-	private final FieldSpec recyclerView;
+	private final ClassName specificResourceClassName;
+	private final ClassName attributeViewClassName;
 
 	private final ParameterSpec context = getContextParam();
 	private final ParameterSpec attrs = ParameterSpec.builder(getAttributeSetClassName(), "attrs").build();
 	private final ParameterSpec defStyleAttr = ParameterSpec.builder(int.class, "defStyleAttr").build();
 
-	public DetailViewGenerator(AppDescription appDescription, DetailView detailView) {
+	public DetailViewWithoutPictureGenerator(AppDescription appDescription, DetailView detailView) {
 		super(appDescription.getLibPackageName() + ".specific.customView", detailView.getResourceName() + "DetailView");
 		this.detailView = detailView;
 		this.appDescription = appDescription;
 
 		this.rClassName = ClassName.get(appDescription.getLibPackageName(), "R");
-		this.recyclerViewClassName = getRecyclerViewClassName();
-		this.profileImageViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "ProfileImageView");
+		this.attributeViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "AttributeView");
 		this.specificResourceClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.model", detailView.getResourceName());
 		this.resourceDetailViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "ResourceDetailView");
-		this.specificResourceDetailAdapterClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.adapter", detailView.getResourceName() + "DetailAdapter");
-
-		this.profileImageView = FieldSpec.builder(profileImageViewClassName, "profileImageView", Modifier.PRIVATE).build();
-		this.recyclerView = FieldSpec.builder(recyclerViewClassName, "recyclerView", Modifier.PRIVATE).build();
 
 		addDeclareStyleable();
 	}
@@ -63,11 +64,7 @@ public class DetailViewGenerator extends AbstractModelClass {
 		TypeSpec.Builder type = TypeSpec.classBuilder(this.className);
 		type.addModifiers(Modifier.PUBLIC);
 		type.superclass(resourceDetailViewClassName);
-		type.addField(recyclerView);
-		if (detailView.getImage() != null) {
-			type.addField(profileImageView);
-		}
-
+		type.addFields(getFields());
 		type.addMethod(constructorOne());
 		type.addMethod(constructorTwo());
 		type.addMethod(constructorThree());
@@ -75,8 +72,24 @@ public class DetailViewGenerator extends AbstractModelClass {
 		type.addMethod(getGetStyleable());
 		type.addMethod(getInitializeView());
 		type.addMethod(getSetUpView());
+		type.addMethod(getConvertDate());
 
 		return JavaFile.builder(this.packageName, type.build()).build();
+	}
+
+	private List<FieldSpec> getFields() {
+		FieldVisitor fieldVisitor = new FieldVisitor(attributeViewClassName, null);
+		List<FieldSpec> fieldSpecs = new ArrayList<>();
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				resourceViewAttribute.accept(fieldVisitor);
+				if (fieldVisitor.getFieldSpec() != null) {
+					fieldSpecs.add(fieldVisitor.getFieldSpec());
+				}
+			}
+		}
+		return fieldSpecs;
+
 	}
 
 	private MethodSpec constructorOne() {
@@ -131,38 +144,41 @@ public class DetailViewGenerator extends AbstractModelClass {
 		builder.addModifiers(Modifier.PROTECTED);
 		builder.returns(void.class);
 
-		if (detailView.getImage() != null) {
-			builder.addStatement("$N = ($T) findViewById($T.id.$N)", profileImageView, profileImageViewClassName, rClassName, "ivLecturerPicture");
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				InitializeDetailViewVisitor visitor = new InitializeDetailViewVisitor(builder, attributeViewClassName, rClassName);
+				resourceViewAttribute.accept(visitor);
+
+			}
 		}
 
-		builder.addStatement("$N = ($T) findViewById($T.id.$N)", recyclerView, recyclerViewClassName, rClassName, "rv" + detailView.getResourceName() + "Details");
 		return builder.build();
 	}
 
 	private MethodSpec getSetUpView() {
 		String resourceName = detailView.getResourceName();
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("setUpView");
+		builder.addParameter(specificResourceClassName, detailView.getResourceName().toLowerCase());
 		builder.addModifiers(Modifier.PUBLIC);
 		builder.returns(void.class);
-		builder.addParameter(specificResourceClassName, resourceName.toLowerCase());
-		builder.addParameter(getViewOnClickListenerClassName(), "listener");
-		builder.addStatement("$N.setLayoutManager(new $T($N))", recyclerView, getLinearLayoutManagerClassName(), context);
-		builder.addStatement("$N.setHasFixedSize(true)", recyclerView);
 
-		builder.addStatement("$T $N = new $T($N)", specificResourceDetailAdapterClassName, "adapter", specificResourceDetailAdapterClassName, "listener");
-		builder.addStatement("$N.$N($N)", "adapter", "add" + resourceName, resourceName.toLowerCase());
-		if (detailView.getImage() != null) {
-			builder.beginControlFlow("if ($N.$N() != null)", resourceName.toLowerCase(), getImageViewGetter());
-			builder.addStatement("$N.loadCutImage($N.$N())", profileImageView, resourceName.toLowerCase(), getImageViewGetter());
-			builder.endControlFlow();
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				SetTextVisitor visitor = new SetTextVisitor(builder, rClassName, resourceName);
+				resourceViewAttribute.accept(visitor);
+			}
 		}
 
-		builder.addStatement("$N.setAdapter($N)", recyclerView, "adapter");
 		return builder.build();
 	}
 
+	private MethodSpec getConvertDate() {
+		return MethodSpec.methodBuilder("convertDate").addModifiers(Modifier.PRIVATE)
+				.returns(String.class)
+				.addParameter(Date.class, "date")
+				.addStatement("return new $T($S, $T.GERMANY).format($N)",
+						SimpleDateFormat.class, "dd.MM.yyyy HH:mm", Locale.class, "date").build();
 
-	private String getImageViewGetter() {
-		return GetterSetterGenerator.getGetter(detailView.getImage().getDisplayViewAttribute().getAttributeName());
 	}
+
 }

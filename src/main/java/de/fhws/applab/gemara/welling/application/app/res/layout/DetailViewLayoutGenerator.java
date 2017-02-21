@@ -1,18 +1,20 @@
 package de.fhws.applab.gemara.welling.application.app.res.layout;
 
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
+import de.fhws.applab.gemara.welling.generator.AppDescription;
 
 import java.util.List;
 
-public class ActivityDetailViewGenerator extends AbstractLayoutGenerator {
+public class DetailViewLayoutGenerator extends AbstractLayoutGenerator {
 
 	private final String resourceName;
 	private final String packageName;
 
-	public ActivityDetailViewGenerator(String directoryName, String resourceName, String packageName) {
-		super("activity_" + resourceName.toLowerCase() + "_detail", directoryName);
+	public DetailViewLayoutGenerator(AppDescription appDescription, String resourceName, String viewName) {
+		super(viewName, appDescription.getAppResDirectory());
+
 		this.resourceName = resourceName;
-		this.packageName = packageName;
+		this.packageName = appDescription.getLibPackageName();
 	}
 
 	@Override

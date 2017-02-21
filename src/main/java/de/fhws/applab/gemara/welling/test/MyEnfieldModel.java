@@ -166,10 +166,12 @@ public class MyEnfieldModel {
 		this.chargeResource.setResourceName("Charge");
 		this.chargeResource.setMediaType("application/vnd.fhws-charge.default+json");
 
+		final SimpleAttribute id = new SimpleAttribute("id", SimpleDatatype.INT);
 		final SimpleAttribute titleOfCharge = new SimpleAttribute("title", SimpleDatatype.STRING);
 		final SimpleAttribute fromDate = new SimpleAttribute("fromDate", SimpleDatatype.DATE);
 		final SimpleAttribute toDate = new SimpleAttribute("toDate", SimpleDatatype.DATE);
 
+		this.chargeResource.addAttribute(id);
 		this.chargeResource.addAttribute(titleOfCharge);
 		this.chargeResource.addAttribute(fromDate);
 		this.chargeResource.addAttribute(toDate);

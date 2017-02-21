@@ -1,9 +1,11 @@
 package de.fhws.applab.gemara.welling.generator.resourceViewGenerator;
 
+import de.fhws.applab.gemara.enfield.metamodel.resources.SingleResource;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.application.app.java.NoPictureActivityGenerator;
 import de.fhws.applab.gemara.welling.application.app.java.PictureActivityGenerator;
+import de.fhws.applab.gemara.welling.application.app.java.fragment.ListFragmentSubResourceGenerator;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.application.app.java.fragment.ListFragmentGenerator;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.adapter.ResourceListAdapter;
@@ -21,11 +23,14 @@ import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
+import de.fhws.applab.gemara.welling.metaModelExtension.AppResource;
+import de.fhws.applab.gemara.welling.metaModelExtension.Resource;
 import de.fhws.applab.gemara.welling.visitors.ContainsImageVisitor;
 import de.fhws.applab.gemara.welling.visitors.LinkDescriptionVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CardViewGenerator extends ResourceViewGenerator<CardView> {
 
@@ -135,7 +140,11 @@ public class CardViewGenerator extends ResourceViewGenerator<CardView> {
 	protected List<AbstractModelClass> getAppJavaClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
-		classes.add(new ListFragmentGenerator(stateHolder, appDescription, resourceView));
+		if (isSubResource()){
+			classes.add(new ListFragmentSubResourceGenerator(stateHolder, appDescription, resourceView));
+		} else {
+			classes.add(new ListFragmentGenerator(stateHolder, appDescription, resourceView));
+		}
 
 		ContainsImageVisitor containsImageVisitor = new ContainsImageVisitor();
 
@@ -163,5 +172,20 @@ public class CardViewGenerator extends ResourceViewGenerator<CardView> {
 		for (ResourceViewAttribute resourceViewAttribute : resourceView.getResourceViewAttributes()) {
 			resourceViewAttribute.accept(visitor);
 		}
+	}
+
+	private boolean isSubResource() {
+		AppResource appResource = appDescription.getAppResources();
+		Map<String, Resource> resources = appResource.getResources();
+
+		for (String resourceNames : resources.keySet()) {
+			Resource resource = resources.get(resourceNames);
+			SingleResource subResource = resource.getSubResources().get(resourceView.getResourceName());
+			if (subResource != null) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

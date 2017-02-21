@@ -3,6 +3,7 @@ package de.fhws.applab.gemara.welling.visitors;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.ResourceViewVisitor;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.navigationDrawerView.NavigationDrawerView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
@@ -45,5 +46,10 @@ public class ResourceViewVisitorImpl implements ResourceViewVisitor {
 		DetailViewGenerator detailViewGenerator = new DetailViewGenerator(detailView, appDescription, stateHolder);
 		detailViewGenerator.generate();
 
+	}
+
+	@Override
+	public void visit(NavigationDrawerView navigationDrawerView) {
+		//not needed yet
 	}
 }

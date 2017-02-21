@@ -70,16 +70,15 @@ public class DetailResourceFragment extends AbstractModelClass {
 		TypeSpec.Builder type = TypeSpec.classBuilder(this.className);
 		type.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
 		type.superclass(getFragmentClassName());
-
+		type.addField(updateLink);
+		type.addField(deleteLink);
 
 		if (stateHolder.contains(StateHolder.StateType.PUT)) {
-			type.addField(updateLink);
 			type.addMethod(getGetEditFragment());
 		}
 
 		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
 			type.addSuperinterface(deleteDialogListenerClassName);
-			type.addField(deleteLink);
 			type.addMethod(getGetResourceDeleteError());
 			type.addMethod(getPrepareDeleteBundle());
 			type.addMethod(getOnDialogClosed());

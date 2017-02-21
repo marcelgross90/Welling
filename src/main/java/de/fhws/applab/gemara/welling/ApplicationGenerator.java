@@ -2,6 +2,7 @@ package de.fhws.applab.gemara.welling;
 
 import de.fhws.applab.gemara.dalston.generator.utils.VisitStatesOnlyOnce;
 import de.fhws.applab.gemara.enfield.metamodel.Model;
+import de.fhws.applab.gemara.enfield.metamodel.attributes.Attribute;
 import de.fhws.applab.gemara.enfield.metamodel.attributes.sub.ResourceCollectionAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.resources.SingleResource;
 import de.fhws.applab.gemara.enfield.metamodel.states.AbstractState;
@@ -15,6 +16,7 @@ import de.fhws.applab.gemara.welling.application.lib.generic.res.values.RestApi;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.values.Strings;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.FileWriter;
+import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.preparation.PrepareGradleGenerator;
 import de.fhws.applab.gemara.welling.generator.preparation.PrepareAppGenerator;
 import de.fhws.applab.gemara.welling.generator.preparation.PrepareLibGenerator;
@@ -59,6 +61,10 @@ public class ApplicationGenerator {
 						ResourceCollectionAttribute resourceCollectionAttribute = (ResourceCollectionAttribute) attribute;
 						appResource.addSubResource(singleResource, resourceCollectionAttribute.getDatatype());
 
+						//todo needed because of the problem with self-url of sub-resources
+						String subResourceName = resourceCollectionAttribute.getDatatype().getResourceName();
+						appDescription.setRestApi(
+								StateHolder.StateType.GET_SINGLE + "_" + subResourceName, "rel_type_get_single_" + subResourceName, "getOne" + subResourceName + "Of" + singleResource.getResourceName());
 					});
 		}
 

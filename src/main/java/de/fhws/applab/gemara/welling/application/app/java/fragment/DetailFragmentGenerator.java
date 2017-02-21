@@ -18,6 +18,9 @@ import java.util.Map;
 
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBundleClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getMenuClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getMenuInflaterClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getMenuItemClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
 
 public class DetailFragmentGenerator extends AbstractModelClass {
@@ -65,6 +68,7 @@ public class DetailFragmentGenerator extends AbstractModelClass {
 			typeSpec.addMethod(getGetEditFragment());
 			typeSpec.addMethod(getPrepareBundle());
 		}
+		typeSpec.addMethod(getOnCreateOptionsMenu());
 		typeSpec.addMethod(getGetLayout());
 		typeSpec.addMethod(getInitializeView());
 		typeSpec.addMethod(getGetCallback());
@@ -172,11 +176,31 @@ public class DetailFragmentGenerator extends AbstractModelClass {
 		return builder.build();
 	}
 
+
+//todo here
+private MethodSpec getOnCreateOptionsMenu() {
+	ParameterSpec menu = ParameterSpec.builder(getMenuClassName(), "menu").build();
+	ParameterSpec inflater = ParameterSpec.builder(getMenuInflaterClassName(), "inflater").build();
+
+	return MethodSpec.methodBuilder("onCreateOptionsMenu")
+			.addModifiers(Modifier.PUBLIC).returns(void.class)
+			.addAnnotation(Override.class)
+			.addParameter(menu)
+			.addParameter(inflater)
+			.addStatement("$N.inflate($T.menu.detail_menu, $N)", "inflater", rClassName, menu)
+			.addStatement("$T $N = $N.findItem($T.id.delete_item)", getMenuItemClassName(), "deleteItem", menu, rClassName)
+			.addStatement("$T $N = $N.findItem($T.id.edit_item)", getMenuItemClassName(), "updateItem", menu, rClassName)
+			.addStatement("$N.setVisible($N != null)", "deleteItem", "deleteLink")
+			.addStatement("$N.setVisible($N != null)", "updateItem", "updateLink")
+			.build();
+}
+
 	private MethodSpec getSetUp() {
 		return MethodSpec.methodBuilder("setUp").addModifiers(Modifier.PRIVATE).returns(void.class)
 				.addParameter(specificResourceClassName, detailView.getResourceName().toLowerCase()).addStatement("getActivity().invalidateOptionsMenu()")
 				.addStatement("(($T) $N).setUpView($N)", specificResourceDetailViewClassName, "resourceDetailView",
-						detailView.getResourceName().toLowerCase()).build();
+						detailView.getResourceName().toLowerCase())
+				.build();
 	}
 
 	private String replaceIllegalCharacters(String input) {

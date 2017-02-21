@@ -22,32 +22,40 @@ import java.util.Map;
 
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
 
+/**
+ * If problem with the self resources is fixed you can delete @see de.fhws.applab.gemara.welling.application.app.java.fragment.ListFragmentSubResourceGenerator.
+ * You can also change all protected modifier to private.
+ */
+
 public class ListFragmentGenerator extends AbstractModelClass {
 
-	private final StateHolder stateHolder;
-	private final AppDescription appDescription;
-	private final String resourceName;
 	private final CardView cardView;
+	protected final AppDescription appDescription;
+	protected final String resourceName;
+	protected final StateHolder stateHolder;
 
-	private final ClassName rClassName;
 	private final ClassName resourceListAdapterClassName;
 	private final ClassName specificResourceListAdapterClassName;
-	private final ClassName specificResourceDetailActivityClassName;
 	private final ClassName thisClassName;
-	private final ClassName networkCallBackClassName;
-	private final ClassName networkResponseClassName;
-	private final ClassName specificResourceClassName;
-	private final ClassName resourceClassName;
-	private final ClassName linkClassName;
-	private final ClassName resourceListFragmentClassName;
 	private final ClassName newResourceFragmentClassName;
+	protected final ClassName resourceListFragmentClassName;
+	protected final ClassName rClassName;
+	protected final ClassName linkClassName;
+	protected final ClassName resourceClassName;
+	protected final ClassName specificResourceClassName;
+	protected final ClassName specificResourceDetailClassName;
+	protected final ClassName networkCallBackClassName;
+	protected final ClassName fragmentHandlerClassName;
+	protected final ClassName networkResponseClassName;
 
-	private final FieldSpec specificResourceListAdapter;
+	protected final FieldSpec specificResourceListAdapter;
 
-	private final ParameterizedTypeName genericType;
-	private final ParameterizedTypeName specificResourceList;
-	private final ParameterizedTypeName resourceList;
-	private final ParameterizedTypeName linkMap;
+	protected final ParameterizedTypeName linkMap;
+	protected final ParameterizedTypeName resourceList;
+	protected final ParameterizedTypeName genericType;
+	protected final ParameterizedTypeName specificResourceList;
+
+	protected boolean containsImage = false;
 
 	public ListFragmentGenerator(StateHolder stateHolder, AppDescription appDescription, CardView cardView) {
 		super(appDescription.getAppPackageName() + ".fragment", cardView.getResourceName() + "ListFragment");
@@ -55,21 +63,34 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		this.stateHolder = stateHolder;
 		this.resourceName = cardView.getResourceName();
 		this.cardView = cardView;
-		String appName = appDescription.getAppName();
 		String packageName = appDescription.getAppPackageName();
 
+		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(visitor);
+			containsImage = visitor.isContainsImage();
+			if (containsImage) {
+				break;
+			}
+		}
+
 		this.rClassName = ClassName.get(packageName, "R");
-		this.resourceListAdapterClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.adapter", "ResourceListAdapter");
-		this.specificResourceListAdapterClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.adapter", resourceName + "ListAdapter");
-		this.specificResourceDetailActivityClassName = ClassName.get(packageName, resourceName + "DetailActivity");
+		this.resourceListAdapterClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.adapter", "ResourceListAdapter");
+		this.specificResourceListAdapterClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.adapter", resourceName + "ListAdapter");
+		if(containsImage) {
+			this.specificResourceDetailClassName = ClassName.get(packageName, resourceName + "DetailActivity");
+		} else {
+			this.specificResourceDetailClassName = ClassName.get(packageName + ".fragment", resourceName + "DetailFragment");
+		}
 		this.thisClassName = ClassName.get(this.packageName, this.className);
-		this.networkCallBackClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkCallback");
-		this.networkResponseClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.network", "NetworkResponse");
-		this.specificResourceClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.specific.model", resourceName);
-		this.resourceClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.model", "Resource");
-		this.linkClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.model", "Link");
-		this.resourceListFragmentClassName = ClassName.get(packageName + "." + appName.toLowerCase() + "_lib.generic.fragment", "ResourceListFragment");
+		this.networkCallBackClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkCallback");
+		this.networkResponseClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkResponse");
+		this.specificResourceClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.model", resourceName);
+		this.resourceClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Resource");
+		this.linkClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Link");
+		this.resourceListFragmentClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.fragment", "ResourceListFragment");
 		this.newResourceFragmentClassName = ClassName.get(this.packageName, "New" + resourceName + "Fragment");
+		this.fragmentHandlerClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.util", "FragmentHandler");
 
 		this.specificResourceListAdapter = FieldSpec.builder(specificResourceListAdapterClassName, resourceName.toLowerCase() + "ListAdapter", Modifier.PRIVATE).build();
 
@@ -95,7 +116,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		return JavaFile.builder(this.packageName, type).build();
 	}
 
-	private MethodSpec getOnResourceClickWithView() {
+	protected MethodSpec getOnResourceClickWithView() {
 		TitleVisitor titleVisitor = new TitleVisitor(cardView.getResourceName());
 		cardView.getTitle().accept(titleVisitor);
 
@@ -110,20 +131,13 @@ public class ListFragmentGenerator extends AbstractModelClass {
 			return method.addCode("//no detailView\n").build();
 		}
 
-		ContainsImageVisitor visitor = new ContainsImageVisitor();
-		boolean containsImage = false;
-		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
-			resourceViewAttribute.accept(visitor);
-			containsImage = visitor.isContainsImage();
-			if (containsImage) {
-				break;
-			}
-		}
+
 		if (!containsImage) {
 			method.addCode("//not needed here\n");
 		} else {
 			method.addStatement("$T $N = ($T) $N", specificResourceClassName, resourceName.toLowerCase(), specificResourceClassName, "resource");
-			method.addStatement("$T $N = new $T(getActivity(), $T.class)", getIntentClassName(), "intent", getIntentClassName(), specificResourceDetailActivityClassName);
+			method.addStatement("$T $N = new $T(getActivity(), $T.class)", getIntentClassName(), "intent", getIntentClassName(),
+					specificResourceDetailClassName);
 			method.addStatement("$N.putExtra($S, $N.getSelf().getHref())", "intent", "selfUrl", resourceName.toLowerCase());
 			method.addStatement("$N.putExtra($S, $N.getSelf().getType())", "intent", "mediaType", resourceName.toLowerCase());
 			method.addStatement("$N.putExtra($S, $N)", "intent", "fullName", titleVisitor.getTitle());
@@ -142,7 +156,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		return method.build();
 	}
 
-	private MethodSpec getOnResourceClick() {
+	protected MethodSpec getOnResourceClick() {
 
 		MethodSpec.Builder method = MethodSpec.methodBuilder("onResourceClick");
 		method.addModifiers(Modifier.PUBLIC);
@@ -154,24 +168,21 @@ public class ListFragmentGenerator extends AbstractModelClass {
 			return method.addCode("//no detailView\n").build();
 		}
 
-		ContainsImageVisitor visitor = new ContainsImageVisitor();
-		boolean containsImage = false;
-		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
-			resourceViewAttribute.accept(visitor);
-			containsImage = visitor.isContainsImage();
-			if (containsImage) {
-				break;
-			}
-		}
-		if (!containsImage) {
+		if (containsImage) {
 			method.addCode("//not needed here\n");
 		} else {
-			//todo
+			method.addStatement("$T $N = ($T) $N", specificResourceClassName, resourceName.toLowerCase(), specificResourceClassName, "resource");
+			method.addStatement("$T $N = new $T()", getFragmentClassName(), "fragment", specificResourceDetailClassName);
+			method.addStatement("$T $N = new $T()", getBundleClassName(), "bundle", getBundleClassName());
+			method.addStatement("$N.putString($S, $N.getSelf().getHref())", "bundle", "url", resourceName.toLowerCase());
+			method.addStatement("$N.putString($S, $N.getSelf().getType())", "bundle", "url", resourceName.toLowerCase());
+			method.addStatement("$N.setArguments($N)", "fragment", "bundle");
+			method.addStatement("$T.replaceFragment(getFragmentManager(), $N)", fragmentHandlerClassName, "fragment");
 		}
 		return method.build();
 	}
 
-	private MethodSpec getGetCallBack() {
+	protected MethodSpec getGetCallBack() {
 		TypeSpec onFailure = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
 				.addMethod(MethodSpec.methodBuilder("run")
@@ -203,7 +214,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 
 	}
 
-	private MethodSpec getOnSuccess() {
+	protected MethodSpec getOnSuccess() {
 		TypeSpec onSuccess = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
 				.addMethod(MethodSpec.methodBuilder("run")
@@ -246,7 +257,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		return onSuccessMethod.build();
 	}
 
-	private MethodSpec getGetAdapter() {
+	protected MethodSpec getGetAdapter() {
 		return MethodSpec.methodBuilder("getAdapter")
 				.addModifiers(Modifier.PROTECTED)
 				.addAnnotation(Override.class)
@@ -259,7 +270,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 
 	}
 
-	private MethodSpec getGetFragment() {
+	protected MethodSpec getGetFragment() {
 		if (stateHolder.contains(StateHolder.StateType.POST)) {
 			return MethodSpec.methodBuilder("getFragment")
 					.addModifiers(Modifier.PROTECTED)

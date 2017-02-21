@@ -34,6 +34,9 @@ public class AttributeVisitor implements IAttributeVisitor {
 		} else if (simpleAttribute.getDatatype() == SimpleDatatype.DATE) {
 			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(simpleAttribute.getAttributeName(),
 					Attribute.DataType.DATE, Modifier.PRIVATE);
+		} else if (simpleAttribute.getDatatype() == SimpleDatatype.INT) {
+			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(simpleAttribute.getAttributeName(),
+					Attribute.DataType.INT, Modifier.PRIVATE);
 		} else {
 			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(simpleAttribute.getAttributeName(),
 					Attribute.DataType.STRING, Modifier.PRIVATE);
