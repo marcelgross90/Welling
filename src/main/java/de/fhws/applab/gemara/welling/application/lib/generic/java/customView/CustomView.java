@@ -15,10 +15,11 @@ import java.util.List;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getAttributeSetParam;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class CustomView extends AbstractModelClass {
 
 	protected final ParameterSpec defStyleAttr = ParameterSpec.builder(int.class, "defStyleAttr").build();
-	protected final ClassName superClass;
+	private final ClassName superClass;
 
 	public abstract Modifier[] addClassModifiers();
 	public abstract List<MethodSpec> addConstructors();

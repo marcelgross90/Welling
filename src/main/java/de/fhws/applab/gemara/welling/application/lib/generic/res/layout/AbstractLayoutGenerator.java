@@ -5,6 +5,7 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class AbstractLayoutGenerator extends GeneratedFile {
 
 	protected abstract View generateLayout();

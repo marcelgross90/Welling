@@ -7,7 +7,6 @@ import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.Abstract
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.visitors.DetailCardSubViewVisitor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {

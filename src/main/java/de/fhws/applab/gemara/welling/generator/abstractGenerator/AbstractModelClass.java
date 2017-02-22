@@ -6,7 +6,6 @@ public abstract class AbstractModelClass {
 
 	protected String packageName;
 	protected String className;
-	protected String description;
 
 	protected AbstractModelClass() {}
 
@@ -21,10 +20,6 @@ public abstract class AbstractModelClass {
 
 	public final void setClassName(final String className) {
 		this.className = className;
-	}
-
-	public final void setDescription(final String description) {
-		this.description = description;
 	}
 
 	public final String getPackageName() {

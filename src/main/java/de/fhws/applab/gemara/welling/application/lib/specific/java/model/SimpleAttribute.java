@@ -11,6 +11,7 @@ public class SimpleAttribute extends Attribute {
 
 	private final DataType type;
 
+	@SuppressWarnings("SameParameterValue")
 	public SimpleAttribute(String name, DataType type, Modifier... modifiers) {
 		super(name, type, modifiers);
 		this.type = type;

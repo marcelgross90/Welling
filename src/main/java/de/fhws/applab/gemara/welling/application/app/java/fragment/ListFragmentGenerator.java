@@ -33,6 +33,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
  * You can also change all protected modifier to private.
  */
 
+@SuppressWarnings("WeakerAccess")
 public class ListFragmentGenerator extends AbstractModelClass {
 
 	private final CardView cardView;
@@ -44,13 +45,13 @@ public class ListFragmentGenerator extends AbstractModelClass {
 	private final ClassName specificResourceListAdapterClassName;
 	private final ClassName thisClassName;
 	private final ClassName newResourceFragmentClassName;
+	private final ClassName networkCallBackClassName;
 	protected final ClassName resourceListFragmentClassName;
 	protected final ClassName rClassName;
 	protected final ClassName linkClassName;
 	protected final ClassName resourceClassName;
 	protected final ClassName specificResourceClassName;
 	protected final ClassName specificResourceDetailClassName;
-	protected final ClassName networkCallBackClassName;
 	protected final ClassName fragmentHandlerClassName;
 	protected final ClassName networkResponseClassName;
 

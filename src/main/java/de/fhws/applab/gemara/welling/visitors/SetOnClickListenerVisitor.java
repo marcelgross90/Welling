@@ -8,8 +8,8 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResour
 
 public class SetOnClickListenerVisitor implements ResourceViewAttributeVisitor {
 
-	private MethodSpec.Builder method;
-	private String listenerName;
+	private final MethodSpec.Builder method;
+	private final String listenerName;
 
 	public SetOnClickListenerVisitor(MethodSpec.Builder method, String listenerName) {
 		this.method = method;

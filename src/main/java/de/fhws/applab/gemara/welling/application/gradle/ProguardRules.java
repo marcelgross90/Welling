@@ -6,6 +6,7 @@ public abstract class ProguardRules extends GeneratedFile {
 
 	private final String directoryName;
 
+	@SuppressWarnings("WeakerAccess")
 	public ProguardRules(String directoryName) {
 		this.directoryName = directoryName;
 	}

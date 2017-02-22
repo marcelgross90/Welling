@@ -54,7 +54,7 @@ public class DetailViewWithoutPictureGenerator extends AbstractModelClass {
 		addDeclareStyleable();
 	}
 
-	public void addDeclareStyleable() {
+	private void addDeclareStyleable() {
 		appDescription.setDeclareStyleables(detailView.getResourceName() + "DetailView",
 				new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailView"));
 	}

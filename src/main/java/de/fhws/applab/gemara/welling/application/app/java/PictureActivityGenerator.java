@@ -115,6 +115,7 @@ public class PictureActivityGenerator extends AbstractModelClass {
 		// @formatter:on
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private void addString(String key, String value) {
 		appDescription.setLibStrings(key, value);
 	}

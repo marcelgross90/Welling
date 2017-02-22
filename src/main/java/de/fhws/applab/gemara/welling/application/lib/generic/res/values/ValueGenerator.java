@@ -2,9 +2,10 @@ package de.fhws.applab.gemara.welling.application.lib.generic.res.values;
 
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class ValueGenerator extends GeneratedFile {
 
-	public abstract void generateBody();
+	protected abstract void generateBody();
 
 	private final String fileName;
 	private final String directoryName;

@@ -10,7 +10,7 @@ public class StateHolder {
 	}
 
 	public class State {
-		private StateType stateType;
+		private final StateType stateType;
 
 		public State(StateType stateType) {
 			this.stateType = stateType;

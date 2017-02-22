@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class Resource {
 
-	private SingleResource resource;
-	private Map<String, SingleResource> subResources = new HashMap<>();
+	private final SingleResource resource;
+	private final Map<String, SingleResource> subResources = new HashMap<>();
 
 	public Resource(SingleResource resource) {
 		this.resource = resource;

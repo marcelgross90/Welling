@@ -12,6 +12,7 @@ import java.util.List;
 
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getAppCompatActivityClassName;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class AbstractActivityClass extends AbstractModelClass {
 
 	public AbstractActivityClass(String packageName, String className) {

@@ -2,6 +2,7 @@ package de.fhws.applab.gemara.welling.metaModelExtension;
 
 import de.fhws.applab.gemara.enfield.metamodel.wembley.frondentSpecifics.FrontendColor;
 
+@SuppressWarnings("WeakerAccess")
 public class AppColor {
 
 	private String colorPrimary;

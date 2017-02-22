@@ -126,6 +126,7 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		return constructor.build();
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private void addInitializeClickableAttributes(MethodSpec.Builder method, String viewName) {
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
 			resourceViewAttribute.accept(new InitializeClickableAttributesCardViewVisitor(method, viewName, attributeViewClassName, rClassName));

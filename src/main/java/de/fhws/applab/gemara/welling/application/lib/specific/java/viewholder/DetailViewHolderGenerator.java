@@ -87,6 +87,7 @@ public class DetailViewHolderGenerator extends AbstractModelClass {
 		return method.build();
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private void addInitializeClickableAttributes(MethodSpec.Builder method, String viewName) {
 		for (Category category : detailView.getCategories()) {
 			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {

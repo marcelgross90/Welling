@@ -6,9 +6,10 @@ import java.util.List;
 
 public abstract class InputResourceFragmentViewGenerator extends AbstractLayoutGenerator {
 
-	protected final String resourceName;
-	protected final String packageName;
+	private final String resourceName;
+	private final String packageName;
 
+	@SuppressWarnings("WeakerAccess")
 	public InputResourceFragmentViewGenerator(String directoryName, String fileName, String resourceName, String packageName) {
 		super(fileName, directoryName);
 		this.resourceName = resourceName;

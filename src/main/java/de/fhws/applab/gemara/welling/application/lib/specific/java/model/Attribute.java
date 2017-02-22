@@ -7,6 +7,7 @@ import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class Attribute {
 
 	public enum DataType {

@@ -14,23 +14,23 @@ import java.util.Map;
 
 public class AppDescription {
 
-	private String appName;
-	private String appPackageName;
-	private String appResDirectory;
-	private String appJavaDirectory;
-	private String appManifestDirectory;
+	private final String appName;
+	private final String appPackageName;
+	private final String appResDirectory;
+	private final String appJavaDirectory;
+	private final String appManifestDirectory;
 
-	private String libName;
-	private String libPackageName;
-	private String libResDirectory;
-	private String libJavaDirectory;
-	private String libManifestDirectory;
+	private final String libName;
+	private final String libPackageName;
+	private final String libResDirectory;
+	private final String libJavaDirectory;
+	private final String libManifestDirectory;
 
-	private AppDeclareStyleable appDeclareStyleable;
-	private AppRestAPI appRestAPI;
-	private AppAndroidManifest appManifest;
-	private AppString appString;
-	private AppString libString;
+	private final AppDeclareStyleable appDeclareStyleable;
+	private final AppRestAPI appRestAPI;
+	private final AppAndroidManifest appManifest;
+	private final AppString appString;
+	private final AppString libString;
 	private AppResource appResources;
 
 	public AppDescription(Model metaModel, String startDir, String baseUrl) {
@@ -123,6 +123,7 @@ public class AppDescription {
 		return appString;
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	public void setAppStrings(String key, String value) {
 		this.appString.setStrings(key, value);
 	}

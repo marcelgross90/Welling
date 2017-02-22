@@ -15,7 +15,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 
 public class HideViewsVisitor implements ResourceViewAttributeVisitor {
 
-	private MethodSpec.Builder builder;
+	private final MethodSpec.Builder builder;
 	private final String specificResourceName;
 	private final ClassName viewClassName;
 

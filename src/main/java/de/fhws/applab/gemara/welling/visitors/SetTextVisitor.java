@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SetTextVisitor implements ResourceViewAttributeVisitor {
 
-	private MethodSpec.Builder builder;
+	private final MethodSpec.Builder builder;
 	private final ClassName rClassName;
 	private final String specificResourceName;
 

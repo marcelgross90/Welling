@@ -8,16 +8,17 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class ResourceViewGenerator<T> {
 
 	protected final T resourceView;
 	protected final AppDescription appDescription;
 	protected final StateHolder stateHolder;
 
-	protected final String appJavaDirectory;
+	private final String appJavaDirectory;
+	private final String libJavaDirectory;
 	protected final String libPackageName;
 	protected final String libResDirectory;
-	protected final String libJavaDirectory;
 
 	protected abstract List<AbstractModelClass> getLibJavaClasses();
 	protected abstract List<GeneratedFile> getLibXMLClasses();

@@ -10,7 +10,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResour
 
 public class InitializeViewVisitor implements ResourceViewAttributeVisitor {
 
-	private MethodSpec.Builder builder;
+	private final MethodSpec.Builder builder;
 	private final ClassName attributeViewClassName;
 	private final ClassName profileImageViewClassName;
 	private final ClassName rClassName;

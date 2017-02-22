@@ -27,8 +27,10 @@ import de.fhws.applab.gemara.welling.visitors.StateVisitorImpl;
 import java.util.Collection;
 import java.util.LinkedList;
 
+@SuppressWarnings("WeakerAccess")
 public class ApplicationGenerator {
 
+	@SuppressWarnings("FieldCanBeLocal")
 	private final String startDir = "gemara/android/src-gen/generated/";
 	private final AppDescription appDescription;
 
@@ -51,7 +53,7 @@ public class ApplicationGenerator {
 		prepareGradleGenerator = new PrepareGradleGenerator(appDescription);
 	}
 
-	public void addResources() {
+	private void addResources() {
 		AppResource appResource = new AppResource();
 		for (SingleResource singleResource : metaModel.getSingleResources()) {
 			appResource.setResources(singleResource);

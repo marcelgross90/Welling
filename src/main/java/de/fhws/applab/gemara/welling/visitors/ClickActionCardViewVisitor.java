@@ -7,6 +7,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.GroupResourc
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResourceViewAttribute;
 
 public class ClickActionCardViewVisitor extends ClickActionVisitor {
+	@SuppressWarnings("SameParameterValue")
 	public ClickActionCardViewVisitor(MethodSpec.Builder method, String index, ClassName rClassName, String resourceName,
 			boolean contextNeeded) {
 		super(method, index, rClassName, resourceName, contextNeeded);

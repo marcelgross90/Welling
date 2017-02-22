@@ -6,14 +6,15 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class MenuGenerator extends GeneratedFile {
 
 	protected abstract List<MenuItem> addMenuItems();
 	protected abstract List<MenuGroup> addMenuGroups();
 
-	protected final String fileName;
-	protected final String directoryName;
-	protected final AppDescription appDescription;
+	private final String directoryName;
+	private final String fileName;
+	private final AppDescription appDescription;
 
 	public MenuGenerator(String fileName, AppDescription appDescription) {
 		this.appDescription = appDescription;
@@ -102,6 +103,7 @@ public abstract class MenuGenerator extends GeneratedFile {
 			return showAsAction;
 		}
 
+		@SuppressWarnings("SameParameterValue")
 		public void setShowAsAction(String showAsAction) {
 			this.showAsAction = showAsAction;
 		}

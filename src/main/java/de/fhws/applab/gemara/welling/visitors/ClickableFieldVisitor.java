@@ -12,7 +12,7 @@ import javax.lang.model.element.Modifier;
 
 public class ClickableFieldVisitor implements ResourceViewAttributeVisitor {
 
-	private TypeSpec.Builder type;
+	private final TypeSpec.Builder type;
 	private final ClassName attributeViewClassName;
 
 	public ClickableFieldVisitor(TypeSpec.Builder type, ClassName attributeViewClassName) {

@@ -145,6 +145,7 @@ public class AppAndroidManifest {
 		private final String host;
 		private final String scheme;
 
+		@SuppressWarnings("SameParameterValue")
 		public Data(String host, String scheme) {
 			this.host = host;
 			this.scheme = scheme;

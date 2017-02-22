@@ -8,6 +8,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResour
 
 public class ClickActionDetailViewVisitor extends ClickActionVisitor {
 
+	@SuppressWarnings("SameParameterValue")
 	public ClickActionDetailViewVisitor(MethodSpec.Builder method, String index, ClassName rClassName, String resourceName,
 			boolean contextNeeded) {
 		super(method, index, rClassName, resourceName, contextNeeded);

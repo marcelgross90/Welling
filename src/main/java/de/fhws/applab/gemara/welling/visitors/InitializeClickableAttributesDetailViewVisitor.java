@@ -6,7 +6,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.DisplayViewA
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.GroupResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResourceViewAttribute;
 
-public class InitializeClickableAttributesDetailViewVisitor extends InitializeClackableVisitor {
+public class InitializeClickableAttributesDetailViewVisitor extends InitializeClickableVisitor {
 
 	public InitializeClickableAttributesDetailViewVisitor(MethodSpec.Builder method, String viewName, ClassName attributeViewClassName,
 			ClassName rClassName) {

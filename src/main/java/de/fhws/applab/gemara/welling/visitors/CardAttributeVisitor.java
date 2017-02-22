@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 
-	private String packageName;
+	private final String packageName;
 
 	private final AppDescription appDescription;
 	private final List<AbstractLayoutGenerator.View> views = new ArrayList<>();
@@ -82,6 +82,7 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		appDescription.setLibStrings(key, value);
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private AbstractLayoutGenerator.View getBorderView(String imageName) {
 		AbstractLayoutGenerator.View border = new AbstractLayoutGenerator.View("View");
 		List<String> viewAttributes = new ArrayList<>();

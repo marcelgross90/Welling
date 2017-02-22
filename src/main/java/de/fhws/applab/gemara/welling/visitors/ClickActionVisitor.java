@@ -10,13 +10,14 @@ import de.fhws.applab.gemara.welling.generator.GetterSetterGenerator;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getIntentClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getUriClassName;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class ClickActionVisitor implements ResourceViewAttributeVisitor {
 
-	protected MethodSpec.Builder method;
-	protected String index;
-	protected ClassName rClassName;
-	protected String resourceName;
-	private boolean contextNeeded;
+	protected final MethodSpec.Builder method;
+	protected final String index;
+	protected final ClassName rClassName;
+	private final String resourceName;
+	private final boolean contextNeeded;
 
 	public ClickActionVisitor(MethodSpec.Builder method, String index, ClassName rClassName, String resourceName, boolean contextNeeded) {
 		this.method = method;

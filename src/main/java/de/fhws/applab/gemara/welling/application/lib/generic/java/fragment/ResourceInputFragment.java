@@ -22,6 +22,7 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewGroupClassName;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class ResourceInputFragment extends AbstractModelClass {
 
 	protected final ClassName networkCallbackClassName;

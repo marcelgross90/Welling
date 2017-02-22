@@ -16,6 +16,7 @@ import de.fhws.applab.gemara.enfield.metamodel.states.secondary.PostSecondaryRes
 import de.fhws.applab.gemara.enfield.metamodel.states.secondary.PutSecondaryResourceState;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 
+@SuppressWarnings("WeakerAccess")
 public class StateIdentifierVisitor implements IStateVisitor {
 
 	private StateHolder.StateType stateType;

@@ -28,9 +28,9 @@ import de.fhws.applab.gemara.welling.modelGenerator.CardViewModelGenerator;
 import de.fhws.applab.gemara.welling.modelGenerator.DetailViewModelGenerator;
 import de.fhws.applab.gemara.welling.modelGenerator.InputViewModelGenerator;
 
-public class MyEnfieldModel {
+class MyEnfieldModel {
 
-	private Model metaModel;
+	private final Model metaModel;
 
 	private SingleResource lecturerResource;
 

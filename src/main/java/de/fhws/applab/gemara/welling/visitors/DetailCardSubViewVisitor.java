@@ -14,9 +14,9 @@ import java.util.List;
 public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 
 	private final AppDescription appDescription;
+	private final String packageName;
 
 	private AbstractLayoutGenerator.View view;
-	private String packageName;
 
 	public DetailCardSubViewVisitor(AppDescription appDescription, String packageName) {
 		this.appDescription = appDescription;

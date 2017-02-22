@@ -2,6 +2,7 @@ package de.fhws.applab.gemara.welling.application.app.res.anim;
 
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class AnimGenerator extends GeneratedFile {
 
 	public abstract Alpha getAlpha();
@@ -45,6 +46,7 @@ public abstract class AnimGenerator extends GeneratedFile {
 		private final double fromAlpha;
 		private final double toAlpha;
 
+		@SuppressWarnings("SameParameterValue")
 		public Alpha(int duration, double fromAlpha, double toAlpha) {
 			this.duration = duration;
 			this.fromAlpha = fromAlpha;

@@ -11,6 +11,7 @@ public class LinkAttribute extends Attribute {
 
 	private final ClassName linkClassName;
 
+	@SuppressWarnings("SameParameterValue")
 	public LinkAttribute(String name, String packageName, Modifier... modifiers) {
 		super(name, DataType.LINK, modifiers);
 		linkClassName = ClassName.get(packageName + ".generic.model", "Link");
