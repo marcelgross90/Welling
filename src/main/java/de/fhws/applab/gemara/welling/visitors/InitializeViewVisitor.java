@@ -2,11 +2,11 @@ package de.fhws.applab.gemara.welling.visitors;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute.AttributeType;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.DisplayViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.GroupResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttributeVisitor;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResourceViewAttribute;
-import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute.AttributeType;
 
 public class InitializeViewVisitor implements ResourceViewAttributeVisitor {
 
@@ -38,11 +38,9 @@ public class InitializeViewVisitor implements ResourceViewAttributeVisitor {
 	private void addStatement(String viewName, AttributeType attributeType) {
 		if (attributeType != AttributeType.SUBRESOURCE) {
 			if (attributeType == AttributeType.PICTURE) {
-				builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, profileImageViewClassName, rClassName,
-						"profileImg");
+				builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, profileImageViewClassName, rClassName, "profileImg");
 			} else {
-				builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, attributeViewClassName, rClassName,
-						viewName);
+				builder.addStatement("$N = ($T) findViewById($T.id.$N)", viewName, attributeViewClassName, rClassName, viewName);
 			}
 		}
 	}

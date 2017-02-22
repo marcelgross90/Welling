@@ -12,13 +12,15 @@ public class ContainsSubResourceVisitor implements ResourceViewAttributeVisitor 
 
 	@Override
 	public void visit(SingleResourceViewAttribute singleResourceViewAttribute) {
-		this.containsSubResource = singleResourceViewAttribute.getDisplayViewAttribute().getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE;
+		this.containsSubResource =
+				singleResourceViewAttribute.getDisplayViewAttribute().getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE;
 		this.viewName = singleResourceViewAttribute.getDisplayViewAttribute().getAttributeName();
 	}
 
 	@Override
 	public void visit(GroupResourceViewAttribute groupResourceViewAttribute) {
-		this.containsSubResource = groupResourceViewAttribute.getGroupResouceViewAttribute().getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE;
+		this.containsSubResource =
+				groupResourceViewAttribute.getGroupResouceViewAttribute().getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE;
 		this.viewName = groupResourceViewAttribute.getGroupResouceViewAttribute().getAttributeName();
 	}
 

@@ -28,9 +28,6 @@ import de.fhws.applab.gemara.welling.modelGenerator.CardViewModelGenerator;
 import de.fhws.applab.gemara.welling.modelGenerator.DetailViewModelGenerator;
 import de.fhws.applab.gemara.welling.modelGenerator.InputViewModelGenerator;
 
-/**
- * Created by marcelgross on 11.02.17.
- */
 public class MyEnfieldModel {
 
 	private Model metaModel;
@@ -44,8 +41,6 @@ public class MyEnfieldModel {
 	private GetPrimarySingleResourceByIdState getLecturerByIdState;
 
 	private GetPrimaryCollectionResourceByQueryState getCollectionOfLecturersState;
-
-	private PostPrimaryResourceState postNewLecturerState;
 
 	private GetPrimarySingleResourceByIdState getChargeByIdState;
 
@@ -81,15 +76,15 @@ public class MyEnfieldModel {
 
 		createGetLecturerImageState();
 
-		createGetCollectionOfChargesState( );
+		createGetCollectionOfChargesState();
 
-		createGetChargeByIdState( );
+		createGetChargeByIdState();
 
-		createPostNewChargeState( );
+		createPostNewChargeState();
 
-		createUpdateChargeState( );
+		createUpdateChargeState();
 
-		createDeleteChargeState( );
+		createDeleteChargeState();
 
 		return this.metaModel;
 	}
@@ -104,8 +99,10 @@ public class MyEnfieldModel {
 
 	private FrontendColor getFrontendColor() {
 		try {
+
 			return new FrontendColor("#3F51B5", "#303F9F", "#FF4081", "#fff");
 		} catch (InputException ex) {
+
 			return null;
 		}
 	}
@@ -131,7 +128,6 @@ public class MyEnfieldModel {
 		createSingleResourceCharge();
 		final ResourceCollectionAttribute charge = new ResourceCollectionAttribute("chargeUrl", this.chargeResource);
 
-
 		this.lecturerResource.addAttribute(title);
 		this.lecturerResource.addAttribute(firstName);
 		this.lecturerResource.addAttribute(lastName);
@@ -143,7 +139,6 @@ public class MyEnfieldModel {
 
 		this.lecturerResource.addAttribute(charge);
 
-
 		addImageAttributeForLecturerResource();
 
 	}
@@ -154,7 +149,6 @@ public class MyEnfieldModel {
 		this.lecturerResource.addAttribute(profileImage);
 		this.lecturerResource.setCaching(new CachingByEtag());
 	}
-
 
 	private void createSingleResourceCharge() {
 		this.metaModel.addSingleResource("Charge");

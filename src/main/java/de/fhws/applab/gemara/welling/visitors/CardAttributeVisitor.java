@@ -43,11 +43,11 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		_visitForCardSubView(displayViewAttribute);
 	}
 
-
-	private void  _visitForCardSubView(DisplayViewAttribute displayViewAttribute) {
+	private void _visitForCardSubView(DisplayViewAttribute displayViewAttribute) {
 		AbstractLayoutGenerator.View view = getAttributeView(displayViewAttribute, packageName);
 
 		List<AbstractLayoutGenerator.View> views = new ArrayList<>();
+
 		views.add(view);
 
 		addViews(views);
@@ -59,6 +59,7 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		AbstractLayoutGenerator.View imageView = new AbstractLayoutGenerator.View(packageName + ".generic.customView.ProfileImageView");
 
 		List<String> viewAttributes = new ArrayList<>();
+
 		viewAttributes.add("android:layout_width=\"wrap_content\"");
 		viewAttributes.add("android:layout_height=\"@dimen/picture_height\"");
 		viewAttributes.add("android:id=\"@+id/profileImg\"");
@@ -75,7 +76,6 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		imageViews.add(getBorderView("profileImg"));
 
 		addViews(imageViews);
-
 	}
 
 	private void addString(String key, String value) {
@@ -85,6 +85,7 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 	private AbstractLayoutGenerator.View getBorderView(String imageName) {
 		AbstractLayoutGenerator.View border = new AbstractLayoutGenerator.View("View");
 		List<String> viewAttributes = new ArrayList<>();
+
 		viewAttributes.add("android:layout_width=\"@dimen/spacing_small\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
 		viewAttributes.add("android:id=\"@+id/border\"");
@@ -97,6 +98,7 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		viewAttributes.add("android:background=\"@color/colorPrimary\"");
 
 		border.setViewAttributes(viewAttributes);
+
 		return border;
 	}
 
@@ -104,6 +106,7 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View(packageName + ".generic.customView.AttributeView");
 
 		List<String> viewAttributes = new ArrayList<>();
+
 		viewAttributes.add("android:layout_width=\"match_parent\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
 		viewAttributes.add("android:id=\"@+id/" + displayViewAttribute.getAttributeName() + "\"");

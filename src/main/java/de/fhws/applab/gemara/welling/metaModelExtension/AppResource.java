@@ -24,8 +24,4 @@ public class AppResource {
 	public void addSubResource(SingleResource resource, SingleResource subResource) {
 		this.resources.get(resource.getResourceName()).setSubResources(subResource);
 	}
-
-	public SingleResource getSubResource(String resourceName, String subResourceName) {
-		return this.resources.get(resourceName).getSubResource(subResourceName);
-	}
 }

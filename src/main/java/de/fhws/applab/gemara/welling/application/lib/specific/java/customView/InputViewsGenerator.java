@@ -7,8 +7,8 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputViewAttribute;
 import de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView;
-import de.fhws.applab.gemara.welling.generator.GetterSetterGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
+import de.fhws.applab.gemara.welling.generator.GetterSetterGenerator;
 import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
 
 import javax.lang.model.element.Modifier;
@@ -56,22 +56,38 @@ public class InputViewsGenerator extends CustomView {
 
 	@Override
 	protected MethodSpec getConstructorOne() {
-		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
-				.addStatement("super($N)", getContextParam()).build();
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+					.addModifiers(Modifier.PUBLIC)
+					.addParameter(getContextParam())
+					.addStatement("super($N)", getContextParam())
+					.build();
+		// @formatter:on
 	}
 
 	@Override
 	protected MethodSpec getConstructorTwo() {
-		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
-				.addParameter(getAttributeSetParam()).addStatement("super($N, $N)", getContextParam(), getAttributeSetParam()).build();
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+					.addModifiers(Modifier.PUBLIC)
+					.addParameter(getContextParam())
+					.addParameter(getAttributeSetParam())
+					.addStatement("super($N, $N)", getContextParam(), getAttributeSetParam())
+					.build();
+		// @formatter:on
 	}
 
 	@Override
 	protected MethodSpec getConstructorThree() {
-
-		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
-				.addParameter(getAttributeSetParam()).addParameter(defStyleAttr)
-				.addStatement("super($N, $N, $N)", getContextParam(), getAttributeSetParam(), defStyleAttr).build();
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+					.addModifiers(Modifier.PUBLIC)
+					.addParameter(getContextParam())
+					.addParameter(getAttributeSetParam())
+					.addParameter(defStyleAttr)
+					.addStatement("super($N, $N, $N)", getContextParam(), getAttributeSetParam(), defStyleAttr)
+					.build();
+		// @formatter:on
 	}
 
 	@Override
@@ -99,8 +115,8 @@ public class InputViewsGenerator extends CustomView {
 		if (containsDate) {
 			fields.add(FieldSpec.builder(specificResourceClassName, "current" + inputView.getResourceName(), Modifier.PRIVATE).build());
 			fields.add(FieldSpec.builder(specificResourceClassName, "old" + inputView.getResourceName(), Modifier.PRIVATE).build());
-			FieldSpec simpleDateFormat = FieldSpec.builder(SimpleDateFormat.class, "simpleDateFormat", Modifier.PRIVATE, Modifier.FINAL).initializer(
-					"new $T($S, $T.GERMANY)", SimpleDateFormat.class, "dd.MM.yyyy HH:mm", Locale.class).build();
+			FieldSpec simpleDateFormat = FieldSpec.builder(SimpleDateFormat.class, "simpleDateFormat", Modifier.PRIVATE, Modifier.FINAL)
+					.initializer("new $T($S, $T.GERMANY)", SimpleDateFormat.class, "dd.MM.yyyy HH:mm", Locale.class).build();
 			fields.add(simpleDateFormat);
 		}
 		return fields;
@@ -212,7 +228,6 @@ public class InputViewsGenerator extends CustomView {
 			getResourceWithoutDate(builder);
 		}
 
-
 		for (InputViewAttribute inputViewAttribute : inputView.getInputViewAttributes()) {
 			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE
 					|| inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE) {
@@ -224,14 +239,15 @@ public class InputViewsGenerator extends CustomView {
 			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.URL) {
 				builder.addStatement("$T $N = new $T($N, $S, $S)", linkClassName, inputViewAttribute.getAttributeName() + "Url",
 						linkClassName, stringName, inputViewAttribute.getAttributeName().toLowerCase(), "text/html");
-				builder.addStatement("$N.$N($N)", "current" + inputView.getResourceName(), GetterSetterGenerator.getSetter(inputViewAttribute.getAttributeName()),
+				builder.addStatement("$N.$N($N)", "current" + inputView.getResourceName(),
+						GetterSetterGenerator.getSetter(inputViewAttribute.getAttributeName()),
 						inputViewAttribute.getAttributeName() + "Url");
 			} else if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.DATE) {
-				builder.addStatement("$N.$N($N($N))", "current" + inputView.getResourceName(), GetterSetterGenerator.getSetter(inputViewAttribute.getAttributeName()),
-						getStringToDate(), stringName);
+				builder.addStatement("$N.$N($N($N))", "current" + inputView.getResourceName(),
+						GetterSetterGenerator.getSetter(inputViewAttribute.getAttributeName()), getStringToDate(), stringName);
 			} else {
-				builder.addStatement("$N.$N($N)", "current" + inputView.getResourceName(), GetterSetterGenerator.getSetter(inputViewAttribute.getAttributeName()),
-						stringName);
+				builder.addStatement("$N.$N($N)", "current" + inputView.getResourceName(),
+						GetterSetterGenerator.getSetter(inputViewAttribute.getAttributeName()), stringName);
 			}
 		}
 
@@ -243,20 +259,18 @@ public class InputViewsGenerator extends CustomView {
 	}
 
 	private void getResourceWithDate(MethodSpec.Builder builder) {
-
-		builder.beginControlFlow("if ($N == $L)",  "current" + inputView.getResourceName(), null);
-		builder.addStatement("$N = new $T()",  "current" + inputView.getResourceName(), specificResourceClassName);
+		builder.beginControlFlow("if ($N == $L)", "current" + inputView.getResourceName(), null);
+		builder.addStatement("$N = new $T()", "current" + inputView.getResourceName(), specificResourceClassName);
 		builder.endControlFlow();
 		builder.beginControlFlow("if ($N != $L)", "old" + inputView.getResourceName(), null);
 		builder.addStatement("$N.setId($N.getId())", "current" + inputView.getResourceName(), "old" + inputView.getResourceName());
 		builder.endControlFlow();
-
 	}
 
 	private void getResourceWithoutDate(MethodSpec.Builder builder) {
-		builder.addStatement("$T $N = new $T()", specificResourceClassName, "current" + inputView.getResourceName(), specificResourceClassName);
+		builder.addStatement("$T $N = new $T()", specificResourceClassName, "current" + inputView.getResourceName(),
+				specificResourceClassName);
 	}
-
 
 	private MethodSpec getInitializeViews() {
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("initializeView");
@@ -285,44 +299,61 @@ public class InputViewsGenerator extends CustomView {
 	}
 
 	private MethodSpec getGetLayout() {
-		return MethodSpec.methodBuilder("getLayout").addModifiers(Modifier.PROTECTED).addAnnotation(Override.class).returns(int.class)
-				.addStatement("return $T.layout.$N", rClassName, "view_" + inputView.getResourceName().toLowerCase() + "_input").build();
+		// @formatter:off
+		return MethodSpec.methodBuilder("getLayout")
+					.addModifiers(Modifier.PROTECTED)
+					.addAnnotation(Override.class)
+					.returns(int.class)
+					.addStatement("return $T.layout.$N", rClassName, "view_" + inputView.getResourceName().toLowerCase() + "_input")
+					.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetStyleable() {
-		appDescription.setDeclareStyleables(replaceIllegalCharacters(inputView.getResourceName() + "InputView"), new AppDeclareStyleable.DeclareStyleable(replaceIllegalCharacters(inputView.getResourceName() + "InputView")));
-		return MethodSpec.methodBuilder("getStyleable").addModifiers(Modifier.PROTECTED).addAnnotation(Override.class).returns(int[].class)
-				.addStatement("return $T.styleable.$N", rClassName, replaceIllegalCharacters(inputView.getResourceName() + "InputView")).build();
+		appDescription.setDeclareStyleables(replaceIllegalCharacters(inputView.getResourceName() + "InputView"),
+				new AppDeclareStyleable.DeclareStyleable(replaceIllegalCharacters(inputView.getResourceName() + "InputView")));
+
+		// @formatter:off
+		return MethodSpec.methodBuilder("getStyleable")
+					.addModifiers(Modifier.PROTECTED)
+					.addAnnotation(Override.class)
+					.returns(int[].class)
+					.addStatement("return $T.styleable.$N",
+							rClassName, replaceIllegalCharacters(inputView.getResourceName() + "InputView"))
+					.build();
+		// @formatter:on
 	}
 
-
 	private MethodSpec getDateToString() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("dateToString")
-				.addModifiers(Modifier.PRIVATE)
-				.returns(String.class)
-				.addParameter(Date.class, "date")
-				.addStatement("return $N.format($N)", "simpleDateFormat", "date")
-				.build();
+					.addModifiers(Modifier.PRIVATE)
+					.returns(String.class)
+					.addParameter(Date.class, "date")
+					.addStatement("return $N.format($N)", "simpleDateFormat", "date")
+					.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getStringToDate() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("stringToDate")
-				.addModifiers(Modifier.PRIVATE)
-				.returns(Date.class)
-				.addParameter(String.class, "date")
-				.beginControlFlow("try")
-				.addStatement("return $N.parse($N)", "simpleDateFormat", "date")
-				.endControlFlow()
-				.beginControlFlow("catch ($T $N)", ParseException.class, "ex")
-				.addStatement("$N.printStackTrace()", "ex")
-				.addStatement("return new $T()", Date.class)
-				.endControlFlow()
-				.build();
+					.addModifiers(Modifier.PRIVATE)
+					.returns(Date.class)
+					.addParameter(String.class, "date")
+					.beginControlFlow("try")
+					.addStatement("return $N.parse($N)", "simpleDateFormat", "date")
+					.endControlFlow()
+					.beginControlFlow("catch ($T $N)", ParseException.class, "ex")
+					.addStatement("$N.printStackTrace()", "ex")
+					.addStatement("return new $T()", Date.class)
+					.endControlFlow()
+					.build();
+		// @formatter:on
 	}
 
 	private void addString(String key, String value) {
 		appDescription.setLibStrings(replaceIllegalCharacters(key), value);
-
 	}
 
 	private String replaceIllegalCharacters(String input) {

@@ -19,10 +19,10 @@ import de.fhws.applab.gemara.enfield.metamodel.states.secondary.PutSecondaryReso
 import de.fhws.applab.gemara.enfield.metamodel.transitions.AbstractTransition;
 import de.fhws.applab.gemara.enfield.metamodel.transitions.ActionTransition;
 import de.fhws.applab.gemara.enfield.metamodel.views.SingleResourceView;
-import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.application.lib.specific.java.model.ResourceGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.FileWriter;
+import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.resourceViewGenerator.DeleteGenerator;
 
 import java.util.List;
@@ -40,25 +40,23 @@ public class StateVisitorImpl implements IStateVisitor {
 		SingleResource resource = getPrimarySingleResourceByIdState.getResourceType();
 		FileWriter.writeJavaFiles(new ResourceGenerator(appDescription, resource), appDescription.getLibJavaDirectory());
 
-		StateHolder stateHolder = getStateHolder(getPrimarySingleResourceByIdState, getTransitionFromState(
-				getPrimarySingleResourceByIdState));
+		StateHolder stateHolder = getStateHolder(getPrimarySingleResourceByIdState,
+				getTransitionFromState(getPrimarySingleResourceByIdState));
 
 		SingleResourceView resourceView = getPrimarySingleResourceByIdState.getSingleResourceView();
-		resourceView.getDetailView().accept(new ResourceViewVisitorImpl(appDescription, stateHolder, ResourceViewVisitorImpl.InputType.NONE));
-
+		resourceView.getDetailView()
+				.accept(new ResourceViewVisitorImpl(appDescription, stateHolder, ResourceViewVisitorImpl.InputType.NONE));
 	}
 
 	public void visit(GetPrimaryCollectionResourceByQueryState getPrimaryCollectionResourceByQueryState) {
 		SingleResource resource = getPrimaryCollectionResourceByQueryState.getResourceType();
 		FileWriter.writeJavaFiles(new ResourceGenerator(appDescription, resource), appDescription.getLibJavaDirectory());
 
-		StateHolder stateHolder = getStateHolder(getPrimaryCollectionResourceByQueryState, getTransitionFromState(
-				getPrimaryCollectionResourceByQueryState));
+		StateHolder stateHolder = getStateHolder(getPrimaryCollectionResourceByQueryState,
+				getTransitionFromState(getPrimaryCollectionResourceByQueryState));
 
 		SingleResourceView resourceView = getPrimaryCollectionResourceByQueryState.getSingleResourceView();
 		resourceView.getCardView().accept(new ResourceViewVisitorImpl(appDescription, stateHolder, ResourceViewVisitorImpl.InputType.NONE));
-
-
 	}
 
 	public void visit(PostPrimaryResourceState postPrimaryResourceState) {
@@ -68,7 +66,8 @@ public class StateVisitorImpl implements IStateVisitor {
 		StateHolder stateHolder = getStateHolder(postPrimaryResourceState, getTransitionFromState(postPrimaryResourceState));
 
 		SingleResourceView resourceView = postPrimaryResourceState.getSingleResourceView();
-		resourceView.getInputView().accept(new ResourceViewVisitorImpl(appDescription, stateHolder, ResourceViewVisitorImpl.InputType.POST));
+		resourceView.getInputView()
+				.accept(new ResourceViewVisitorImpl(appDescription, stateHolder, ResourceViewVisitorImpl.InputType.POST));
 	}
 
 	public void visit(PutPrimaryResourceState putPrimaryResourceState) {
@@ -79,7 +78,6 @@ public class StateVisitorImpl implements IStateVisitor {
 
 		SingleResourceView resourceView = putPrimaryResourceState.getSingleResourceView();
 		resourceView.getInputView().accept(new ResourceViewVisitorImpl(appDescription, stateHolder, ResourceViewVisitorImpl.InputType.PUT));
-
 	}
 
 	public void visit(DeletePrimaryResourceState deletePrimaryResourceState) {
@@ -118,7 +116,6 @@ public class StateVisitorImpl implements IStateVisitor {
 
 	}
 
-
 	private List<AbstractTransition> getTransitionFromState(AbstractState state) {
 		return state.getTransitions().stream().collect(Collectors.toList());
 	}
@@ -132,21 +129,18 @@ public class StateVisitorImpl implements IStateVisitor {
 			StateIdentifierVisitor stateIdentifierVisitor1 = new StateIdentifierVisitor();
 			currentState.generate(stateIdentifierVisitor1);
 
-			String relType = "";
 			if (abstractTransition instanceof ActionTransition) {
-				relType = ((ActionTransition) abstractTransition).getRelationType();
+				String relType = ((ActionTransition) abstractTransition).getRelationType();
 
 				generateRestApi(stateIdentifierVisitor1.getStateType() + "_" + state.getResourceType().getResourceName(), relType);
 			}
-			stateHolder.setNextStates(stateIdentifierVisitor1.getStateType(), relType);
+			stateHolder.setNextStates(stateIdentifierVisitor1.getStateType());
 		}
 
 		return stateHolder;
 	}
 
-
 	private void generateRestApi(String stateKey, String relType) {
-
 		appDescription.setRestApi(stateKey, "rel_type_" + relType.toLowerCase(), relType);
 	}
 }

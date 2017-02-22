@@ -7,7 +7,6 @@ import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public abstract class Attribute {
 
 	public enum DataType {
@@ -15,7 +14,9 @@ public abstract class Attribute {
 	}
 
 	protected abstract void addReturnValue(MethodSpec.Builder builder);
+
 	protected abstract void addParameter(MethodSpec.Builder builder);
+
 	protected abstract void addField(TypeSpec.Builder builder);
 
 	protected final String name;
@@ -32,11 +33,6 @@ public abstract class Attribute {
 		return name;
 	}
 
-	public Modifier[] getModifiers() {
-		return modifiers;
-	}
-
-
 	public List<MethodSpec> createGetterSetter() {
 		List<MethodSpec> getterSetter = new ArrayList<>();
 		getterSetter.add(createGetter());
@@ -51,6 +47,7 @@ public abstract class Attribute {
 
 	private MethodSpec createGetter() {
 		String name = getNameWithCapitalStart();
+
 		MethodSpec.Builder getter = MethodSpec.methodBuilder("get" + name);
 		getter.addModifiers(Modifier.PUBLIC);
 		addReturnValue(getter);
@@ -59,9 +56,9 @@ public abstract class Attribute {
 		return getter.build();
 	}
 
-
 	private MethodSpec createSetter() {
 		String name = getNameWithCapitalStart();
+
 		MethodSpec.Builder setter = MethodSpec.methodBuilder("set" + name);
 		setter.addModifiers(Modifier.PUBLIC);
 		setter.returns(void.class);
@@ -70,7 +67,6 @@ public abstract class Attribute {
 
 		return setter.build();
 	}
-
 
 	private String getNameWithCapitalStart() {
 		return Character.toUpperCase(name.charAt(0)) + name.substring(1);

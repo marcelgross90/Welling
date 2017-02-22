@@ -14,9 +14,12 @@ public class Resource extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		TypeSpec type = TypeSpec.interfaceBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC)
 				.build();
+		// @formatter:on
+
 		return JavaFile.builder(this.packageName, type).build();
 	}
 }

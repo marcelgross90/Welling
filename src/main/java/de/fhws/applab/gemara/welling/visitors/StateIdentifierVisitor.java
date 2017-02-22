@@ -24,7 +24,6 @@ public class StateIdentifierVisitor implements IStateVisitor {
 		return stateType;
 	}
 
-
 	@Override
 	public void visit(GetPrimarySingleResourceByIdState getPrimarySingleResourceByIdState) {
 		this.stateType = StateHolder.StateType.GET_SINGLE;

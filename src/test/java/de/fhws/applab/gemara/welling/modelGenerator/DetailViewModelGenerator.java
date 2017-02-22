@@ -20,6 +20,7 @@ public class DetailViewModelGenerator {
 
 		try {
 			List<Category> categories = new ArrayList<>();
+
 			DisplayViewAttribute nameAttribute = new DisplayViewAttribute("name", ViewAttribute.AttributeType.TEXT);
 			GroupResourceViewAttribute name = new GroupResourceViewAttribute(nameAttribute, getViewTitleAttributes());
 
@@ -41,6 +42,7 @@ public class DetailViewModelGenerator {
 
 		try {
 			List<Category> categories = new ArrayList<>();
+
 			DisplayViewAttribute titleAttribute = new DisplayViewAttribute("title", ViewAttribute.AttributeType.TEXT);
 			SingleResourceViewAttribute title = new SingleResourceViewAttribute(titleAttribute);
 
@@ -52,9 +54,7 @@ public class DetailViewModelGenerator {
 		}
 
 		return detailView;
-
 	}
-
 
 	private static List<ResourceViewAttribute> getTenureResourceViewAttributes() {
 		List<ResourceViewAttribute> tenureAttributes = new ArrayList<>();
@@ -68,6 +68,7 @@ public class DetailViewModelGenerator {
 		toDateAttribute.setAttributeLabel("Enddate");
 		SingleResourceViewAttribute toDate = new SingleResourceViewAttribute(toDateAttribute);
 		tenureAttributes.add(toDate);
+
 		return tenureAttributes;
 	}
 
@@ -75,17 +76,21 @@ public class DetailViewModelGenerator {
 		DisplayViewAttribute imageAttribute = new DisplayViewAttribute("profileImageUrl", ViewAttribute.AttributeType.PICTURE);
 		imageAttribute.setAttributeLabel("ProfileImage");
 		imageAttribute.setPicturePosition(DisplayViewAttribute.PicturePosition.LEFT);
+
 		return new SingleResourceViewAttribute(imageAttribute);
 	}
 
 	private static List<DisplayViewAttribute> getViewTitleAttributes() {
 		List<DisplayViewAttribute> nameAttributes = new ArrayList<>();
+
 		DisplayViewAttribute firstNameAttributes = new DisplayViewAttribute("firstName", ViewAttribute.AttributeType.TEXT);
 		firstNameAttributes.setAttributeLabel("FirstName");
 		nameAttributes.add(firstNameAttributes);
+
 		DisplayViewAttribute lastNameAttributes = new DisplayViewAttribute("lastName", ViewAttribute.AttributeType.TEXT);
 		lastNameAttributes.setAttributeLabel("LastName");
 		nameAttributes.add(lastNameAttributes);
+
 		return nameAttributes;
 	}
 
@@ -103,6 +108,7 @@ public class DetailViewModelGenerator {
 		roomAttribute.setClickActionAndroid(true);
 		SingleResourceViewAttribute room = new SingleResourceViewAttribute(roomAttribute);
 		officeAttributes.add(room);
+
 		return officeAttributes;
 	}
 
@@ -127,6 +133,7 @@ public class DetailViewModelGenerator {
 		welearnAttribute.setLinkDescription("welearn");
 		SingleResourceViewAttribute welearn = new SingleResourceViewAttribute(welearnAttribute);
 		contactAttributes.add(welearn);
+
 		return contactAttributes;
 	}
 
@@ -139,8 +146,6 @@ public class DetailViewModelGenerator {
 		SingleResourceViewAttribute chargeResourceViewAttribute = new SingleResourceViewAttribute(charge);
 		chargeAttributes.add(chargeResourceViewAttribute);
 
-
 		return chargeAttributes;
-
 	}
 }

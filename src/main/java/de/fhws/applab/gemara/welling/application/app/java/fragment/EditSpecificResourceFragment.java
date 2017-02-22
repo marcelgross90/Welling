@@ -10,10 +10,10 @@ import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
-
 import java.util.Map;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getToastClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
 
 public class EditSpecificResourceFragment extends AbstractModelClass {
 
@@ -35,17 +35,20 @@ public class EditSpecificResourceFragment extends AbstractModelClass {
 		this.appDescription = appDescription;
 
 		this.rClassName = ClassName.get(appDescription.getAppPackageName(), "R");
-		this.specificResourceInputViewClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.customView", resourceName + "InputView");
+		this.specificResourceInputViewClassName = ClassName
+				.get(appDescription.getLibPackageName() + ".specific.customView", resourceName + "InputView");
 		this.specificResourceClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.model", resourceName);
 		this.networkCallBackClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkCallback");
 		this.networkResponseClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkResponse");
-		this.editResourceFragmentClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.fragment", "EditResourceFragment");
+		this.editResourceFragmentClassName = ClassName
+				.get(appDescription.getLibPackageName() + ".generic.fragment", "EditResourceFragment");
 		ClassName linkClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Link");
 		linkMap = ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), linkClassName);
 	}
 
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC)
 				.superclass(editResourceFragmentClassName)
@@ -54,21 +57,24 @@ public class EditSpecificResourceFragment extends AbstractModelClass {
 				.addMethod(getGetLoadCallback())
 				.addMethod(getGetSaveCallback())
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
 	}
 
-
 	private MethodSpec getGetLayout() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLayout")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(int.class)
 				.addStatement("return $T.layout.$N", rClassName, "fragment_edit_" + resourceName.toLowerCase())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitializeView() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("initializeView")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
@@ -77,18 +83,22 @@ public class EditSpecificResourceFragment extends AbstractModelClass {
 				.addStatement("$N = ($T) $N.findViewById($T.id.$N)", "inputView", specificResourceInputViewClassName, "view", rClassName,
 						resourceName.toLowerCase() + "_input")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetLoadCallback() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLoadCallBack")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(networkCallBackClassName)
 				.addStatement("return $L", getLoadCallback())
 				.build();
+		// @formatter:on
 	}
 
 	private TypeSpec getLoadCallback() {
+		// @formatter:off
 		TypeSpec runnable = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
 				.addMethod(
@@ -97,8 +107,8 @@ public class EditSpecificResourceFragment extends AbstractModelClass {
 								.addModifiers(Modifier.PUBLIC)
 								.returns(void.class)
 								.addStatement("$N.setResource($N)", "inputView", resourceName.toLowerCase())
-								.build()
-				).build();
+								.build())
+				.build();
 
 		MethodSpec onSuccess = MethodSpec.methodBuilder("onSuccess")
 				.addAnnotation(Override.class)
@@ -115,22 +125,31 @@ public class EditSpecificResourceFragment extends AbstractModelClass {
 
 		return TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(networkCallBackClassName)
-				.addMethod(MethodSpec.methodBuilder("onFailure").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(void.class).build())
+				.addMethod(
+						MethodSpec.methodBuilder("onFailure")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.returns(void.class)
+								.build())
 				.addMethod(onSuccess)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetSaveCallback() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getSaveCallBack")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(networkCallBackClassName)
 				.addStatement("return $L", getSaveCallback())
 				.build();
+		// @formatter:on
 	}
 
 	private TypeSpec getSaveCallback() {
 		addString(replaceIllegalCharacters(resourceName.toLowerCase() + "_updated"), resourceName + " updated!");
+		// @formatter:off
 		TypeSpec runnable = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
 				.addMethod(
@@ -138,10 +157,11 @@ public class EditSpecificResourceFragment extends AbstractModelClass {
 								.addAnnotation(Override.class)
 								.addModifiers(Modifier.PUBLIC)
 								.returns(void.class)
-								.addStatement("$T.makeText(getActivity(), $T.string.$N, $T.LENGTH_SHORT).show()", getToastClassName(), rClassName, replaceIllegalCharacters(resourceName.toLowerCase() + "_updated"), getToastClassName())
+								.addStatement("$T.makeText(getActivity(), $T.string.$N, $T.LENGTH_SHORT).show()"
+										, getToastClassName(), rClassName, replaceIllegalCharacters(resourceName.toLowerCase() + "_updated"), getToastClassName())
 								.addStatement("getActivity().onBackPressed()")
-								.build()
-				).build();
+								.build())
+				.build();
 
 		MethodSpec onSuccess = MethodSpec.methodBuilder("onSuccess")
 				.addAnnotation(Override.class)
@@ -153,9 +173,15 @@ public class EditSpecificResourceFragment extends AbstractModelClass {
 
 		return TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(networkCallBackClassName)
-				.addMethod(MethodSpec.methodBuilder("onFailure").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(void.class).build())
+				.addMethod(
+						MethodSpec.methodBuilder("onFailure")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.returns(void.class)
+								.build())
 				.addMethod(onSuccess)
 				.build();
+		// @formatter:on
 	}
 
 	private String replaceIllegalCharacters(String input) {

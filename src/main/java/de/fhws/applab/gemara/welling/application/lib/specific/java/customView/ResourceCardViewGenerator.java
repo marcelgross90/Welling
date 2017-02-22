@@ -15,14 +15,14 @@ import de.fhws.applab.gemara.welling.visitors.InitializeViewVisitor;
 import de.fhws.applab.gemara.welling.visitors.SetTextVisitor;
 
 import javax.lang.model.element.Modifier;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getAttributeSetParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
 
 public class ResourceCardViewGenerator extends AbstractModelClass {
 
@@ -88,23 +88,28 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getConstructorOne() {
+		// @formatter:off
 		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(getContextParam())
 				.addStatement("super($N)", getContextParam())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getConstructorTwo() {
+		// @formatter:off
 		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(getContextParam())
 				.addParameter(getAttributeSetParam())
 				.addStatement("super($N, $N)", getContextParam(), getAttributeSetParam())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getConstructorThree() {
+		// @formatter:off
 		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(getContextParam())
@@ -112,24 +117,29 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 				.addParameter(int.class, "defStyleAttr")
 				.addStatement("super($N, $N, $N)", getContextParam(), getAttributeSetParam(), "defStyleAttr")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetStyleable() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getStyleable")
 				.addModifiers(Modifier.PROTECTED)
 				.returns(int[].class)
 				.addAnnotation(Override.class)
 				.addStatement("return $T.styleable.$N", rClassName, this.className)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetLayout() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLayout")
 				.addModifiers(Modifier.PROTECTED)
 				.addAnnotation(Override.class)
 				.returns(int.class)
 				.addStatement("return $T.layout.$N", rClassName, "view_" + cardView.getResourceName().toLowerCase() + "_card")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitializeView() {
@@ -139,9 +149,9 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 		method.returns(void.class);
 
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
-			InitializeViewVisitor visitor = new InitializeViewVisitor(method, attributeViewClassName, profileImageViewClassName, rClassName);
+			InitializeViewVisitor visitor = new InitializeViewVisitor(method, attributeViewClassName, profileImageViewClassName,
+					rClassName);
 			resourceViewAttribute.accept(visitor);
-
 		}
 
 		return method.build();
@@ -149,6 +159,7 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 
 	private MethodSpec getSetupView() {
 		String specificResourceName = cardView.getResourceName().toLowerCase();
+
 		MethodSpec.Builder method = MethodSpec.methodBuilder("setUpView");
 		method.addAnnotation(Override.class);
 		method.addModifiers(Modifier.PUBLIC);
@@ -167,6 +178,7 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 
 	private MethodSpec getHideUnnecessaryViews() {
 		String specificResourceName = cardView.getResourceName().toLowerCase();
+
 		MethodSpec.Builder method = MethodSpec.methodBuilder("hideUnnecessaryViews");
 		method.addModifiers(Modifier.PRIVATE);
 		method.returns(void.class);
@@ -181,12 +193,15 @@ public class ResourceCardViewGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getConvertDate() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("convertDate")
 				.addModifiers(Modifier.PRIVATE)
 				.returns(String.class)
 				.addParameter(Date.class, "date")
-				.addStatement("$T $N = new $T($S, $T.GERMANY)", SimpleDateFormat.class, "formatter", SimpleDateFormat.class, "dd.MM.yyyy HH:mm",
-						Locale.class)
-				.addStatement("return $N.format($N)", "formatter", "date").build();
+				.addStatement("$T $N = new $T($S, $T.GERMANY)",
+						SimpleDateFormat.class, "formatter", SimpleDateFormat.class, "dd.MM.yyyy HH:mm", Locale.class)
+				.addStatement("return $N.format($N)", "formatter", "date")
+				.build();
+		// @formatter:on
 	}
 }

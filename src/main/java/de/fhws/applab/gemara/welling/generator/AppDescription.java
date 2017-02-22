@@ -99,10 +99,6 @@ public class AppDescription {
 		return appDeclareStyleable;
 	}
 
-	public void setDeclareStyleables(Map<String, AppDeclareStyleable.DeclareStyleable> declareStyleables) {
-		this.appDeclareStyleable.setDeclareStyleables(declareStyleables);
-	}
-
 	public void setDeclareStyleables(String key, AppDeclareStyleable.DeclareStyleable declareStyleable) {
 		this.appDeclareStyleable.setDeclareStyleables(key, declareStyleable);
 	}
@@ -110,7 +106,6 @@ public class AppDescription {
 	public AppRestAPI getAppRestAPI() {
 		return appRestAPI;
 	}
-
 
 	public void setRestApi(String stateKey, String relTypeKey, String relType) {
 		this.appRestAPI.setRestApi(stateKey, relTypeKey, relType);
@@ -120,24 +115,12 @@ public class AppDescription {
 		return appManifest;
 	}
 
-	public void setManifestPermissions(List<String> permissions) {
-		this.appManifest.setPermissions(permissions);
-	}
-
-	public void setManifestPermissions(String permission) {
-		this.appManifest.setPermissions(permission);
-	}
-
 	public void setManifestApplication(AppAndroidManifest.Application application) {
 		this.appManifest.setApplication(application);
 	}
 
 	public AppString getAppString() {
 		return appString;
-	}
-
-	public void setAppStrings(Map<String, String> strings) {
-		this.appString.setStrings(strings);
 	}
 
 	public void setAppStrings(String key, String value) {
@@ -179,7 +162,6 @@ public class AppDescription {
 		List<AppAndroidManifest.Activity> activities = new ArrayList<>();
 		AppAndroidManifest.Activity mainActivity = new AppAndroidManifest.Activity(".MainActivity");
 
-
 		List<AppAndroidManifest.IntentFilter> intentFilters = new ArrayList<>();
 
 		AppAndroidManifest.IntentFilter mainFilter = new AppAndroidManifest.IntentFilter();
@@ -204,6 +186,5 @@ public class AppDescription {
 		application.addActivities(activities);
 
 		this.appManifest.setApplication(application);
-
 	}
 }

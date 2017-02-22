@@ -8,7 +8,9 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelCl
 
 import javax.lang.model.element.Modifier;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentManagerClassName;
+
 public class FragmentHandler extends AbstractModelClass {
 
 	private final ClassName rClassName;
@@ -19,34 +21,45 @@ public class FragmentHandler extends AbstractModelClass {
 	}
 
 	public JavaFile javaFile() {
-
-		MethodSpec replaceFragment = MethodSpec.methodBuilder("replaceFragment")
-				.addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(void.class)
-				.addParameter(getFragmentManagerClassName(), "fm")
-				.addParameter(getFragmentClassName(), "fragment")
-				.addCode("fm.beginTransaction()\n"
-						+ ".replace(\n"
-						+ "$T.id.content_container, \n"
-						+ "fragment, fragment.getClass().getName())\n"
-						+ ".addToBackStack(null)\n"
-						+ ".commit();", rClassName)
-				.build();
-
-		MethodSpec replaceFragmentPopBackStack = MethodSpec.methodBuilder("replaceFragmentPopBackStack")
-				.addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(void.class)
-				.addParameter(getFragmentManagerClassName(), "fm")
-				.addParameter(getFragmentClassName(), "fragment")
-				.addStatement("fm.popBackStack()")
-				.addStatement("$N(fm, fragment)", replaceFragment)
-				.build();
-
-
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC)
-				.addMethod(replaceFragment)
-				.addMethod(replaceFragmentPopBackStack)
+				.addMethod(getReplaceFragment())
+				.addMethod(getReplaceFragmentPopBackStack())
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
+	}
+
+	private MethodSpec getReplaceFragmentPopBackStack() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("replaceFragmentPopBackStack")
+					.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+					.returns(void.class)
+					.addParameter(getFragmentManagerClassName(), "fm")
+					.addParameter(getFragmentClassName(), "fragment")
+					.addStatement("$N.popBackStack()", "fm")
+					.addStatement("$N($N, $N)", getReplaceFragment(), "fm", "fragment")
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getReplaceFragment() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("replaceFragment")
+					.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+					.returns(void.class)
+					.addParameter(getFragmentManagerClassName(), "fm")
+					.addParameter(getFragmentClassName(), "fragment")
+					.addCode("$N.beginTransaction()\n"
+									+ ".replace(\n"
+									+ "$T.id.$N, \n"
+									+ "$N, $N.getClass().getName())\n"
+									+ ".addToBackStack(null)\n"
+									+ ".commit();",
+							"fm", rClassName, "content_container", "fragment", "fragment")
+					.build();
+		// @formatter:on
 	}
 }

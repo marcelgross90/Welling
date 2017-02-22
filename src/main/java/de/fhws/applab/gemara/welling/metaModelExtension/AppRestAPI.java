@@ -9,7 +9,6 @@ public class AppRestAPI {
 
 	private final Map<String, Pair<String, String>> restApi = new HashMap<>();
 
-
 	public AppRestAPI(String baseUrl) {
 		restApi.put("baseUrl", new Pair<>("entry_url", baseUrl));
 		restApi.put("next", new Pair<>("rel_type_next", "next"));

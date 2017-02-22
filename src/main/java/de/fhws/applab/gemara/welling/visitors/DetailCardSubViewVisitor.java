@@ -42,8 +42,7 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 		_visitForDetailCardSubView(displayViewAttribute, packageName);
 	}
 
-
-	private void  _visitForDetailCardSubView(DisplayViewAttribute displayViewAttribute,  String packageName) {
+	private void _visitForDetailCardSubView(DisplayViewAttribute displayViewAttribute, String packageName) {
 		AbstractLayoutGenerator.View view;
 
 		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE) {
@@ -56,6 +55,7 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 
 		AbstractLayoutGenerator.View linearLayout = new AbstractLayoutGenerator.View("LinearLayout");
 		List<String> viewAttributes = new ArrayList<>();
+
 		viewAttributes.add("android:layout_width=\"match_parent\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
 		viewAttributes.add("android:layout_marginTop=\"@dimen/spacing_medium\"");
@@ -75,6 +75,7 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 		addString(stringName, displayViewAttribute.getAttributeLabel());
 
 		List<String> viewAttributes = new ArrayList<>();
+
 		viewAttributes.add("android:layout_width=\"match_parent\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
 		viewAttributes.add("android:id=\"@+id/" + viewName + "\"");
@@ -104,6 +105,7 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View(packageName + ".generic.customView.AttributeView");
 
 		List<String> viewAttributes = new ArrayList<>();
+
 		viewAttributes.add("android:layout_width=\"match_parent\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
 		viewAttributes.add("android:id=\"@+id/" + viewName + "\"");
@@ -132,6 +134,7 @@ public class DetailCardSubViewVisitor implements ResourceViewAttributeVisitor {
 		AbstractLayoutGenerator.View view = new AbstractLayoutGenerator.View("Button");
 
 		List<String> viewAttributes = new ArrayList<>();
+
 		viewAttributes.add("android:layout_width=\"match_parent\"");
 		viewAttributes.add("android:layout_height=\"wrap_content\"");
 		viewAttributes.add("android:text=\"@string/" + replaceIllegalCharacters(displayViewAttribute.getAttributeName()) + "_btn" + "\"");

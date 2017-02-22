@@ -5,14 +5,12 @@ import java.util.List;
 public class CustomCardViewLayoutGenerator extends AbstractLayoutGenerator {
 
 	private final String packageName;
-	private final String viewName;
 	private final String viewType;
 	private final String layoutId;
 
 	public CustomCardViewLayoutGenerator(String directoryName, String packageName, String viewName, String viewType, String layoutId) {
 		super(viewName, directoryName);
 		this.packageName = packageName;
-		this.viewName = viewName;
 		this.viewType = viewType;
 		this.layoutId = layoutId;
 	}

@@ -18,11 +18,13 @@ public class InputViewModelGenerator {
 		title.setAttributeLabel("Title");
 		inputViewAttributes.add(title);
 
-		InputViewAttribute firstName = new InputViewAttribute("firstName", ViewAttribute.AttributeType.TEXT, "FirstName", "Firstname is missing!");
+		InputViewAttribute firstName = new InputViewAttribute("firstName", ViewAttribute.AttributeType.TEXT, "FirstName",
+				"Firstname is missing!");
 		firstName.setAttributeLabel("Firstname");
 		inputViewAttributes.add(firstName);
 
-		InputViewAttribute lastName = new InputViewAttribute("lastName", ViewAttribute.AttributeType.TEXT, "Lastname", "LastName is missing!");
+		InputViewAttribute lastName = new InputViewAttribute("lastName", ViewAttribute.AttributeType.TEXT, "Lastname",
+				"LastName is missing!");
 		lastName.setAttributeLabel("Lastname");
 		inputViewAttributes.add(lastName);
 
@@ -30,7 +32,8 @@ public class InputViewModelGenerator {
 		mail.setAttributeLabel("E-Mail");
 		inputViewAttributes.add(mail);
 
-		InputViewAttribute phone = new InputViewAttribute("phone", ViewAttribute.AttributeType.PHONE_NUMBER, "Phone Number", "Phone number is missing!");
+		InputViewAttribute phone = new InputViewAttribute("phone", ViewAttribute.AttributeType.PHONE_NUMBER, "Phone Number",
+				"Phone number is missing!");
 		phone.setAttributeLabel("Phone Number");
 		inputViewAttributes.add(phone);
 
@@ -42,7 +45,8 @@ public class InputViewModelGenerator {
 		room.setAttributeLabel("Room");
 		inputViewAttributes.add(room);
 
-		InputViewAttribute weLearn = new InputViewAttribute("homepage", ViewAttribute.AttributeType.URL, "welearn", "welearn URL is missing!");
+		InputViewAttribute weLearn = new InputViewAttribute("homepage", ViewAttribute.AttributeType.URL, "welearn",
+				"welearn URL is missing!");
 		weLearn.setAttributeLabel("welearn");
 		inputViewAttributes.add(weLearn);
 
@@ -64,7 +68,8 @@ public class InputViewModelGenerator {
 		title.setAttributeLabel("Title");
 		inputViewAttributes.add(title);
 
-		InputViewAttribute fromDate = new InputViewAttribute("fromDate", ViewAttribute.AttributeType.DATE, "Startdate", "Startdate is missing!");
+		InputViewAttribute fromDate = new InputViewAttribute("fromDate", ViewAttribute.AttributeType.DATE, "Startdate",
+				"Startdate is missing!");
 		fromDate.setAttributeLabel("Startdate");
 		inputViewAttributes.add(fromDate);
 

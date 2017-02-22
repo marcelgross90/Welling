@@ -10,7 +10,7 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelCl
 import javax.lang.model.element.Modifier;
 import java.util.List;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getAppCompatActivityClassName;
 
 public abstract class AbstractActivityClass extends AbstractModelClass {
 
@@ -23,9 +23,9 @@ public abstract class AbstractActivityClass extends AbstractModelClass {
 	protected abstract List<FieldSpec> getFields();
 	protected abstract List<MethodSpec> getMethods();
 
-
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.superclass(getAppCompatActivityClassName())
 				.addSuperinterfaces(getSuperInterfaces())
@@ -33,6 +33,7 @@ public abstract class AbstractActivityClass extends AbstractModelClass {
 				.addFields(getFields())
 				.addMethods(getMethods())
 				.build();
+		// @formatter:on
 		return JavaFile.builder(this.packageName, type).build();
 	}
 }

@@ -10,7 +10,8 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelCl
 
 import javax.lang.model.element.Modifier;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getIntentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
 
 public class NewSpecificResourceWithPictureFragment extends AbstractModelClass {
 
@@ -28,7 +29,8 @@ public class NewSpecificResourceWithPictureFragment extends AbstractModelClass {
 		this.resourceName = inputView.getResourceName();
 
 		this.rClassName = ClassName.get(appDescription.getAppPackageName(), "R");
-		this.specificResourceInputView = ClassName.get(appDescription.getLibPackageName() + ".specific.customView", resourceName + "InputView");
+		this.specificResourceInputView = ClassName
+				.get(appDescription.getLibPackageName() + ".specific.customView", resourceName + "InputView");
 		this.networkCallBackClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkCallback");
 		this.networkResponseClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkResponse");
 		this.newResourceFragmentClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.fragment", "NewResourceFragment");
@@ -37,6 +39,7 @@ public class NewSpecificResourceWithPictureFragment extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.superclass(newResourceFragmentClassName)
 				.addModifiers(Modifier.PUBLIC)
@@ -44,39 +47,48 @@ public class NewSpecificResourceWithPictureFragment extends AbstractModelClass {
 				.addMethod(getInitializeView())
 				.addMethod(getGetCallback())
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
 	}
 
 	private MethodSpec getGetLayout() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLayout")
 				.addModifiers(Modifier.PROTECTED)
 				.addAnnotation(Override.class)
 				.returns(int.class)
 				.addStatement("return $T.layout.$N", rClassName, "fragment_new_" + resourceName.toLowerCase())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitializeView() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("initializeView")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(void.class)
 				.addParameter(getViewClassName(), "view")
-				.addStatement("$N = ($T) $N.findViewById($T.id.$N)", "inputView", specificResourceInputView, "view", rClassName, resourceName.toLowerCase() + "_input")
+				.addStatement("$N = ($T) $N.findViewById($T.id.$N)",
+						"inputView", specificResourceInputView, "view", rClassName, resourceName.toLowerCase() + "_input")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetCallback() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getCallback")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(networkCallBackClassName)
 				.addStatement("return $L", getCallback())
 				.build();
+		// @formatter:on
 	}
 
 	private TypeSpec getCallback() {
+		// @formatter:off
 		TypeSpec runnable = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
 				.addMethod(
@@ -84,7 +96,8 @@ public class NewSpecificResourceWithPictureFragment extends AbstractModelClass {
 								.addAnnotation(Override.class)
 								.addModifiers(Modifier.PUBLIC)
 								.returns(void.class)
-								.addStatement("$T $N = new $T(getActivity(), $T.class)", getIntentClassName(), "intent", getIntentClassName(), detailActivityClassName)
+								.addStatement("$T $N = new $T(getActivity(), $T.class)",
+										getIntentClassName(), "intent", getIntentClassName(), detailActivityClassName)
 								.addStatement("$N.putExtra($S, $N.getHeader().get($S).get(0))", "intent", "selfUrl", "response", "location")
 								.addStatement("getActivity().startActivity($N)", "intent")
 								.addStatement("getFragmentManager().popBackStack()")
@@ -101,8 +114,14 @@ public class NewSpecificResourceWithPictureFragment extends AbstractModelClass {
 
 		return TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(networkCallBackClassName)
-				.addMethod(MethodSpec.methodBuilder("onFailure").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(void.class).build())
+				.addMethod(
+						MethodSpec.methodBuilder("onFailure")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.returns(void.class)
+								.build())
 				.addMethod(onSuccess)
 				.build();
+		// @formatter:on
 	}
 }

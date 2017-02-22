@@ -36,9 +36,10 @@ public class ResourceDetailView extends de.fhws.applab.gemara.welling.applicatio
 
 	@Override
 	public MethodSpec getInitMethod() {
+		// @formatter:off
 		return getInitMethodSignature()
-				.addStatement("$T $N = ($T) $N.getSystemService($T.LAYOUT_INFLATER_SERVICE)", getLayoutInflaterClassName(), "inflater",
-						getLayoutInflaterClassName(), getContextParam(), getContextClass())
+				.addStatement("$T $N = ($T) $N.getSystemService($T.LAYOUT_INFLATER_SERVICE)",
+						getLayoutInflaterClassName(), "inflater", getLayoutInflaterClassName(), getContextParam(), getContextClass())
 				.addStatement("this.addView($N.inflate($N(), this, false))", "inflater", getGetLayout())
 				.addStatement("$T $N = $N.getTheme().obtainStyledAttributes(attributeSet, $N(), $N, 0)",
 						getTypedArrayClassName(), "typedArray", getContextParam(), getGetStyleable(), defStyleAttr)
@@ -49,6 +50,7 @@ public class ResourceDetailView extends de.fhws.applab.gemara.welling.applicatio
 				.addStatement("$N.recycle()", "typedArray")
 				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 
 	@Override
@@ -62,40 +64,70 @@ public class ResourceDetailView extends de.fhws.applab.gemara.welling.applicatio
 
 	@Override
 	protected MethodSpec getConstructorOne() {
-		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
-				.addStatement("super($N)", getContextParam()).addStatement("$N($N, null, 0)", getInitMethod(), getContextParam())
-				.addStatement("this.$N = $N", context, getContextParam()).build();
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
+				.addParameter(getContextParam())
+				.addStatement("super($N)", getContextParam())
+				.addStatement("$N($N, null, 0)", getInitMethod(), getContextParam())
+				.addStatement("this.$N = $N", context, getContextParam())
+				.build();
+		// @formatter:on
 	}
 
 	@Override
 	protected MethodSpec getConstructorTwo() {
-		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
-				.addParameter(getAttributeSetParam()).addStatement("super($N, $N)", getContextParam(), getAttributeSetParam())
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
+				.addParameter(getContextParam())
+				.addParameter(getAttributeSetParam())
+				.addStatement("super($N, $N)", getContextParam(), getAttributeSetParam())
 				.addStatement("this.$N = $N", context, getContextParam())
 				.addStatement("$N($N, $N, 0)", getInitMethod(), getContextParam(), getAttributeSetParam())
 				.build();
+		// @formatter:on
 	}
 
 	@Override
 	protected MethodSpec getConstructorThree() {
-
-		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
-				.addParameter(getAttributeSetParam()).addParameter(defStyleAttr)
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
+				.addParameter(getContextParam())
+				.addParameter(getAttributeSetParam())
+				.addParameter(defStyleAttr)
 				.addStatement("super($N, $N, $N)", getContextParam(), getAttributeSetParam(), defStyleAttr)
 				.addStatement("this.$N = $N", context, getContextParam())
 				.addStatement("$N($N, $N, $N)", getInitMethod(), getContextParam(), getAttributeSetParam(), defStyleAttr)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetLayout() {
-		return MethodSpec.methodBuilder("getLayout").addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(int.class).build();
+		// @formatter:off
+		return MethodSpec.methodBuilder("getLayout")
+				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
+				.returns(int.class)
+				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetStyleable() {
-		return MethodSpec.methodBuilder("getStyleable").addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(int[].class).build();
+		// @formatter:off
+		return MethodSpec.methodBuilder("getStyleable")
+				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
+				.returns(int[].class)
+				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitializeView() {
-		return MethodSpec.methodBuilder("initializeView").addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(void.class).build();
+		// @formatter:off
+		return MethodSpec.methodBuilder("initializeView")
+				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
+				.returns(void.class)
+				.build();
+		// @formatter:on
 	}
 }

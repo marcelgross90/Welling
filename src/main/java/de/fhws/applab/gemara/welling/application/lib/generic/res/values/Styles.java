@@ -20,10 +20,14 @@ public class Styles extends ValueGenerator {
 
 		for (Style style : this.appStyle.getStyles()) {
 			if (style.getItems().size() == 0) {
-				appendln("<style name=\"" + style.getName() + "\"" + (style.getParent() != null ? " parent=\"" + style.getParent() + "\"/>" : "/>"));
+				appendln("<style name=\"" + style.getName() + "\"" + (style.getParent() != null ?
+						" parent=\"" + style.getParent() + "\"/>" :
+						"/>"));
 			} else {
 				Map<String, String> items = style.getItems();
-				appendln("<style name=\"" + style.getName() + "\"" + (style.getParent() != null ? " parent=\"" + style.getParent() + "\">" : ">"));
+				appendln("<style name=\"" + style.getName() + "\"" + (style.getParent() != null ?
+						" parent=\"" + style.getParent() + "\">" :
+						">"));
 				for (String key : items.keySet()) {
 					appendln("<item name=\"" + key + "\">" + items.get(key) + "</item>");
 				}

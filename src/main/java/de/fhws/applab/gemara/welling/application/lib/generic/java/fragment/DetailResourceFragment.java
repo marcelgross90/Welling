@@ -6,13 +6,23 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods;
 
 import javax.lang.model.element.Modifier;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBundleClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getGensonClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getLayoutInflaterClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getMenuClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getMenuInflaterClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getMenuItemClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getSavedInstanceStateParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getToastClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewGroupClassName;
 
 public class DetailResourceFragment extends AbstractModelClass {
 
@@ -57,8 +67,8 @@ public class DetailResourceFragment extends AbstractModelClass {
 
 		this.resourceUrl = FieldSpec.builder(String.class, "resourceUrl", Modifier.PRIVATE).build();
 		this.mediaTyp = FieldSpec.builder(String.class, "mediaType", Modifier.PRIVATE).build();
-		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL).initializer("new $T().getDateFormatter()",
-				gensonBuilderClassName).build();
+		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL)
+				.initializer("new $T().getDateFormatter()", gensonBuilderClassName).build();
 		this.currentResource = FieldSpec.builder(resourceClassName, "currentResource", Modifier.PROTECTED).build();
 		this.resourceDetailView = FieldSpec.builder(resourceDetailViewClassName, "resourceDetailView", Modifier.PROTECTED).build();
 		this.deleteLink = FieldSpec.builder(linkClassName, "deleteLink", Modifier.PROTECTED).build();
@@ -72,6 +82,11 @@ public class DetailResourceFragment extends AbstractModelClass {
 		type.superclass(getFragmentClassName());
 		type.addField(updateLink);
 		type.addField(deleteLink);
+		type.addField(resourceUrl);
+		type.addField(mediaTyp);
+		type.addField(genson);
+		type.addField(currentResource);
+		type.addField(resourceDetailView);
 
 		if (stateHolder.contains(StateHolder.StateType.PUT)) {
 			type.addMethod(getGetEditFragment());
@@ -84,20 +99,9 @@ public class DetailResourceFragment extends AbstractModelClass {
 			type.addMethod(getOnDialogClosed());
 		}
 
-
-		type.addField(resourceUrl);
-		type.addField(mediaTyp);
-		type.addField(genson);
-		type.addField(currentResource);
-		type.addField(resourceDetailView);
-
-
-
 		type.addMethod(getGetLayout());
 		type.addMethod(getInitializeView());
-
 		type.addMethod(getGetCallback());
-
 		type.addMethod(getOnCreate());
 		type.addMethod(getOnSaveInstanceState());
 		type.addMethod(getOnCreateView());
@@ -109,63 +113,77 @@ public class DetailResourceFragment extends AbstractModelClass {
 	}
 
 	private MethodSpec getGetResourceDeleteError() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getResourceDeleteError")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(int.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetLayout() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLayout")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(int.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitializeView() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("initializeView")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.addParameter(getViewClassName(), "view")
 				.returns(void.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetEditFragment() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getEditFragment")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(getFragmentClassName())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getPrepareDeleteBundle() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("prepareDeleteBundle")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(getBundleClassName())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetCallback() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getCallback")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(networkCallbackClassName)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnDialogClosed() {
+		// @formatter:off
 		TypeSpec runnable = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
 				.addMethod(
 						MethodSpec.methodBuilder("run")
-						.addModifiers(Modifier.PUBLIC)
-						.addAnnotation(Override.class)
-						.returns(void.class)
-						.beginControlFlow("if ($N)", "successfullyDeleted")
-						.addStatement("getFragmentManager().popBackStackImmediate()")
-						.endControlFlow()
-						.beginControlFlow("else")
-						.addStatement("$T.makeText(getActivity(), $N(), $T.LENGTH_SHORT).show()", getToastClassName(), getGetResourceDeleteError(), getToastClassName())
-						.endControlFlow()
-						.build()
+								.addModifiers(Modifier.PUBLIC)
+								.addAnnotation(Override.class)
+								.returns(void.class)
+								.beginControlFlow("if ($N)", "successfullyDeleted")
+								.addStatement("getFragmentManager().popBackStackImmediate()")
+								.endControlFlow()
+								.beginControlFlow("else")
+								.addStatement("$T.makeText(getActivity(), $N(), $T.LENGTH_SHORT).show()",
+										getToastClassName(), getGetResourceDeleteError(), getToastClassName())
+								.endControlFlow()
+								.build()
 				).build();
 
 		return MethodSpec.methodBuilder("onDialogClosed")
@@ -175,9 +193,11 @@ public class DetailResourceFragment extends AbstractModelClass {
 				.addParameter(boolean.class, "successfullyDeleted", Modifier.FINAL)
 				.addStatement("getActivity().runOnUiThread($L)", runnable)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnCreate() {
+		// @formatter:off
 		return LifecycleMethods.getOnCreateFragment()
 				.addStatement("setHasOptionsMenu(true)")
 				.beginControlFlow("if ($N == null)", getSavedInstanceStateParam())
@@ -191,10 +211,13 @@ public class DetailResourceFragment extends AbstractModelClass {
 				.endControlFlow()
 				.addStatement("$N()", getLoadResource())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnSaveInstanceState() {
 		ParameterSpec outState = ParameterSpec.builder(getBundleClassName(), "outState").build();
+
+		// @formatter:off
 		return MethodSpec.methodBuilder("onSaveInstanceState")
 				.addModifiers(Modifier.PUBLIC)
 				.addAnnotation(Override.class)
@@ -204,9 +227,11 @@ public class DetailResourceFragment extends AbstractModelClass {
 				.addStatement("$N.putString($S, $N)", outState, "mediaType", mediaTyp)
 				.addStatement("super.onSaveInstanceState($N)", outState)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnCreateView() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onCreateView")
 				.addAnnotation(Override.class)
 				.addParameter(getLayoutInflaterClassName(), "inflater")
@@ -217,10 +242,11 @@ public class DetailResourceFragment extends AbstractModelClass {
 				.addStatement("$N($N)", getInitializeView(), "view")
 				.addStatement("return $N", "view")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnCreateOptionsMenu() {
-		MethodSpec.Builder method =  MethodSpec.methodBuilder("onCreateOptionsMenu");
+		MethodSpec.Builder method = MethodSpec.methodBuilder("onCreateOptionsMenu");
 		method.addAnnotation(Override.class);
 		method.addModifiers(Modifier.PUBLIC);
 		method.returns(void.class);
@@ -236,7 +262,7 @@ public class DetailResourceFragment extends AbstractModelClass {
 			method.addStatement("$T $N = $N.findItem($T.id.$N)", getMenuItemClassName(), "editItem", "menu", rClassName, "edit_item");
 			method.addStatement("$N.setVisible($N != null)", "editItem", updateLink);
 		}
-		return  method.build();
+		return method.build();
 	}
 
 	private MethodSpec getOnOptionsItemSelected() {
@@ -271,11 +297,14 @@ public class DetailResourceFragment extends AbstractModelClass {
 	}
 
 	private MethodSpec getLoadResource() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("loadResource")
-				.addModifiers(Modifier.PRIVATE).returns(void.class)
+				.addModifiers(Modifier.PRIVATE)
+				.returns(void.class)
 				.addStatement("$T $N = new $T(getActivity(), new $T().acceptHeader($N).url($N))",
 						networkClientClassName, "client", networkClientClassName, networkRequestClassName, mediaTyp, resourceUrl)
 				.addStatement("$N.sendRequest($N())", "client", getGetCallback())
 				.build();
+		// @formatter:on
 	}
 }

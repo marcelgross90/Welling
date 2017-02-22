@@ -49,6 +49,7 @@ public class PrepareLibGenerator extends Preparation {
 
 	private List<AbstractModelClass> getJavaFiles() {
 		List<AbstractModelClass> classes = new ArrayList<>();
+
 		classes.addAll(getGenericModels());
 		classes.addAll(getGenericNetwork());
 		classes.addAll(getGenericUtil());
@@ -60,6 +61,7 @@ public class PrepareLibGenerator extends Preparation {
 
 	private List<AbstractModelClass> getGenericModels() {
 		List<AbstractModelClass> classes = new ArrayList<>();
+
 		classes.add(new Link(appDescription.getLibPackageName()));
 		classes.add(new Resource(appDescription.getLibPackageName()));
 
@@ -68,6 +70,7 @@ public class PrepareLibGenerator extends Preparation {
 
 	private List<AbstractModelClass> getGenericNetwork() {
 		List<AbstractModelClass> classes = new ArrayList<>();
+
 		classes.add(new HeaderParser(appDescription.getLibPackageName()));
 		classes.add(new NetworkCallback(appDescription.getLibPackageName()));
 		classes.add(new NetworkClient(appDescription.getLibPackageName()));
@@ -80,6 +83,7 @@ public class PrepareLibGenerator extends Preparation {
 
 	private List<AbstractModelClass> getGenericUtil() {
 		List<AbstractModelClass> classes = new ArrayList<>();
+
 		classes.add(new FragmentHandler(appDescription.getLibPackageName()));
 		classes.add(new GensonBuilder(appDescription.getLibPackageName()));
 		classes.add(new ScrollListener(appDescription.getLibPackageName()));
@@ -89,6 +93,7 @@ public class PrepareLibGenerator extends Preparation {
 
 	private List<AbstractModelClass> getGenericCustomViews() {
 		List<AbstractModelClass> classes = new ArrayList<>();
+
 		classes.add(new AttributeView(appDescription.getLibPackageName()));
 		classes.add(new ProfileImageView(appDescription.getLibPackageName()));
 
@@ -126,7 +131,8 @@ public class PrepareLibGenerator extends Preparation {
 
 	private void addDeclareStyleables(List<AbstractModelClass> customViews) {
 		for (AbstractModelClass customView : customViews) {
-			appDescription.setDeclareStyleables(customView.getClassName(), new AppDeclareStyleable.DeclareStyleable(customView.getClassName()));
+			appDescription
+					.setDeclareStyleables(customView.getClassName(), new AppDeclareStyleable.DeclareStyleable(customView.getClassName()));
 		}
 
 	}

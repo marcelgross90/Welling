@@ -1,6 +1,5 @@
 package de.fhws.applab.gemara.welling.generator;
 
-
 public class GetterSetterGenerator {
 
 	public static String getGetter(String attributeName) {

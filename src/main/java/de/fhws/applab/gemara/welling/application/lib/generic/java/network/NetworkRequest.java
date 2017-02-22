@@ -4,7 +4,6 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
@@ -26,76 +25,116 @@ public class NetworkRequest extends AbstractModelClass {
 	}
 
 	public JavaFile javaFile() {
-
-		MethodSpec constructor = MethodSpec.constructorBuilder()
-				.addModifiers(Modifier.PUBLIC)
-				.addStatement("this.$N = new $T()", requestBuilderField, requestBuilderClassName)
-				.build();
-
-		MethodSpec url = MethodSpec.methodBuilder("url")
-				.addModifiers(Modifier.PUBLIC).returns(thisClass)
-				.addParameter(ParameterSpec.builder(String.class, "url").build())
-				.addStatement("this.$N.url(url)", requestBuilderField)
-				.addStatement("return this")
-				.build();
-
-		MethodSpec addHeader = MethodSpec.methodBuilder("addHeader")
-				.addModifiers(Modifier.PUBLIC).returns(thisClass)
-				.addParameter(ParameterSpec.builder(String.class, "header").build())
-				.addParameter(ParameterSpec.builder(String.class, "value").build())
-				.addStatement("this.$N.addHeader(header, value)", requestBuilderField)
-				.addStatement("return this")
-				.build();
-
-		MethodSpec addHeaderShort = MethodSpec.methodBuilder("acceptHeader")
-				.addModifiers(Modifier.PUBLIC).returns(thisClass)
-				.addParameter(ParameterSpec.builder(String.class, "acceptHeader").build())
-				.addStatement("return $N(\"Accept\", acceptHeader)", addHeader)
-				.build();
-
-		MethodSpec post = MethodSpec.methodBuilder("post")
-				.addModifiers(Modifier.PUBLIC).returns(thisClass)
-				.addParameter(ParameterSpec.builder(String.class, "payload").build())
-				.addParameter(ParameterSpec.builder(String.class, "mediaType").build())
-				.addStatement("$T body = $T.create($T.parse(mediaType), payload)", requestBodyClassName, requestBodyClassName, mediaTypeClassName)
-				.addStatement("this.$N.post(body)", requestBuilderField)
-				.addStatement("return this")
-				.build();
-
-		MethodSpec put = MethodSpec.methodBuilder("put")
-				.addModifiers(Modifier.PUBLIC).returns(thisClass)
-				.addParameter(ParameterSpec.builder(String.class, "payload").build())
-				.addParameter(ParameterSpec.builder(String.class, "mediaType").build())
-				.addStatement("$T body = $T.create($T.parse(mediaType), payload)", requestBodyClassName, requestBodyClassName, mediaTypeClassName)
-				.addStatement("this.$N.put(body)", requestBuilderField)
-				.addStatement("return this")
-				.build();
-
-		MethodSpec delete = MethodSpec.methodBuilder("delete")
-				.addModifiers(Modifier.PUBLIC).returns(thisClass)
-				.addStatement("this.$N.delete()", requestBuilderField)
-				.addStatement("return this")
-				.build();
-
-		MethodSpec buildRequest = MethodSpec.methodBuilder("buildRequest")
-				.addModifiers(Modifier.PUBLIC).returns(requestClassName)
-				.addStatement("return this.$N.build()", requestBuilderField)
-				.build();
-
-
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC)
 				.addField(requestBuilderField)
-				.addMethod(constructor)
-				.addMethod(url)
-				.addMethod(addHeader)
-				.addMethod(addHeaderShort)
-				.addMethod(post)
-				.addMethod(put)
-				.addMethod(delete)
-				.addMethod(buildRequest)
+				.addMethod(getConstructor())
+				.addMethod(getUrl())
+				.addMethod(getAddHeader())
+				.addMethod(getAcceptHeader())
+				.addMethod(getPost())
+				.addMethod(getPut())
+				.addMethod(getDelete())
+				.addMethod(getBuildRequest())
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
+	}
+
+	private MethodSpec getBuildRequest() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("buildRequest")
+				.addModifiers(Modifier.PUBLIC)
+				.returns(requestClassName)
+				.addStatement("return this.$N.build()", requestBuilderField)
+				.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getDelete() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("delete")
+					.addModifiers(Modifier.PUBLIC)
+					.returns(thisClass)
+					.addStatement("this.$N.delete()", requestBuilderField)
+					.addStatement("return this")
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getPut() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("put")
+					.addModifiers(Modifier.PUBLIC).returns(thisClass)
+					.addParameter(String.class, "payload")
+					.addParameter(String.class, "mediaType")
+					.addStatement("$T $N = $T.create($T.parse($N), $N)",
+							requestBodyClassName, "body", requestBodyClassName, mediaTypeClassName, "mediaType", "payload")
+					.addStatement("this.$N.put(body)", requestBuilderField)
+					.addStatement("return this")
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getPost() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("post")
+					.addModifiers(Modifier.PUBLIC)
+					.returns(thisClass)
+					.addParameter(String.class, "payload")
+					.addParameter(String.class, "mediaType")
+					.addStatement("$T $N = $T.create($T.parse($N), $N)",
+							requestBodyClassName, "body", requestBodyClassName, mediaTypeClassName, "mediaType", "payload")
+					.addStatement("this.$N.post(body)", requestBuilderField)
+					.addStatement("return this")
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getAcceptHeader() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("acceptHeader")
+					.addModifiers(Modifier.PUBLIC)
+					.returns(thisClass)
+					.addParameter(String.class, "acceptHeader")
+					.addStatement("return $N($S, $N)", getAddHeader(), "Accept", "acceptHeader")
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getAddHeader() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("addHeader")
+					.addModifiers(Modifier.PUBLIC)
+					.returns(thisClass)
+					.addParameter(String.class, "header")
+					.addParameter(String.class, "value")
+					.addStatement("this.$N.addHeader($N, $N)", requestBuilderField, "header", "value")
+					.addStatement("return this")
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getUrl() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("url")
+					.addModifiers(Modifier.PUBLIC)
+					.returns(thisClass)
+					.addParameter(String.class, "url")
+					.addStatement("this.$N.url($N)", requestBuilderField, "url")
+					.addStatement("return this")
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getConstructor() {
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+					.addModifiers(Modifier.PUBLIC)
+					.addStatement("this.$N = new $T()", requestBuilderField, requestBuilderClassName)
+					.build();
+		// @formatter:on
 	}
 }

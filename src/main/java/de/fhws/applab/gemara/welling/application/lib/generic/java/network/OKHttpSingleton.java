@@ -9,7 +9,8 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelCl
 
 import javax.lang.model.element.Modifier;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextClass;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
 
 public class OKHttpSingleton extends AbstractModelClass {
 
@@ -23,60 +24,75 @@ public class OKHttpSingleton extends AbstractModelClass {
 	public OKHttpSingleton(String packageName) {
 		super(packageName + ".generic.network", "OKHttpSingleton");
 		thisClass = ClassName.get(this.packageName, this.className);
-		instance = FieldSpec.builder(thisClass, "instance")
-				.addModifiers(Modifier.PRIVATE, Modifier.STATIC)
-				.build();
-		client = FieldSpec.builder(okHttpClientClassName, "client")
-				.addModifiers(Modifier.PRIVATE, Modifier.STATIC)
-				.build();
+		instance = FieldSpec.builder(thisClass, "instance").addModifiers(Modifier.PRIVATE, Modifier.STATIC).build();
+		client = FieldSpec.builder(okHttpClientClassName, "client").addModifiers(Modifier.PRIVATE, Modifier.STATIC).build();
 	}
 
 	public JavaFile javaFile() {
-		MethodSpec getInstance = MethodSpec.methodBuilder("getInstance")
-				.addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(thisClass)
-				.addParameter(getContextClass(), "context")
-				.addParameter(boolean.class, "cached")
-				.beginControlFlow("if ($N == null)", instance)
-				.addStatement("$N = new $T(context, cached)", instance, thisClass)
-				.endControlFlow()
-				.addStatement("return $N", instance)
-				.build();
-
-		MethodSpec getCacheInstance = MethodSpec.methodBuilder("getCacheInstance")
-				.addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(thisClass)
-				.addParameter(getContextClass(), "context")
-				.addStatement("return $N(context, true)", getInstance)
-				.build();
-
-		MethodSpec getClient = MethodSpec.methodBuilder("getClient")
-				.addModifiers(Modifier.PUBLIC).returns(okHttpClientClassName)
-				.addStatement("return $N", client)
-				.build();
-
-		MethodSpec constructor = MethodSpec.constructorBuilder()
-				.addModifiers(Modifier.PRIVATE)
-				.addParameter(getContextClass(), "context")
-				.addParameter(boolean.class, "cached")
-				.beginControlFlow("if (cached)")
-				.addStatement("int cacheSize = (int) ((Runtime.getRuntime().maxMemory() / 1024) / 8)")
-				.addStatement("$T cache = new $T($N.getCacheDir(), cacheSize)", cacheClassName, cacheClassName, getContextParam())
-				.addStatement("$N = new $T.Builder().cache(cache).build()", client, okHttpClientClassName)
-				.endControlFlow()
-				.beginControlFlow("else")
-				.addStatement("$N = new $T()", client, okHttpClientClassName)
-				.endControlFlow()
-				.build();
-
+		// @formatter:off
 		final TypeSpec type = TypeSpec.classBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC)
 				.addField(instance)
 				.addField(client)
-				.addMethod(getInstance)
-				.addMethod(getCacheInstance)
-				.addMethod(getClient)
-				.addMethod(constructor)
+				.addMethod(getGetInstance())
+				.addMethod(getGetCacheInstance())
+				.addMethod(getGetClient())
+				.addMethod(getConstructor())
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
+	}
+
+	private MethodSpec getConstructor() {
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+					.addModifiers(Modifier.PRIVATE)
+					.addParameter(getContextClass(), "context")
+					.addParameter(boolean.class, "cached")
+					.beginControlFlow("if ($N)", "cached")
+					.addStatement("$T $N = ($T) ((Runtime.getRuntime().maxMemory() / 1024) / 8)", int.class, "cacheSize", int.class)
+					.addStatement("$T $N = new $T($N.getCacheDir(), cacheSize)",
+							cacheClassName, "cache", cacheClassName, getContextParam())
+					.addStatement("$N = new $T.Builder().cache($N).build()", client, okHttpClientClassName, "cache")
+					.endControlFlow()
+					.beginControlFlow("else")
+					.addStatement("$N = new $T()", client, okHttpClientClassName)
+					.endControlFlow()
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getGetClient() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("getClient")
+					.addModifiers(Modifier.PUBLIC).returns(okHttpClientClassName)
+					.addStatement("return $N", client)
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getGetCacheInstance() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("getCacheInstance")
+					.addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(thisClass)
+					.addParameter(getContextClass(), "context")
+					.addStatement("return $N($N, true)", getGetInstance(), "context")
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getGetInstance() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("getInstance")
+					.addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(thisClass)
+					.addParameter(getContextClass(), "context")
+					.addParameter(boolean.class, "cached")
+					.beginControlFlow("if ($N == null)", instance)
+					.addStatement("$N = new $T($N, $N)", instance, thisClass, "context", "cached")
+					.endControlFlow()
+					.addStatement("return $N", instance)
+					.build();
+		// @formatter:on
 	}
 }

@@ -10,10 +10,6 @@ public class AppDeclareStyleable {
 	public AppDeclareStyleable() {
 	}
 
-	public void setDeclareStyleables(Map<String, DeclareStyleable> declareStyleables) {
-		this.declareStyleables.putAll(declareStyleables);
-	}
-
 	public void setDeclareStyleables(String key, DeclareStyleable declareStyleable) {
 		this.declareStyleables.put(key, declareStyleable);
 	}

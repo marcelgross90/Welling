@@ -32,16 +32,15 @@ public class AttributeVisitor implements IAttributeVisitor {
 		if (simpleAttribute.getDatatype() == SimpleDatatype.LINK || simpleAttribute.getDatatype() == SimpleDatatype.IMAGE) {
 			this.attribute = new LinkAttribute(simpleAttribute.getAttributeName(), packageName, Modifier.PRIVATE);
 		} else if (simpleAttribute.getDatatype() == SimpleDatatype.DATE) {
-			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(simpleAttribute.getAttributeName(),
-					Attribute.DataType.DATE, Modifier.PRIVATE);
+			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(
+					simpleAttribute.getAttributeName(), Attribute.DataType.DATE, Modifier.PRIVATE);
 		} else if (simpleAttribute.getDatatype() == SimpleDatatype.INT) {
-			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(simpleAttribute.getAttributeName(),
-					Attribute.DataType.INT, Modifier.PRIVATE);
+			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(
+					simpleAttribute.getAttributeName(), Attribute.DataType.INT, Modifier.PRIVATE);
 		} else {
-			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(simpleAttribute.getAttributeName(),
-					Attribute.DataType.STRING, Modifier.PRIVATE);
+			this.attribute = new de.fhws.applab.gemara.welling.application.lib.specific.java.model.SimpleAttribute(
+					simpleAttribute.getAttributeName(), Attribute.DataType.STRING, Modifier.PRIVATE);
 		}
-
 	}
 
 	@Override

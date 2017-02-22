@@ -10,7 +10,6 @@ import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 
 import javax.lang.model.element.Modifier;
-
 import java.util.ArrayList;
 
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBundleClassName;
@@ -28,7 +27,8 @@ public class ListFragmentSubResourceGenerator extends ListFragmentGenerator {
 	public ListFragmentSubResourceGenerator(StateHolder stateHolder, AppDescription appDescription, CardView cardView) {
 		super(stateHolder, appDescription, cardView);
 
-		this.detailTemplateUrl = FieldSpec.builder(String.class, "detail" + cardView.getResourceName() + "TemplateUrl", Modifier.PRIVATE).build();
+		this.detailTemplateUrl = FieldSpec.builder(String.class, "detail" + cardView.getResourceName() + "TemplateUrl", Modifier.PRIVATE)
+				.build();
 
 	}
 
@@ -48,11 +48,13 @@ public class ListFragmentSubResourceGenerator extends ListFragmentGenerator {
 		if (containsImage) {
 			method.addCode("//not needed here\n");
 		} else {
-			method.addStatement("$T $N = ($T) $N", specificResourceClassName, resourceName.toLowerCase(), specificResourceClassName, "resource");
+			method.addStatement("$T $N = ($T) $N", specificResourceClassName, resourceName.toLowerCase(), specificResourceClassName,
+					"resource");
 			method.addStatement("$T $N = new $T()", getFragmentClassName(), "fragment", specificResourceDetailClassName);
 			method.addStatement("$T $N = new $T()", getBundleClassName(), "bundle", getBundleClassName());
 
-			method.addStatement("$N.putString($S, $N.replace($S, $T.valueOf($N.getId())))", "bundle", "url", detailTemplateUrl, "{id}", String.class, resourceName.toLowerCase());
+			method.addStatement("$N.putString($S, $N.replace($S, $T.valueOf($N.getId())))", "bundle", "url", detailTemplateUrl, "{id}",
+					String.class, resourceName.toLowerCase());
 
 			method.addStatement("$N.putString($S, $N.getSelf().getType())", "bundle", "mediaType", resourceName.toLowerCase());
 			method.addStatement("$N.setArguments($N)", "fragment", "bundle");
@@ -63,16 +65,20 @@ public class ListFragmentSubResourceGenerator extends ListFragmentGenerator {
 
 	@Override
 	protected MethodSpec getOnSuccess() {
+		// @formatter:off
 		TypeSpec onSuccess = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
-				.addMethod(MethodSpec.methodBuilder("run")
-						.addAnnotation(Override.class)
-						.addModifiers(Modifier.PUBLIC)
-						.returns(void.class)
-						.addStatement("setHasOptionsMenu($N != null)", "createNewResourceLink")
-						.addStatement("showProgressBar(false)")
-						.addStatement("$N().addResource($N)", getGetAdapter(), "resources")
-						.build()).build();
+				.addMethod(
+						MethodSpec.methodBuilder("run")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.returns(void.class)
+								.addStatement("setHasOptionsMenu($N != null)", "createNewResourceLink")
+								.addStatement("showProgressBar(false)")
+								.addStatement("$N().addResource($N)", getGetAdapter(), "resources")
+								.build())
+				.build();
+		// @formatter:on
 
 		MethodSpec.Builder onSuccessMethod = MethodSpec.methodBuilder("onSuccess");
 		onSuccessMethod.addAnnotation(Override.class);
@@ -87,9 +93,12 @@ public class ListFragmentSubResourceGenerator extends ListFragmentGenerator {
 		onSuccessMethod.endControlFlow();
 
 		onSuccessMethod.addStatement("$T $N = $N.getLinkHeader()", linkMap, "linkHeader", "response");
-		onSuccessMethod.addStatement("$T $N = $N.get(getActivity().getString($T.string.$N))",
-				linkClassName, "nextLink", "linkHeader", rClassName, appDescription.getAppRestAPI().getRestApi().get("next").getKey());
-		onSuccessMethod.addStatement("$T $N = $N.get(getActivity().getString($T.string.$N))", linkClassName, "one" + resourceName + "Link", "linkHeader", rClassName, appDescription.getAppRestAPI().getRestApi().get(StateHolder.StateType.GET_SINGLE + "_" + resourceName).getKey());
+		onSuccessMethod
+				.addStatement("$T $N = $N.get(getActivity().getString($T.string.$N))", linkClassName, "nextLink", "linkHeader", rClassName,
+						appDescription.getAppRestAPI().getRestApi().get("next").getKey());
+		onSuccessMethod.addStatement("$T $N = $N.get(getActivity().getString($T.string.$N))", linkClassName, "one" + resourceName + "Link",
+				"linkHeader", rClassName,
+				appDescription.getAppRestAPI().getRestApi().get(StateHolder.StateType.GET_SINGLE + "_" + resourceName).getKey());
 
 		onSuccessMethod.beginControlFlow("if ($N != null)", "one" + resourceName + "Link");
 		onSuccessMethod.addStatement("$N = $N.getHref()", detailTemplateUrl, "one" + resourceName + "Link");
@@ -100,8 +109,9 @@ public class ListFragmentSubResourceGenerator extends ListFragmentGenerator {
 
 		if (stateHolder.contains(StateHolder.StateType.POST)) {
 
-			onSuccessMethod.addStatement("$N = $N.get(getActivity().getString($T.string.$N))",
-					"createNewResourceLink", "linkHeader", rClassName, appDescription.getAppRestAPI().getRestApi().get(StateHolder.StateType.POST + "_" + resourceName).getKey());
+			onSuccessMethod
+					.addStatement("$N = $N.get(getActivity().getString($T.string.$N))", "createNewResourceLink", "linkHeader", rClassName,
+							appDescription.getAppRestAPI().getRestApi().get(StateHolder.StateType.POST + "_" + resourceName).getKey());
 		}
 		onSuccessMethod.beginControlFlow("if ($N != null)", "nextLink");
 		onSuccessMethod.addStatement("$N = $N.getHref()", "nextUrl", "nextLink");
@@ -111,12 +121,12 @@ public class ListFragmentSubResourceGenerator extends ListFragmentGenerator {
 		onSuccessMethod.endControlFlow();
 		onSuccessMethod.addStatement("getActivity().runOnUiThread($L)", onSuccess).returns(void.class);
 
-
 		return onSuccessMethod.build();
 	}
 
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.superclass(resourceListFragmentClassName)
 				.addField(specificResourceListAdapter)
@@ -128,9 +138,7 @@ public class ListFragmentSubResourceGenerator extends ListFragmentGenerator {
 				.addMethod(getGetAdapter())
 				.addMethod(getGetFragment())
 				.build();
-
+		// @formatter:on
 		return JavaFile.builder(this.packageName, type).build();
 	}
-
-
 }

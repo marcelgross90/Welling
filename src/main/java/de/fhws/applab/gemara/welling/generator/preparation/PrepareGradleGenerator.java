@@ -1,5 +1,6 @@
 package de.fhws.applab.gemara.welling.generator.preparation;
 
+import de.fhws.applab.gemara.welling.application.gradle.SettingsGradle;
 import de.fhws.applab.gemara.welling.application.gradle.app.AppProguardRules;
 import de.fhws.applab.gemara.welling.application.gradle.app.BuildGradleApp;
 import de.fhws.applab.gemara.welling.application.gradle.lib.BuildGradleLib;
@@ -8,14 +9,11 @@ import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.Copy;
 import de.fhws.applab.gemara.welling.generator.FileWriter;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
-import de.fhws.applab.gemara.welling.application.gradle.SettingsGradle;
-import de.fhws.applab.gemara.welling.generator.preparation.Preparation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PrepareGradleGenerator extends Preparation {
-
 
 	public PrepareGradleGenerator(AppDescription appDescription) {
 		super(appDescription);
@@ -66,11 +64,9 @@ public class PrepareGradleGenerator extends Preparation {
 
 	private void copyGradleFiles() {
 		Copy copy = new Copy();
-
 		copy.copyFile("gradle/gradlew.bat", "gradlew.bat");
 		copy.copyFile("gradle/gradlew", "gradlew");
 		copy.copyFile("gradle/build.gradle", "build.gradle");
 		copy.copyFolder("gradle/wrapper", "gradle/wrapper");
 	}
-
 }

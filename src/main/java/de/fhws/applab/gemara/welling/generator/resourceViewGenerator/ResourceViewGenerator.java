@@ -19,6 +19,11 @@ public abstract class ResourceViewGenerator<T> {
 	protected final String libResDirectory;
 	protected final String libJavaDirectory;
 
+	protected abstract List<AbstractModelClass> getLibJavaClasses();
+	protected abstract List<GeneratedFile> getLibXMLClasses();
+	protected abstract List<AbstractModelClass> getAppJavaClasses();
+	protected abstract void addStrings();
+
 	public ResourceViewGenerator(T resourceView, AppDescription appDescription, StateHolder stateHolder) {
 		this.resourceView = resourceView;
 		this.appDescription = appDescription;
@@ -30,16 +35,11 @@ public abstract class ResourceViewGenerator<T> {
 		this.libJavaDirectory = appDescription.getLibJavaDirectory();
 	}
 
-	public void generate(){
+	public void generate() {
 		FileWriter.writeJavaFiles(getLibJavaClasses(), libJavaDirectory);
 		FileWriter.writeGeneratedFiles(getLibXMLClasses());
 
 		FileWriter.writeJavaFiles(getAppJavaClasses(), appJavaDirectory);
 		addStrings();
 	}
-
-	protected abstract List<AbstractModelClass> getLibJavaClasses();
-	protected abstract List<GeneratedFile> getLibXMLClasses();
-	protected abstract List<AbstractModelClass> getAppJavaClasses();
-	protected abstract void addStrings();
 }

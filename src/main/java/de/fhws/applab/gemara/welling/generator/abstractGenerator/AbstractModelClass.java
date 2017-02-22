@@ -24,7 +24,7 @@ public abstract class AbstractModelClass {
 	}
 
 	public final void setDescription(final String description) {
-		this.description =description;
+		this.description = description;
 	}
 
 	public final String getPackageName() {

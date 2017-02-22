@@ -15,8 +15,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getDateFormatClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getDatePickerClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getDatePickerDialogClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getDialogClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getDialogFragmentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getNonNullClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getOnDateSetListenerClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getOnTimeSetListenerClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getSavedInstanceStateParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTimePickerClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTimePickerDialogClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods.getOnCreateFragment;
 
 public class DateTimePickerFragment extends AbstractModelClass {
 
@@ -24,14 +34,13 @@ public class DateTimePickerFragment extends AbstractModelClass {
 	private final ClassName onDateTimeSetListenerClassName;
 	private final ClassName datePickerDialogClassName;
 
-
-	private final FieldSpec calendar = FieldSpec.builder(calendarClassName, "calendar", Modifier.PRIVATE, Modifier.FINAL).initializer("$T.getInstance()", calendarClassName).build();
+	private final FieldSpec calendar = FieldSpec.builder(calendarClassName, "calendar", Modifier.PRIVATE, Modifier.FINAL)
+			.initializer("$T.getInstance()", calendarClassName).build();
 	private final FieldSpec listener;
 
 	private final FieldSpec year = FieldSpec.builder(int.class, "year", Modifier.PRIVATE).build();
 	private final FieldSpec month = FieldSpec.builder(int.class, "month", Modifier.PRIVATE).build();
 	private final FieldSpec day = FieldSpec.builder(int.class, "day", Modifier.PRIVATE).build();
-
 
 	public DateTimePickerFragment(String packageName) {
 		super(packageName + ".generic.fragment", "DateTimePickerFragment");
@@ -43,8 +52,10 @@ public class DateTimePickerFragment extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		MethodSpec onCreate = getOnCreateFragment()
-				.addStatement("$N = ($T) getTargetFragment()", listener, onDateTimeSetListenerClassName).build();
+				.addStatement("$N = ($T) getTargetFragment()", listener, onDateTimeSetListenerClassName)
+				.build();
 
 		MethodSpec onCreateDialog = MethodSpec.methodBuilder("onCreateDialog")
 				.addAnnotation(Override.class)
@@ -56,7 +67,8 @@ public class DateTimePickerFragment extends AbstractModelClass {
 				.build();
 
 		MethodSpec onDateSet = MethodSpec.methodBuilder("onDateSet")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.addAnnotation(Override.class)
 				.addParameter(getDatePickerClassName(), "datePicker")
 				.addParameter(ParameterSpec.builder(int.class, "year", Modifier.FINAL).build())
@@ -65,13 +77,16 @@ public class DateTimePickerFragment extends AbstractModelClass {
 				.addStatement("this.$N = year", year)
 				.addStatement("this.$N = month", month)
 				.addStatement("this.$N = day", day)
-				.addStatement("$T timePickerDialog = new $T(getContext(), this, $N.get($T.HOUR_OF_DAY), $N.get($T.MINUTE), $T.is24HourFormat(getActivity()))",
-						getTimePickerDialogClassName(), getTimePickerDialogClassName(), calendar, calendarClassName, calendar, calendarClassName, getDateFormatClassName())
+				.addStatement("$T timePickerDialog = new $T(getContext(), this, "
+								+ "$N.get($T.HOUR_OF_DAY), $N.get($T.MINUTE), $T.is24HourFormat(getActivity()))",
+						getTimePickerDialogClassName(), getTimePickerDialogClassName(), calendar, calendarClassName,
+						calendar, calendarClassName, getDateFormatClassName())
 				.addStatement("timePickerDialog.show()")
 				.build();
 
 		MethodSpec onTimeSet = MethodSpec.methodBuilder("onTimeSet")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.addAnnotation(Override.class)
 				.addParameter(getTimePickerClassName(), "timePicker")
 				.addParameter(int.class, "hour")
@@ -98,7 +113,10 @@ public class DateTimePickerFragment extends AbstractModelClass {
 				.addStatement("$N.onDateTimeSet(date)", listener)
 				.build();
 
-		TypeSpec type = TypeSpec.classBuilder(this.className).superclass(getDialogFragmentClassName()).addSuperinterface(getOnDateSetListenerClassName()).addSuperinterface(getOnTimeSetListenerClassName())
+		TypeSpec type = TypeSpec.classBuilder(this.className)
+				.superclass(getDialogFragmentClassName())
+				.addSuperinterface(getOnDateSetListenerClassName())
+				.addSuperinterface(getOnTimeSetListenerClassName())
 				.addModifiers(Modifier.PUBLIC)
 				.addField(calendar)
 				.addField(listener)
@@ -111,18 +129,23 @@ public class DateTimePickerFragment extends AbstractModelClass {
 				.addMethod(onDateSet)
 				.addMethod(onTimeSet)
 				.build();
-
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
 	}
 
 	private TypeSpec generateInterface() {
+		// @formatter:off
 		MethodSpec onDateTimeSet = MethodSpec.methodBuilder("onDateTimeSet")
-				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT).returns(void.class)
+				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+				.returns(void.class)
 				.addParameter(ClassName.get(Date.class), "date")
 				.build();
 
-		return TypeSpec.interfaceBuilder(onDateTimeSetListenerClassName).addModifiers(Modifier.PUBLIC)
-				.addMethod(onDateTimeSet).build();
+		return TypeSpec.interfaceBuilder(onDateTimeSetListenerClassName)
+				.addModifiers(Modifier.PUBLIC)
+				.addMethod(onDateTimeSet)
+				.build();
+		// @formatter:on
 	}
 }

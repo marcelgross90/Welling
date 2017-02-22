@@ -52,52 +52,92 @@ public class NoPictureActivityGenerator extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
-		TypeSpec type = TypeSpec.classBuilder(this.className).superclass(resourceActivityClassName).addModifiers(Modifier.PUBLIC)
-				.addMethod(getOnBackPressed()).addMethod(getHandleIntentAndPrepareFragment()).addMethod(getSetUpToolbar())
-				.addMethod(getCanBack()).build();
+		// @formatter:off
+		TypeSpec type = TypeSpec.classBuilder(this.className)
+				.superclass(resourceActivityClassName)
+				.addModifiers(Modifier.PUBLIC)
+				.addMethod(getOnBackPressed())
+				.addMethod(getHandleIntentAndPrepareFragment())
+				.addMethod(getSetUpToolbar())
+				.addMethod(getCanBack())
+				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
 	}
 
 	private MethodSpec getOnBackPressed() {
-		return MethodSpec.methodBuilder("onBackPressed").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(void.class)
-				.beginControlFlow("if ($N.getBackStackEntryCount() > 1)", "fragmentManager").addStatement("super.onBackPressed()")
-				.endControlFlow().beginControlFlow("else").addStatement("finish()")
+		// @formatter:off
+		return MethodSpec.methodBuilder("onBackPressed")
+				.addAnnotation(Override.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
+				.beginControlFlow("if ($N.getBackStackEntryCount() > 1)", "fragmentManager")
+				.addStatement("super.onBackPressed()")
+				.endControlFlow()
+				.beginControlFlow("else")
+				.addStatement("finish()")
 				.addStatement("overridePendingTransition($T.anim.$N, $T.anim.$N)", rClassName, "fade_out", rClassName, "fade_in")
-				.endControlFlow().build();
+				.endControlFlow()
+				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getHandleIntentAndPrepareFragment() {
 		ParameterSpec intent = ParameterSpec.builder(getIntentClassName(), "intent").build();
 
-		return MethodSpec.methodBuilder("handleIntentAndPrepareFragment").addAnnotation(Override.class).addModifiers(Modifier.PROTECTED)
-				.returns(getFragmentClassName()).addParameter(intent)
-				.addStatement("$T $N = $N.getStringExtra($S)", String.class, "name", intent, "name").addStatement("setTitle($N)", "name")
+		// @formatter:off
+		return MethodSpec.methodBuilder("handleIntentAndPrepareFragment")
+				.addAnnotation(Override.class)
+				.addModifiers(Modifier.PROTECTED)
+				.returns(getFragmentClassName())
+				.addParameter(intent)
+				.addStatement("$T $N = $N.getStringExtra($S)", String.class, "name", intent, "name")
+				.addStatement("setTitle($N)", "name")
 				.addStatement("$T $N = new $T()", getFragmentClassName(), "fragment", resourceListFragmentClassName)
 				.addStatement("$T $N = new $T()", getBundleClassName(), "bundle", getBundleClassName())
 				.addStatement("$N.putString($S, $N.getStringExtra($S))", "bundle", "url", intent, "url")
 				.addStatement("$N.putString($S, $N.getStringExtra($S))", "bundle", "mediaType", intent, "mediaType")
-				.addStatement("$N.setArguments($N)", "fragment", "bundle").addStatement("return $N", "fragment").build();
+				.addStatement("$N.setArguments($N)", "fragment", "bundle")
+				.addStatement("return $N", "fragment")
+				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getSetUpToolbar() {
-		return MethodSpec.methodBuilder("setUpToolbar").addAnnotation(Override.class).addModifiers(Modifier.PROTECTED).returns(void.class)
-
-				.addStatement("$T $N = ($T) findViewById($T.id.$N)", getToolbarClassname(), "toolbar", getToolbarClassname(), rClassName,
-						"toolbar").beginControlFlow("if ($N != null)", "toolbar").addStatement("setSupportActionBar($N)", "toolbar")
+		// @formatter:off
+		return MethodSpec.methodBuilder("setUpToolbar")
+				.addAnnotation(Override.class)
+				.addModifiers(Modifier.PROTECTED)
+				.returns(void.class)
+				.addStatement("$T $N = ($T) findViewById($T.id.$N)",
+						getToolbarClassname(), "toolbar", getToolbarClassname(), rClassName, "toolbar")
+				.beginControlFlow("if ($N != null)", "toolbar")
+				.addStatement("setSupportActionBar($N)", "toolbar")
 				.endControlFlow()
-
 				.addStatement("$N.addOnBackStackChangedListener($L)", "fragmentManager", getOnBackStackChangedListener())
-				.addStatement("$N()", getCanBack()).build();
+				.addStatement("$N()", getCanBack())
+				.build();
+		// @formatter:on
 	}
 
 	private TypeSpec getOnBackStackChangedListener() {
-		return TypeSpec.anonymousClassBuilder("").superclass(getOnBackStackChangedListenerClassName()).addMethod(
-				MethodSpec.methodBuilder("onBackStackChanged").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC)
-						.returns(void.class).addStatement("$N()", getCanBack()).build()).build();
+		// @formatter:off
+		return TypeSpec.anonymousClassBuilder("")
+				.superclass(getOnBackStackChangedListenerClassName())
+				.addMethod(
+						MethodSpec.methodBuilder("onBackStackChanged")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.returns(void.class)
+								.addStatement("$N()", getCanBack())
+								.build())
+				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getCanBack() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("canBack")
 				.addModifiers(Modifier.PRIVATE)
 				.returns(void.class)
@@ -106,6 +146,7 @@ public class NoPictureActivityGenerator extends AbstractModelClass {
 				.addStatement("$N.setDisplayHomeAsUpEnabled($N.getBackStackEntryCount() > 0)", "actionbar", "fragmentManager")
 				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 
 	private void addString(String key, String value) {

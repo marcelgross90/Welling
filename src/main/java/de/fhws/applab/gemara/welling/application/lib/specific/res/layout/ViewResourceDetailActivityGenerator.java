@@ -14,7 +14,6 @@ public class ViewResourceDetailActivityGenerator extends AbstractLayoutGenerator
 	private final DetailView detailView;
 	private final AppDescription appDescription;
 
-
 	public ViewResourceDetailActivityGenerator(AppDescription appDescription, DetailView detailView) {
 		super("view_" + detailView.getResourceName().toLowerCase() + "_detail", appDescription.getLibResDirectory());
 		this.resourceName = detailView.getResourceName();
@@ -47,7 +46,6 @@ public class ViewResourceDetailActivityGenerator extends AbstractLayoutGenerator
 		viewAttributes.add("android:scrollbars=\"none\"");
 		viewAttributes.add("app:layout_behavior=\"@string/appbar_scrolling_view_behavior\"");
 		view.setViewAttributes(viewAttributes);
-
 
 		return view;
 	}
@@ -90,12 +88,14 @@ public class ViewResourceDetailActivityGenerator extends AbstractLayoutGenerator
 
 		List<String> viewAttributes = getLayoutAttributes("match_parent", "match_parent");
 		viewAttributes.add("android:id=\"@+id/iv" + resourceName + "Picture\"");
-		viewAttributes.add("android:contentDescription=\"@string/" + replaceIllegalCharacters(image.getAttributeLabel().toLowerCase()) + "\"");
+		viewAttributes
+				.add("android:contentDescription=\"@string/" + replaceIllegalCharacters(image.getAttributeLabel().toLowerCase()) + "\"");
 		viewAttributes.add("android:fitsSystemWindows=\"true\"");
 		viewAttributes.add("android:scaleType=\"centerCrop\"");
 		viewAttributes.add("app:layout_collapseMode=\"parallax\"");
 
 		view.setViewAttributes(viewAttributes);
+
 		return view;
 	}
 

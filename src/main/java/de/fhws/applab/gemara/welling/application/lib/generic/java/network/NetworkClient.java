@@ -11,11 +11,11 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelCl
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getLogClass;
 
 public class NetworkClient extends AbstractModelClass {
 
-	private final ClassName iOExceptionClassName = ClassName.get(IOException.class);
 	private final ClassName callClassName = ClassName.get("okhttp3", "Call");
 	private final ClassName callBackClassName = ClassName.get("okhttp3", "Callback");
 	private final ClassName okHttpClientClassName = ClassName.get("okhttp3", "OkHttpClient");
@@ -25,9 +25,9 @@ public class NetworkClient extends AbstractModelClass {
 	private final ClassName okHttpSingletonClassName;
 	private final ClassName networkCallbackClassName;
 
-	private final FieldSpec clientField = FieldSpec.builder(okHttpClientClassName, "client").addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
+	private final FieldSpec clientField =
+			FieldSpec.builder(okHttpClientClassName, "client").addModifiers(Modifier.PRIVATE, Modifier.FINAL).build();
 	private final FieldSpec requestField;
-
 
 	public NetworkClient(String packageName) {
 		super(packageName + ".generic.network", "NetworkClient");
@@ -39,57 +39,82 @@ public class NetworkClient extends AbstractModelClass {
 	}
 
 	public JavaFile javaFile() {
+		// @formatter:off
+		TypeSpec type = TypeSpec.classBuilder(this.className)
+				.addModifiers(Modifier.PUBLIC)
+				.addField(clientField)
+				.addField(requestField)
+				.addMethod(getConstructor())
+				.addMethod(getSendRequest())
+				.build();
+		// @formatter:on
 
-		MethodSpec constructor = MethodSpec.constructorBuilder()
+		return JavaFile.builder(this.packageName, type).build();
+	}
+
+	private MethodSpec getSendRequest() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("sendRequest")
+				.addModifiers(Modifier.PUBLIC)
+				.addParameter(
+						ParameterSpec.builder(networkCallbackClassName, "callback")
+								.addModifiers(Modifier.FINAL)
+								.build())
+				.addCode("$N.newCall($N.buildRequest()).enqueue($L);\n", clientField, requestField, getCallBack())
+				.build();
+		// @formatter:on
+	}
+
+	private TypeSpec getCallBack() {
+		// @formatter:off
+			return TypeSpec.anonymousClassBuilder("")
+				.addSuperinterface(callBackClassName)
+				.addMethod(getOnFailure())
+				.addMethod(getOnResponse())
+				.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getOnResponse() {
+		// @formatter:off
+		//todo add throws ioException
+		return MethodSpec.methodBuilder("onResponse")
+				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addAnnotation(Override.class)
+				.addParameter(callClassName, "call")
+				.addParameter(responseClassName, "response")
+				.beginControlFlow("if (!$N.isSuccessful())", "response")
+				.addStatement("$T.d($S, $N.toString())", getLogClass(), "Request failure", "response")
+				.addStatement("$N.onFailure()", "callback")
+				.endControlFlow()
+				.addStatement("$N.onSuccess( new $T($N.body().charStream(), $N.headers().toMultimap()))",
+						"callback", networkResponseClassName, "response", "response")
+				.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getOnFailure() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("onFailure")
+				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addAnnotation(Override.class)
+				.addParameter(callClassName, "call")
+				.addParameter(IOException.class, "e")
+				.addStatement("e.printStackTrace()")
+				.addStatement("$N.onFailure()", "callback")
+				.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getConstructor() {
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(getContextParam())
 				.addParameter(ParameterSpec.builder(networkRequestClassName, "request").build())
 				.addStatement("this.$N = $T.getCacheInstance($N).getClient()", clientField, okHttpSingletonClassName, getContextParam())
 				.addStatement("this.$N = request", this.requestField)
 				.build();
-
-		MethodSpec onFailure = MethodSpec.methodBuilder("onFailure")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
-				.addAnnotation(Override.class)
-				.addParameter(ParameterSpec.builder(callClassName, "call").build())
-				.addParameter(ParameterSpec.builder(iOExceptionClassName, "e").build())
-				.addStatement("e.printStackTrace()")
-				.addStatement("callback.onFailure()")
-				.build();
-
-		//todo add throws ioException
-		MethodSpec onResponse = MethodSpec.methodBuilder("onResponse")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
-				.addAnnotation(Override.class)
-				.addParameter(ParameterSpec.builder(callClassName, "call").build())
-				.addParameter(ParameterSpec.builder(responseClassName, "response").build())
-				.beginControlFlow("if (!response.isSuccessful())")
-				.addStatement("$T.d(\"Request failure\", response.toString())", getLogClass())
-				.addStatement("callback.onFailure()")
-				.endControlFlow()
-				.addStatement("callback.onSuccess( new $T(response.body().charStream(), response.headers().toMultimap()))", networkResponseClassName)
-				.build();
-
-		TypeSpec callBackClass = TypeSpec.anonymousClassBuilder("")
-				.addSuperinterface(callBackClassName)
-				.addMethod(onFailure)
-				.addMethod(onResponse)
-				.build();
-
-		MethodSpec sendRequest = MethodSpec.methodBuilder("sendRequest")
-				.addModifiers(Modifier.PUBLIC)
-				.addParameter(ParameterSpec.builder(networkCallbackClassName, "callback").addModifiers(Modifier.FINAL).build())
-				.addCode("$N.newCall($N.buildRequest()).enqueue($L);\n", clientField, requestField, callBackClass)
-				.build();
-
-		TypeSpec type = TypeSpec.classBuilder(this.className)
-				.addModifiers(Modifier.PUBLIC)
-				.addField(clientField)
-				.addField(requestField)
-				.addMethod(constructor)
-				.addMethod(sendRequest)
-				.build();
-
-		return JavaFile.builder(this.packageName, type).build();
+		// @formatter:on
 	}
 }

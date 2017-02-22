@@ -57,9 +57,13 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 
 	@Override
 	public MethodSpec getInitMethod() {
+		// @formatter:off
 		return getInitMethodSignature()
 				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.ProfileImageView, $N, 0)",
-						getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr).addStatement("typedArray.recycle()").build();
+						getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr)
+				.addStatement("typedArray.recycle()")
+				.build();
+		// @formatter:on
 	}
 
 	@Override
@@ -73,33 +77,51 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 
 	@Override
 	protected MethodSpec getConstructorOne() {
-		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
-				.addStatement("super($N)", getContextParam()).addStatement("$N($N, null, 0)", getInitMethod(), getContextParam())
-				.addStatement("this.$N = $N", context, getContextParam()).build();
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
+				.addParameter(getContextParam())
+				.addStatement("super($N)", getContextParam())
+				.addStatement("$N($N, null, 0)", getInitMethod(), getContextParam())
+				.addStatement("this.$N = $N", context, getContextParam())
+				.build();
+		// @formatter:on
 	}
 
 	@Override
 	protected MethodSpec getConstructorTwo() {
-		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
-				.addParameter(getAttributeSetParam()).addStatement("super($N, $N)", getContextParam(), getAttributeSetParam())
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
+				.addParameter(getContextParam())
+				.addParameter(getAttributeSetParam())
+				.addStatement("super($N, $N)", getContextParam(), getAttributeSetParam())
 				.addStatement("$N($N, $N, 0)", getInitMethod(), getContextParam(), getAttributeSetParam())
-				.addStatement("this.$N = $N", context, getContextParam()).build();
+				.addStatement("this.$N = $N", context, getContextParam())
+				.build();
+		// @formatter:on
 	}
 
 	@Override
 	protected MethodSpec getConstructorThree() {
-
-		return MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(getContextParam())
-				.addParameter(getAttributeSetParam()).addParameter(defStyleAttr)
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
+				.addParameter(getContextParam())
+				.addParameter(getAttributeSetParam())
+				.addParameter(defStyleAttr)
 				.addStatement("super($N, $N, $N)", getContextParam(), getAttributeSetParam(), defStyleAttr)
 				.addStatement("$N($N, $N, $N)", getInitMethod(), getContextParam(), getAttributeSetParam(), defStyleAttr)
-				.addStatement("this.$N = $N", context, getContextParam()).build();
+				.addStatement("this.$N = $N", context, getContextParam())
+				.build();
+		// @formatter:on
 	}
 
-
 	private MethodSpec getLoadImage() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("loadImage")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.addParameter(profileImage)
 				.addParameter(int.class, "width")
 				.addParameter(int.class, "height")
@@ -107,41 +129,48 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 				.addStatement("$T.with($N).load($N).resizeDimen($N, $N).error($T.drawable.user_picture).into(this)",
 						getPicassoClassName(), getContextParam(), "profileImageUrl", "width", "height", rClassName)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getLoadCutImage() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("loadCutImage")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.addParameter(profileImage)
 				.addStatement("$T $N = $N($N)", String.class, "profileImageUrl", getGetValidUrl(), profileImage)
 				.addStatement("$T $N = $L", getTargetClassName(), "target", getTargetImpl())
 				.addStatement("$T.with($N).load($N).error($T.drawable.user_picture).into($N)",
 						getPicassoClassName(), getContextParam(), "profileImageUrl", rClassName, "target")
 				.build();
-
-
+		// @formatter:on
 	}
 
 	private TypeSpec getTargetImpl() {
+		// @formatter:off
 		MethodSpec onPrepareLoad = MethodSpec.methodBuilder("onPrepareLoad")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.addAnnotation(Override.class)
 				.addParameter(getDrawableClassName(), "placeHolderDrawable")
 				.build();
 
 		MethodSpec onBitmapLoaded = MethodSpec.methodBuilder("onBitmapLoaded")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.addAnnotation(Override.class)
 				.addParameter(getBitMapClassName(), "bitmap")
 				.addParameter(getLoadedFromClassName(), "from")
-				.addStatement("$T $N = $T.createBitmap($N, 0, 50, $N.getWidth(), 300)", getBitMapClassName(), "editedBitmap",
-						getBitMapClassName(), "bitmap", "bitmap")
-				.addStatement("$T $N = new $T(getResources(), $N)", getBitMapDrawableClassName(), "drawable", getBitMapDrawableClassName(), "editedBitmap")
+				.addStatement("$T $N = $T.createBitmap($N, 0, 50, $N.getWidth(), 300)",
+						getBitMapClassName(), "editedBitmap", getBitMapClassName(), "bitmap", "bitmap")
+				.addStatement("$T $N = new $T(getResources(), $N)",
+						getBitMapDrawableClassName(), "drawable", getBitMapDrawableClassName(), "editedBitmap")
 				.addStatement("setImageDrawable($N)", "drawable")
 				.build();
 
 		MethodSpec onBitmapFailed = MethodSpec.methodBuilder("onBitmapFailed")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.addAnnotation(Override.class)
 				.addParameter(getDrawableClassName(), "errorDrawable")
 				.addStatement("setImageDrawable($N)", "errorDrawable")
@@ -153,11 +182,14 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 				.addMethod(onBitmapLoaded)
 				.addMethod(onBitmapFailed)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetValidUrl() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getValidUrl")
-				.addModifiers(Modifier.PRIVATE).returns(String.class)
+				.addModifiers(Modifier.PRIVATE)
+				.returns(String.class)
 				.addParameter(profileImage)
 				.beginControlFlow("if ($N != null)", profileImage)
 				.addStatement("$T $N = new $T($N)", builderClassName, "linkBuilder", builderClassName, profileImage)
@@ -167,5 +199,6 @@ public class ProfileImageView extends de.fhws.applab.gemara.welling.application.
 				.endControlFlow()
 				.addStatement("return $S", "empty")
 				.build();
+		// @formatter:on
 	}
 }

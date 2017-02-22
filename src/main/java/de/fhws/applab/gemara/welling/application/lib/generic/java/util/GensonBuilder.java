@@ -10,7 +10,7 @@ import javax.lang.model.element.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class GensonBuilder  extends AbstractModelClass {
+public class GensonBuilder extends AbstractModelClass {
 
 	private final ClassName gensonClassName = ClassName.get("com.owlike.genson", "Genson");
 	private final ClassName simpleDateFormatClassName = ClassName.get(SimpleDateFormat.class);
@@ -21,19 +21,22 @@ public class GensonBuilder  extends AbstractModelClass {
 	}
 
 	public JavaFile javaFile() {
-
+		// @formatter:off
 		MethodSpec getDateFormatter = MethodSpec.methodBuilder("getDateFormatter")
-				.addModifiers(Modifier.PUBLIC).returns(gensonClassName)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(gensonClassName)
 				.addCode("return new com.owlike.genson.GensonBuilder()\n"
 						+ ".useDateAsTimestamp(false)\n"
 						+ ".useDateFormat(new $T(\"yyyy-MM-dd'T'HH:mm:ss\", $T.GERMANY)) \n"
-						+ ".create();\n", simpleDateFormatClassName, localeClassName)
+						+ ".create();\n",
+						simpleDateFormatClassName, localeClassName)
 				.build();
 
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC)
 				.addMethod(getDateFormatter)
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
 	}

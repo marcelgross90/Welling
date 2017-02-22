@@ -16,7 +16,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTextViewClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTypedArrayClassName;
 
 public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.generic.java.customView.CustomView {
 
@@ -32,7 +34,7 @@ public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.
 
 	@Override
 	public Modifier[] addClassModifiers() {
-		return new Modifier[]{Modifier.PUBLIC};
+		return new Modifier[] { Modifier.PUBLIC };
 	}
 
 	@Override
@@ -49,19 +51,24 @@ public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.
 	public MethodSpec getInitMethod() {
 		appDescription.setDeclareStyleables("dateTimeView", new AppDeclareStyleable.DeclareStyleable("DateTimeView"));
 		ClassName calendar = ClassName.get(Calendar.class);
+
+		// @formatter:off
 		return getInitMethodSignature()
 				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.DateTimeView, $N, 0)",
-				getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr)
+						getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr)
 				.beginControlFlow("try")
 				.addStatement("$T $N = $T.getInstance()", calendar, "calendar", calendar)
-				.addStatement("$T $N = $N.get($T.DAY_OF_MONTH) + \".\" + $N.get($T.MONTH) + \".\" + $N.get($T.YEAR) + \" \" + $N.get($T.HOUR_OF_DAY) + \":\" + $N.get($T.MINUTE)",
-						String.class, "date", "calendar", calendar, "calendar", calendar, "calendar", calendar, "calendar", calendar, "calendar", calendar)
+				.addStatement("$T $N = $N.get($T.DAY_OF_MONTH) + \".\" + $N.get($T.MONTH) + \".\" + $N.get($T.YEAR) + \" \" "
+								+ "+ $N.get($T.HOUR_OF_DAY) + \":\" + $N.get($T.MINUTE)",
+						String.class, "date", "calendar", calendar, "calendar", calendar, "calendar", calendar,
+						"calendar", calendar, "calendar", calendar)
 				.addStatement("setText($N)", "date")
 				.endControlFlow()
 				.beginControlFlow("finally")
 				.addStatement("$N.recycle()", "typedArray")
 				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 
 	@Override
@@ -74,12 +81,16 @@ public class DateTimeView extends de.fhws.applab.gemara.welling.application.lib.
 	private MethodSpec getSetDate() {
 		ClassName simpleDateFormat = ClassName.get(SimpleDateFormat.class);
 		ParameterSpec date = ParameterSpec.builder(Date.class, "date").build();
+
+		// @formatter:off
 		return MethodSpec.methodBuilder("setDate")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.addParameter(date)
 				.addStatement("$T simpleDateFormat = new $T(\"dd.MM.yyyy HH:mm\", $T.GERMANY)",
 						simpleDateFormat, simpleDateFormat, ClassName.get(Locale.class))
 				.addStatement("setText(simpleDateFormat.format($N))", date)
 				.build();
+		// @formatter:on
 	}
 }

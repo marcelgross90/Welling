@@ -27,6 +27,4 @@ public class ListMenu extends MenuGenerator {
 	protected List<MenuGroup> addMenuGroups() {
 		return Collections.emptyList();
 	}
-
-
 }

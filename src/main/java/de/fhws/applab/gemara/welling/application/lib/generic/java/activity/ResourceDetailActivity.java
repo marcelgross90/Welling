@@ -110,80 +110,103 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 	}
 
 	private MethodSpec getGetIntentForClose() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getIntentForClose")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(getIntentClassName())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetDeleteErrorMessage() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getDeleteErrorMessage")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(int.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetLayout() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLayout")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(int.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitializeView() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("initializeView")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(void.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetEnterAnim() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getEnterAnim")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(int.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetExitAnim() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getExitAnim")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(int.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetIntentForEdit() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getIntentForEdit")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(getIntentClassName())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getPrepareBundle() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("prepareBundle")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(getBundleClassName())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getExtractTitleFromIntent() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("extractTitleFromIntent")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(String.class)
 				.addParameter(getIntentClassName(), "intent")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetCallback() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getCallback")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(networkCallbackClassName)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnDialogClosed() {
 		ParameterSpec successfullyDeleted = ParameterSpec.builder(boolean.class, "successfullyDeleted").build();
+
+		// @formatter:off
 		return MethodSpec.methodBuilder("onDialogClosed")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.addAnnotation(Override.class)
 				.addParameter(successfullyDeleted)
 				.beginControlFlow("if ($N)", successfullyDeleted)
@@ -191,25 +214,31 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 				.addStatement("finish()")
 				.endControlFlow()
 				.beginControlFlow("else")
-				.addStatement("$T.makeText(this, $N(), $T.LENGTH_SHORT).show()", getToastClassName(), getGetDeleteErrorMessage(), getToastClassName())
+				.addStatement("$T.makeText(this, $N(), $T.LENGTH_SHORT).show()",
+						getToastClassName(), getGetDeleteErrorMessage(), getToastClassName())
 				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnCreate() {
+		// @formatter:off
 		return LifecycleMethods.getOnCreate()
 				.addStatement("setContentView($N())", getGetLayout())
 				.addStatement("$N()", getInitializeView())
 				.addStatement("$N()", getSetUpToolbar())
 				.addStatement("$N()", getLoadResource())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnCreateOptionsMenu() {
 		ParameterSpec menu = ParameterSpec.builder(getMenuClassName(), "menu").build();
 
+		// @formatter:off
 		return MethodSpec.methodBuilder("onCreateOptionsMenu")
-				.addModifiers(Modifier.PUBLIC).returns(boolean.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(boolean.class)
 				.addAnnotation(Override.class)
 				.addParameter(menu)
 				.addStatement("$T $N = getMenuInflater()", getMenuInflaterClassName(), "inflater")
@@ -220,6 +249,7 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 				.addStatement("$N.setVisible($N != null)", "updateItem", updateLink)
 				.addStatement("return super.onCreateOptionsMenu($N)", menu)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnOptionsItemSelected() {
@@ -263,8 +293,10 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 	}
 
 	private MethodSpec getSetUpToolbar() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("setUpToolbar")
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.beginControlFlow("if ($N != null)", toolbar)
 				.addStatement("setSupportActionBar($N)", toolbar)
 				.endControlFlow()
@@ -274,17 +306,20 @@ public class ResourceDetailActivity extends AbstractActivityClass {
 				.endControlFlow()
 				.addStatement("setTitle($N(getIntent()))", getExtractTitleFromIntent())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getLoadResource() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("loadResource")
 				.addModifiers(Modifier.PUBLIC).returns(void.class)
 				.addStatement("$T $N = getIntent()", getIntentClassName(), "intent")
 				.addStatement("$T $N = $N.getExtras().getString($S, $S)", String.class, "selfUrl", "intent", "selfUrl", "")
 				.addStatement("$T $N = $N.getExtras().getString($S, $S)", String.class, "mediaType", "intent", "mediaType", "")
-				.addStatement("$T $N = new $T(this, new $T().acceptHeader($N).url($N))", networkClientClassName, "client", networkClientClassName, networkRequestClassName, "mediaType", "selfUrl")
+				.addStatement("$T $N = new $T(this, new $T().acceptHeader($N).url($N))",
+						networkClientClassName, "client", networkClientClassName, networkRequestClassName, "mediaType", "selfUrl")
 				.addStatement("$N.sendRequest($N())", "client", getGetCallback())
 				.build();
+		// @formatter:on
 	}
-
 }

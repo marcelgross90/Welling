@@ -2,11 +2,11 @@ package de.fhws.applab.gemara.welling.visitors;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute.AttributeType;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.DisplayViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.GroupResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttributeVisitor;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResourceViewAttribute;
-import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute.AttributeType;
 
 import javax.lang.model.element.Modifier;
 
@@ -29,7 +29,7 @@ public class FieldVisitor implements ResourceViewAttributeVisitor {
 		String viewName = displayViewAttribute.getAttributeName();
 
 		if (displayViewAttribute.getAttributeType() == AttributeType.PICTURE) {
-			this.fieldSpec =  FieldSpec.builder(profileImageViewClassName, viewName, Modifier.PRIVATE).build();
+			this.fieldSpec = FieldSpec.builder(profileImageViewClassName, viewName, Modifier.PRIVATE).build();
 		} else {
 			addField(displayViewAttribute, viewName);
 		}

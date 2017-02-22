@@ -16,7 +16,6 @@ import static de.fhws.applab.gemara.welling.application.androidSpecifics.Android
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getLayoutInflaterClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getTypedArrayClassName;
 
-
 public class ResourceCardView extends CustomView {
 
 	private final ClassName resourceClassName;
@@ -28,7 +27,7 @@ public class ResourceCardView extends CustomView {
 
 	@Override
 	public Modifier[] addClassModifiers() {
-		return new Modifier[]{Modifier.PUBLIC, Modifier.ABSTRACT};
+		return new Modifier[] { Modifier.PUBLIC, Modifier.ABSTRACT };
 	}
 
 	@Override
@@ -43,16 +42,21 @@ public class ResourceCardView extends CustomView {
 
 	@Override
 	public MethodSpec getInitMethod() {
+		// @formatter:off
 		return getInitMethodSignature()
-				.addStatement("$T inflater = ($T) $N.getSystemService($T.LAYOUT_INFLATER_SERVICE)", getLayoutInflaterClassName(),
-						getLayoutInflaterClassName(), getContextParam(), getContextClass())
+				.addStatement("$T inflater = ($T) $N.getSystemService($T.LAYOUT_INFLATER_SERVICE)",
+						getLayoutInflaterClassName(), getLayoutInflaterClassName(), getContextParam(), getContextClass())
 				.addStatement("this.addView($N.inflate($N(), this, false))", "inflater", getGetLayout())
 				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $N(), $N, 0)",
 						getTypedArrayClassName(), getContextParam(), getGetStyleable(), defStyleAttr)
 				.beginControlFlow("try")
 				.addStatement("$N()", getInitializeView())
-				.endControlFlow().beginControlFlow("finally").addStatement("typedArray.recycle()").endControlFlow()
+				.endControlFlow()
+				.beginControlFlow("finally")
+				.addStatement("typedArray.recycle()")
+				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 
 	@Override
@@ -66,27 +70,39 @@ public class ResourceCardView extends CustomView {
 	}
 
 	private MethodSpec getGetLayout() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLayout")
-				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(int.class)
+				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
+				.returns(int.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetStyleable() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getStyleable")
-				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(int[].class)
+				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
+				.returns(int[].class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitializeView() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("initializeView")
-				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(void.class)
+				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
+				.returns(void.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getSetUpView() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("setUpView")
-				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT).returns(void.class)
+				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+				.returns(void.class)
 				.addParameter(ParameterSpec.builder(resourceClassName, "resource").build())
 				.build();
+		// @formatter:on
 	}
 }

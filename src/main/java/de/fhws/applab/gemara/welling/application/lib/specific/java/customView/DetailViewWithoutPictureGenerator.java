@@ -17,7 +17,6 @@ import de.fhws.applab.gemara.welling.visitors.InitializeDetailViewVisitor;
 import de.fhws.applab.gemara.welling.visitors.SetTextVisitor;
 
 import javax.lang.model.element.Modifier;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,14 +47,16 @@ public class DetailViewWithoutPictureGenerator extends AbstractModelClass {
 
 		this.rClassName = ClassName.get(appDescription.getLibPackageName(), "R");
 		this.attributeViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "AttributeView");
-		this.specificResourceClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.model", detailView.getResourceName());
+		this.specificResourceClassName = ClassName
+				.get(appDescription.getLibPackageName() + ".specific.model", detailView.getResourceName());
 		this.resourceDetailViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "ResourceDetailView");
 
 		addDeclareStyleable();
 	}
 
 	public void addDeclareStyleable() {
-		appDescription.setDeclareStyleables(detailView.getResourceName() + "DetailView", new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailView"));
+		appDescription.setDeclareStyleables(detailView.getResourceName() + "DetailView",
+				new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailView"));
 	}
 
 	@Override
@@ -93,23 +94,28 @@ public class DetailViewWithoutPictureGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec constructorOne() {
+		// @formatter:off
 		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(context)
 				.addStatement("super($N)", context)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec constructorTwo() {
+		// @formatter:off
 		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(context)
 				.addParameter(attrs)
 				.addStatement("super($N, $N)", context, attrs)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec constructorThree() {
+		// @formatter:off
 		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(context)
@@ -117,25 +123,29 @@ public class DetailViewWithoutPictureGenerator extends AbstractModelClass {
 				.addParameter(defStyleAttr)
 				.addStatement("super($N, $N, $N)", context, attrs, defStyleAttr)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetLayout() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLayout")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(int.class)
 				.addStatement("return $T.layout.$N", rClassName, "view_" + detailView.getResourceName().toLowerCase() + "_detail")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetStyleable() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getStyleable")
 				.addModifiers(Modifier.PROTECTED)
 				.addAnnotation(Override.class)
 				.returns(int[].class)
 				.addStatement("return $T.styleable.$N", rClassName, detailView.getResourceName() + "DetailView")
-
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitializeView() {
@@ -148,7 +158,6 @@ public class DetailViewWithoutPictureGenerator extends AbstractModelClass {
 			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
 				InitializeDetailViewVisitor visitor = new InitializeDetailViewVisitor(builder, attributeViewClassName, rClassName);
 				resourceViewAttribute.accept(visitor);
-
 			}
 		}
 
@@ -173,12 +182,14 @@ public class DetailViewWithoutPictureGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getConvertDate() {
-		return MethodSpec.methodBuilder("convertDate").addModifiers(Modifier.PRIVATE)
+		// @formatter:off
+		return MethodSpec.methodBuilder("convertDate")
+				.addModifiers(Modifier.PRIVATE)
 				.returns(String.class)
 				.addParameter(Date.class, "date")
 				.addStatement("return new $T($S, $T.GERMANY).format($N)",
-						SimpleDateFormat.class, "dd.MM.yyyy HH:mm", Locale.class, "date").build();
-
+						SimpleDateFormat.class, "dd.MM.yyyy HH:mm", Locale.class, "date")
+				.build();
+		// @formatter:off
 	}
-
 }

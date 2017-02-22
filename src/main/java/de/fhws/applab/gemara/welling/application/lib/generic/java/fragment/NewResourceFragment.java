@@ -21,6 +21,7 @@ public class NewResourceFragment extends ResourceInputFragment {
 
 	@Override
 	protected MethodSpec getSaveResource() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("saveResource")
 				.addModifiers(Modifier.PRIVATE)
 				.returns(void.class)
@@ -32,6 +33,7 @@ public class NewResourceFragment extends ResourceInputFragment {
 				.addStatement("$N.sendRequest($N())", "client", getGetCallback())
 				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 
 	@Override
@@ -47,9 +49,11 @@ public class NewResourceFragment extends ResourceInputFragment {
 	}
 
 	private MethodSpec getGetCallback() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getCallback")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(networkCallbackClassName)
 				.build();
+		// @formatter:on
 	}
 }

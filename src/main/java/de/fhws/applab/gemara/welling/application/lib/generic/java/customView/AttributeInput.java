@@ -57,18 +57,24 @@ public class AttributeInput extends de.fhws.applab.gemara.welling.application.li
 
 	@Override
 	public MethodSpec getInitMethod() {
+		// @formatter:off
 		return getInitMethodSignature()
-				.addStatement("$T inflater = ($T) $N.getSystemService($T.LAYOUT_INFLATER_SERVICE)", getLayoutInflaterClassName(),
-						getLayoutInflaterClassName(), getContextParam(), getContextClass())
+				.addStatement("$T inflater = ($T) $N.getSystemService($T.LAYOUT_INFLATER_SERVICE)",
+						getLayoutInflaterClassName(), getLayoutInflaterClassName(), getContextParam(), getContextClass())
 				.addStatement("this.addView(inflater.inflate($T.layout.textinput_attribute, this, false))", rClassName)
 				.addStatement("$T typedArray = $N.getTheme().obtainStyledAttributes(attributeSet, $T.styleable.AttributeInput, $N, 0)",
 						getTypedArrayClassName(), getContextParam(), rClassName, defStyleAttr)
 				.beginControlFlow("try")
 				.addStatement("this.$N = ($T) findViewById($T.id.attribute_et)", attribute, getEditTextClassName(), rClassName)
 				.addStatement("this.$N.setHint(typedArray.getResourceId($T.styleable.AttributeInput_hintText, 0))", attribute, rClassName)
-				.addStatement("this.$N.setInputType($N(typedArray.getString($T.styleable.AttributeInput_inputType)))", attribute,
-						getParseTextToInputType(), rClassName).endControlFlow().beginControlFlow("finally").addStatement("typedArray.recycle()").endControlFlow()
+				.addStatement("this.$N.setInputType($N(typedArray.getString($T.styleable.AttributeInput_inputType)))",
+						attribute, getParseTextToInputType(), rClassName)
+				.endControlFlow()
+				.beginControlFlow("finally")
+				.addStatement("typedArray.recycle()")
+				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 
 	@Override
@@ -82,24 +88,42 @@ public class AttributeInput extends de.fhws.applab.gemara.welling.application.li
 
 	private MethodSpec getParseTextToInputType() {
 		ClassName inputType = getInputTypeClassName();
-		return MethodSpec.methodBuilder("parseTextToInputType").addModifiers(Modifier.PRIVATE).returns(int.class)
-				.addParameter(String.class, "inputTypeString").addCode(
+
+		// @formatter:off
+		return MethodSpec.methodBuilder("parseTextToInputType")
+				.addModifiers(Modifier.PRIVATE)
+				.returns(int.class)
+				.addParameter(String.class, "inputTypeString")
+				.addCode(
 						"switch ($N) { \n" + "case \"text\":\n" + "return $T.TYPE_CLASS_TEXT;\n" + "case \"phone\":\n"
 								+ "return $T.TYPE_CLASS_PHONE;\n" + "case \"mail\":\n"
 								+ "return $T.TYPE_CLASS_TEXT | $T.TYPE_TEXT_VARIATION_EMAIL_ADDRESS;\n" + "default:\n"
-								+ "return $T.TYPE_CLASS_TEXT;\n" + "} \n", "inputTypeString", inputType, inputType, inputType, inputType,
-						inputType).build();
+								+ "return $T.TYPE_CLASS_TEXT;\n" + "} \n",
+						"inputTypeString", inputType, inputType, inputType, inputType, inputType)
+				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getSetText() {
 		ParameterSpec text = ParameterSpec.builder(String.class, "text").build();
-		return MethodSpec.methodBuilder("setText").addModifiers(Modifier.PUBLIC).returns(void.class).addParameter(text)
-				.addStatement("this.$N.setText($N)", attribute, text).build();
+
+		// @formatter:off
+		return MethodSpec.methodBuilder("setText")
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
+				.addParameter(text)
+				.addStatement("this.$N.setText($N)", attribute, text)
+				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetText() {
-		return MethodSpec.methodBuilder("getText").addModifiers(Modifier.PUBLIC).returns(String.class)
-				.addStatement("return this.$N.getText().toString().trim()", attribute).build();
+		// @formatter:off
+		return MethodSpec.methodBuilder("getText")
+				.addModifiers(Modifier.PUBLIC)
+				.returns(String.class)
+				.addStatement("return this.$N.getText().toString().trim()", attribute)
+				.build();
+		// @formatter:on
 	}
-
 }

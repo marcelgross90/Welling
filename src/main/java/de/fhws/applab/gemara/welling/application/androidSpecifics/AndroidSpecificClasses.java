@@ -62,7 +62,7 @@ public class AndroidSpecificClasses {
 	}
 
 	public static ClassName getOnScrollListenerClassName() {
-		return  ClassName.get("android.support.v7.widget.RecyclerView", "OnScrollListener");
+		return ClassName.get("android.support.v7.widget.RecyclerView", "OnScrollListener");
 	}
 
 	public static ClassName getRecyclerViewClassName() {
@@ -99,10 +99,6 @@ public class AndroidSpecificClasses {
 
 	public static ClassName getNonNullClassName() {
 		return ClassName.get("android.support.annotation", "NonNull");
-	}
-
-	public static ClassName getNullableClassName() {
-		return ClassName.get("android.support.annotation", "Nullable");
 	}
 
 	public static ClassName getDialogFragmentClassName() {
@@ -249,11 +245,6 @@ public class AndroidSpecificClasses {
 	public static FieldSpec getFragmentManagerField(Modifier... modifiers) {
 		return FieldSpec.builder(getFragmentManagerClassName(), "fragmentManager").addModifiers(modifiers).build();
 	}
-
-	public static FieldSpec getProgressBarField(Modifier... modifiers) {
-		return FieldSpec.builder(getProgressBarClassName(), "progressBar").addModifiers(modifiers).build();
-	}
-
 
 	//Parameter
 	public static ParameterSpec getSavedInstanceStateParam() {

@@ -2,13 +2,12 @@ package de.fhws.applab.gemara.welling.visitors;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute.AttributeType;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.DisplayViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.GroupResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttributeVisitor;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResourceViewAttribute;
 import de.fhws.applab.gemara.welling.generator.GetterSetterGenerator;
-
-import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute.AttributeType;
 
 import java.util.List;
 
@@ -37,10 +36,11 @@ public class HideViewsVisitor implements ResourceViewAttributeVisitor {
 		if (!containsSubResourceAttribute(groupResourceViewAttribute)) {
 			String ifCondition = "";
 			List<DisplayViewAttribute> displayViewAttributes = groupResourceViewAttribute.getDisplayViewAttributes();
+
 			for (int i = 0; i < displayViewAttributes.size(); i++) {
 				DisplayViewAttribute attribute = displayViewAttributes.get(i);
 				ifCondition += generateIfCondition(attribute.getAttributeType(), attribute.getAttributeName());
-				if (i < displayViewAttributes.size() -1) {
+				if (i < displayViewAttributes.size() - 1) {
 					ifCondition += " || ";
 				}
 			}
@@ -56,10 +56,12 @@ public class HideViewsVisitor implements ResourceViewAttributeVisitor {
 
 	private boolean containsSubResourceAttribute(GroupResourceViewAttribute groupResourceViewAttribute) {
 		if (groupResourceViewAttribute.getGroupResouceViewAttribute().getAttributeType() == AttributeType.SUBRESOURCE) {
+
 			return true;
 		}
 		for (DisplayViewAttribute displayViewAttribute : groupResourceViewAttribute.getDisplayViewAttributes()) {
 			if (displayViewAttribute.getAttributeType() == AttributeType.SUBRESOURCE) {
+
 				return true;
 			}
 		}
@@ -85,11 +87,14 @@ public class HideViewsVisitor implements ResourceViewAttributeVisitor {
 	private String generateIfCondition(AttributeType attributeType, String viewName) {
 		if (attributeType != AttributeType.PICTURE) {
 			if (attributeType == AttributeType.URL || attributeType == AttributeType.DATE) {
+
 				return specificResourceName + "." + GetterSetterGenerator.getGetter(viewName) + "() == null";
 			} else {
+
 				return specificResourceName + "." + GetterSetterGenerator.getGetter(viewName) + "().trim().isEmpty()";
 			}
 		}
+
 		return "";
 	}
 }

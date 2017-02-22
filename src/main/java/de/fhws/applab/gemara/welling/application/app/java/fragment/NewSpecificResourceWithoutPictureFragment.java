@@ -4,7 +4,6 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
@@ -13,9 +12,7 @@ import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
-
 import java.util.Date;
-import java.util.Map;
 
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getToastClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
@@ -44,20 +41,23 @@ public class NewSpecificResourceWithoutPictureFragment extends AbstractModelClas
 		this.appDescription = appDescription;
 
 		this.rClassName = ClassName.get(appDescription.getAppPackageName(), "R");
-		this.specificResourceInputView = ClassName.get(appDescription.getLibPackageName() + ".specific.customView", resourceName + "InputView");
+		this.specificResourceInputView = ClassName
+				.get(appDescription.getLibPackageName() + ".specific.customView", resourceName + "InputView");
 		this.networkCallBackClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkCallback");
 		this.networkResponseClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.network", "NetworkResponse");
 		this.newResourceFragmentClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.fragment", "NewResourceFragment");
 		this.dateTimeViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "DateTimeView");
-		this.onDateTimeSetListenerClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.fragment.DateTimePickerFragment", "OnDateTimeSetListener");
-		this.dateTimePickerFragmentClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.fragment", "DateTimePickerFragment");
+		this.onDateTimeSetListenerClassName = ClassName
+				.get(appDescription.getLibPackageName() + ".generic.fragment.DateTimePickerFragment", "OnDateTimeSetListener");
+		this.dateTimePickerFragmentClassName = ClassName
+				.get(appDescription.getLibPackageName() + ".generic.fragment", "DateTimePickerFragment");
 		this.thisClassName = ClassName.get(this.packageName, this.className);
 
 		addString();
 	}
 
 	private void addString() {
-		appDescription.setLibStrings(resourceName.toLowerCase() + "_saved",  resourceName + " saved!");
+		appDescription.setLibStrings(resourceName.toLowerCase() + "_saved", resourceName + " saved!");
 	}
 
 	@Override
@@ -73,7 +73,8 @@ public class NewSpecificResourceWithoutPictureFragment extends AbstractModelClas
 		for (InputViewAttribute inputViewAttribute : inputView.getInputViewAttributes()) {
 			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.DATE) {
 				containsDate = true;
-				type.addField(FieldSpec.builder(dateTimeViewClassName, inputViewAttribute.getAttributeName() + "View", Modifier.PRIVATE).build());
+				type.addField(
+						FieldSpec.builder(dateTimeViewClassName, inputViewAttribute.getAttributeName() + "View", Modifier.PRIVATE).build());
 			}
 		}
 
@@ -90,12 +91,14 @@ public class NewSpecificResourceWithoutPictureFragment extends AbstractModelClas
 	}
 
 	private MethodSpec getGetLayout() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLayout")
 				.addModifiers(Modifier.PROTECTED)
 				.addAnnotation(Override.class)
 				.returns(int.class)
 				.addStatement("return $T.layout.$N", rClassName, "fragment_new_" + resourceName.toLowerCase())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitializeView() {
@@ -104,8 +107,8 @@ public class NewSpecificResourceWithoutPictureFragment extends AbstractModelClas
 		builder.addModifiers(Modifier.PROTECTED);
 		builder.returns(void.class);
 		builder.addParameter(getViewClassName(), "view");
-		builder.addStatement("$N = ($T) $N.findViewById($T.id.$N)", "inputView", specificResourceInputView, "view", rClassName, resourceName.toLowerCase() + "_input");
-
+		builder.addStatement("$N = ($T) $N.findViewById($T.id.$N)", "inputView", specificResourceInputView, "view", rClassName,
+				resourceName.toLowerCase() + "_input");
 
 		inputView.getInputViewAttributes().stream()
 				.filter(inputViewAttribute -> inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.DATE)
@@ -119,25 +122,30 @@ public class NewSpecificResourceWithoutPictureFragment extends AbstractModelClas
 	}
 
 	private MethodSpec getGetCallback() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getCallback")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(networkCallBackClassName)
 				.addStatement("return $L", getCallback())
 				.build();
+		// @formatter:on
 	}
 
 	private TypeSpec getCallback() {
+		// @formatter:off
 		TypeSpec runnable = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
-				.addMethod(MethodSpec.methodBuilder("run").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(void.class)
-
+				.addMethod(
+						MethodSpec.methodBuilder("run")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.returns(void.class)
 								.addStatement("$T.makeText(getActivity(), $T.string.$N, $T.LENGTH_SHORT).show()", getToastClassName(),
 										rClassName, resourceName.toLowerCase() + "_saved", getToastClassName())
-
 								.addStatement("getFragmentManager().popBackStack()")
-								.build()
-				).build();
+								.build())
+				.build();
 
 		MethodSpec onSuccess = MethodSpec.methodBuilder("onSuccess")
 				.addAnnotation(Override.class)
@@ -149,12 +157,19 @@ public class NewSpecificResourceWithoutPictureFragment extends AbstractModelClas
 
 		return TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(networkCallBackClassName)
-				.addMethod(MethodSpec.methodBuilder("onFailure").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(void.class).build())
+				.addMethod(
+						MethodSpec.methodBuilder("onFailure")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.returns(void.class)
+								.build())
 				.addMethod(onSuccess)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnClick() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onClick")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC)
@@ -165,10 +180,11 @@ public class NewSpecificResourceWithoutPictureFragment extends AbstractModelClas
 				.addStatement("$N.setTargetFragment($T.this, 0)", "dateTimePickerFragment", thisClassName)
 				.addStatement("$N.show(getFragmentManager(), $S)", "dateTimePickerFragment", "dateTime")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnDateTimeSet() {
-		MethodSpec.Builder builder =  MethodSpec.methodBuilder("onDateTimeSet");
+		MethodSpec.Builder builder = MethodSpec.methodBuilder("onDateTimeSet");
 		builder.addAnnotation(Override.class);
 		builder.addModifiers(Modifier.PUBLIC);
 		builder.returns(void.class);

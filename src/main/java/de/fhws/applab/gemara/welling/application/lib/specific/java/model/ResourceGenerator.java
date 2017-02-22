@@ -34,7 +34,8 @@ public class ResourceGenerator extends AbstractModelClass {
 		this.resourceClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.model", "Resource");
 
 		this.attributes.addAll(transformAttributes(singleResource.getAllAttributes()));
-		this.appDescription.setLibStrings("load_" + replaceIllegalCharacters(resourceName.toLowerCase()) + "_error", "Could not load " + resourceName);
+		this.appDescription
+				.setLibStrings("load_" + replaceIllegalCharacters(resourceName.toLowerCase()) + "_error", "Could not load " + resourceName);
 	}
 
 	private String replaceIllegalCharacters(String input) {
@@ -66,10 +67,12 @@ public class ResourceGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getStandardConstructor() {
+		// @formatter:off
 		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addCode("//for Genson\n")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getConstructor() {
@@ -86,6 +89,7 @@ public class ResourceGenerator extends AbstractModelClass {
 	private MethodSpec getEquals() {
 		ParameterSpec o = ParameterSpec.builder(Object.class, "o").build();
 		String resourceName = this.resourceName.toLowerCase();
+
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("equals");
 		builder.addAnnotation(Override.class);
 		builder.addModifiers(Modifier.PUBLIC);
@@ -100,17 +104,21 @@ public class ResourceGenerator extends AbstractModelClass {
 
 		for (int i = 0; i < attributes.size(); i++) {
 			String attributeName = attributes.get(i).getName();
-			if (i == attributes.size()-1) {
+			if (i == attributes.size() - 1) {
 				if (attributes.get(i).dataType == Attribute.DataType.INT) {
 					builder.addStatement("return $N == $N.$N", attributeName, resourceName, attributeName);
-				} else if (attributes.get(i).dataType == Attribute.DataType.STRING || attributes.get(i).dataType == Attribute.DataType.DATE) {
-					builder.addStatement("return $N != null ? $N.equals($N.$N) : $N.$N == null", attributeName, attributeName, resourceName, attributeName, resourceName, attributeName);
+				} else if (attributes.get(i).dataType == Attribute.DataType.STRING
+						|| attributes.get(i).dataType == Attribute.DataType.DATE) {
+					builder.addStatement("return $N != null ? $N.equals($N.$N) : $N.$N == null", attributeName, attributeName, resourceName,
+							attributeName, resourceName, attributeName);
 				}
 			} else {
 				if (attributes.get(i).dataType == Attribute.DataType.INT) {
 					builder.addStatement("if ($N != $N.$N) return false", attributeName, resourceName, attributeName);
-				} else if (attributes.get(i).dataType == Attribute.DataType.STRING || attributes.get(i).dataType == Attribute.DataType.DATE) {
-					builder.addStatement("if ($N != null ? !$N.equals($N.$N) : $N.$N != null) return false", attributeName, attributeName, resourceName, attributeName, resourceName, attributeName);
+				} else if (attributes.get(i).dataType == Attribute.DataType.STRING
+						|| attributes.get(i).dataType == Attribute.DataType.DATE) {
+					builder.addStatement("if ($N != null ? !$N.equals($N.$N) : $N.$N != null) return false", attributeName, attributeName,
+							resourceName, attributeName, resourceName, attributeName);
 				}
 			}
 
@@ -123,8 +131,9 @@ public class ResourceGenerator extends AbstractModelClass {
 		builder.addAnnotation(Override.class);
 		builder.addModifiers(Modifier.PUBLIC);
 		builder.returns(int.class);
+
 		boolean firstAttempt = true;
-		for (Attribute attribute: attributes) {
+		for (Attribute attribute : attributes) {
 			String attributeName = attribute.getName();
 			if (firstAttempt) {
 				if (attribute.getDataType() == Attribute.DataType.STRING || attribute.getDataType() == Attribute.DataType.DATE) {
@@ -135,17 +144,20 @@ public class ResourceGenerator extends AbstractModelClass {
 				firstAttempt = false;
 			} else {
 				if (attribute.getDataType() == Attribute.DataType.STRING || attribute.getDataType() == Attribute.DataType.DATE) {
-					builder.addStatement("$N = 31 * $N + ($N != null ? $N.hashCode() : 0)", "result", "result", attributeName, attributeName);
+					builder.addStatement("$N = 31 * $N + ($N != null ? $N.hashCode() : 0)", "result", "result", attributeName,
+							attributeName);
 				} else if (attribute.getDataType() == Attribute.DataType.INT) {
 					builder.addStatement("$N = 31 * $N + $N", "result", "result", attributeName);
 				}
 			}
 		}
 		builder.addStatement("return $N", "result");
+
 		return builder.build();
 	}
 
-	private List<Attribute> transformAttributes(Collection<de.fhws.applab.gemara.enfield.metamodel.attributes.Attribute> enfieldAttributes) {
+	private List<Attribute> transformAttributes(
+			Collection<de.fhws.applab.gemara.enfield.metamodel.attributes.Attribute> enfieldAttributes) {
 		List<Attribute> attributes = new ArrayList<>();
 		AttributeVisitor visitor = new AttributeVisitor(appDescription.getLibPackageName());
 		for (de.fhws.applab.gemara.enfield.metamodel.attributes.Attribute enfieldAttribute : enfieldAttributes) {
@@ -153,6 +165,7 @@ public class ResourceGenerator extends AbstractModelClass {
 			attributes.add(visitor.getAttribute());
 		}
 		attributes.add(new LinkAttribute("self", appDescription.getLibPackageName(), Modifier.PRIVATE));
+
 		return attributes;
 	}
 }

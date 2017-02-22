@@ -6,15 +6,13 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.GroupResourc
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttributeVisitor;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.SingleResourceViewAttribute;
 
-
 public class ContainsDateVisitor implements ResourceViewAttributeVisitor {
 
 	private boolean containsDate;
 
 	@Override
 	public void visit(SingleResourceViewAttribute singleResourceViewAttribute) {
-		this.containsDate =
-				singleResourceViewAttribute.getDisplayViewAttribute().getAttributeType() == ViewAttribute.AttributeType.DATE;
+		this.containsDate = singleResourceViewAttribute.getDisplayViewAttribute().getAttributeType() == ViewAttribute.AttributeType.DATE;
 	}
 
 	@Override

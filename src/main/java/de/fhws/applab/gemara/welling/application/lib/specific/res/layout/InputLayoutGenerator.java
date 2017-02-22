@@ -1,9 +1,9 @@
 package de.fhws.applab.gemara.welling.application.lib.specific.res.layout;
 
 import de.fhws.applab.gemara.enfield.metamodel.wembley.ViewAttribute;
+import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputViewAttribute;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
-import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class InputLayoutGenerator extends AbstractLayoutGenerator {
 	private final String packageName;
 
 	public InputLayoutGenerator(AppDescription appDescription, InputView inputView) {
-		super("view_" + inputView.getResourceName().toLowerCase() + "_input" , appDescription.getLibResDirectory());
+		super("view_" + inputView.getResourceName().toLowerCase() + "_input", appDescription.getLibResDirectory());
 		this.inputView = inputView;
 		this.appDescription = appDescription;
 		this.packageName = appDescription.getLibPackageName() + ".generic.customView";
@@ -58,8 +58,8 @@ public class InputLayoutGenerator extends AbstractLayoutGenerator {
 		List<View> attributeInputViews = new ArrayList<>();
 
 		for (InputViewAttribute inputViewAttribute : inputView.getInputViewAttributes()) {
-			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE ||
-					inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE) {
+			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.SUBRESOURCE
+					|| inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE) {
 				continue;
 			}
 			if (inputViewAttribute.getAttributeType() == ViewAttribute.AttributeType.DATE) {
@@ -85,7 +85,8 @@ public class InputLayoutGenerator extends AbstractLayoutGenerator {
 				viewAttributes.add("android:id=\"@+id/" + inputViewAttribute.getAttributeName() + "\"");
 				viewAttributes.add("android:layout_width=\"match_parent\"");
 				viewAttributes.add("android:layout_height=\"wrap_content\"");
-				viewAttributes.add("custom:hintText=\"@string/" + replaceIllegalCharacters(inputViewAttribute.getAttributeName()) + "_hint" + "\"");
+				viewAttributes.add("custom:hintText=\"@string/" + replaceIllegalCharacters(inputViewAttribute.getAttributeName()) + "_hint"
+						+ "\"");
 				viewAttributes.add(getInputType(inputViewAttribute.getAttributeType()));
 
 				View inputView = new View(packageName + ".AttributeInput");
@@ -137,7 +138,6 @@ public class InputLayoutGenerator extends AbstractLayoutGenerator {
 
 	private void addString(String key, String value) {
 		appDescription.setLibStrings(replaceIllegalCharacters(key), value);
-
 	}
 
 	private String replaceIllegalCharacters(String input) {

@@ -19,6 +19,7 @@ public class Copy {
 	public void copyFile(String source, String destination) {
 		copy(getSource(source), getDestination(destination));
 	}
+
 	public void copyFolder(String source, String destination) {
 		copyFolder(getSource(source), getDestination(destination));
 	}
@@ -100,7 +101,6 @@ public class Copy {
 				System.out.println("Could not close Stream");
 				ex.printStackTrace();
 			}
-
 		}
 	}
 }

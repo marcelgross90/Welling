@@ -29,7 +29,6 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 		return getLinearLayout();
 	}
 
-
 	private View getLinearLayout() {
 		View linearLayout = getBaseLinearLayout();
 
@@ -44,7 +43,6 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 		return linearLayout;
 	}
 
-
 	private View getBaseLinearLayout() {
 		List<String> viewAttributes = getLayoutAttributes("match_parent", "wrap_content");
 		viewAttributes.add("android:orientation=\"vertical\"");
@@ -52,7 +50,6 @@ public class DetailCardLayoutGenerator extends AbstractLayoutGenerator {
 
 		View baseLinearLayout = new View("LinearLayout");
 		baseLinearLayout.setViewAttributes(viewAttributes);
-
 
 		return baseLinearLayout;
 	}

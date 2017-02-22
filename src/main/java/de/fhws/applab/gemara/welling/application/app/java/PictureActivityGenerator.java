@@ -11,12 +11,15 @@ import de.fhws.applab.gemara.welling.metaModelExtension.AppAndroidManifest;
 
 import javax.lang.model.element.Modifier;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getActionbarClassname;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBundleClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getIntentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getToolbarClassname;
 
 public class PictureActivityGenerator extends AbstractModelClass {
 
 	private final AppDescription appDescription;
-	private final String resourceName;
 
 	private final ClassName rClassName;
 	private final ClassName editFragmentClassName;
@@ -26,7 +29,6 @@ public class PictureActivityGenerator extends AbstractModelClass {
 		super(appDescription.getAppPackageName(), resourceName + "Activity");
 
 		this.appDescription = appDescription;
-		this.resourceName = resourceName;
 
 		this.rClassName = ClassName.get(appDescription.getAppPackageName(), "R");
 		this.editFragmentClassName = ClassName.get(appDescription.getAppPackageName() + ".fragment", "Edit" + resourceName + "Fragment");
@@ -49,6 +51,7 @@ public class PictureActivityGenerator extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.superclass(resourceActivityClassName)
 				.addModifiers(Modifier.PUBLIC)
@@ -56,11 +59,13 @@ public class PictureActivityGenerator extends AbstractModelClass {
 				.addMethod(getHandleIntentAndPrepareFragment())
 				.addMethod(getSetUpToolbar())
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
 	}
 
 	private MethodSpec getOnBackPressed() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onBackPressed")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC)
@@ -68,11 +73,13 @@ public class PictureActivityGenerator extends AbstractModelClass {
 				.addStatement("finish()")
 				.addStatement("overridePendingTransition($T.anim.$N, $T.anim.$N)", rClassName, "fade_out", rClassName, "fade_in")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getHandleIntentAndPrepareFragment() {
 		ParameterSpec intent = ParameterSpec.builder(getIntentClassName(), "intent").build();
 
+		// @formatter:off
 		return MethodSpec.methodBuilder("handleIntentAndPrepareFragment")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
@@ -85,14 +92,17 @@ public class PictureActivityGenerator extends AbstractModelClass {
 				.addStatement("$N.setArguments($N)", "fragment", "bundle")
 				.addStatement("return $N", "fragment")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getSetUpToolbar() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("setUpToolbar")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED)
 				.returns(void.class)
-				.addStatement("$T $N = ($T) findViewById($T.id.$N)", getToolbarClassname(), "toolbar", getToolbarClassname(), rClassName, "toolbar")
+				.addStatement("$T $N = ($T) findViewById($T.id.$N)",
+						getToolbarClassname(), "toolbar", getToolbarClassname(), rClassName, "toolbar")
 				.beginControlFlow("if ($N != null)", "toolbar")
 				.addStatement("setSupportActionBar($N)", "toolbar")
 				.endControlFlow()
@@ -102,10 +112,10 @@ public class PictureActivityGenerator extends AbstractModelClass {
 				.endControlFlow()
 				.addStatement("setTitle($T.string.$N)", rClassName, "edit")
 				.build();
+		// @formatter:on
 	}
 
-	private void addString(String key , String value) {
+	private void addString(String key, String value) {
 		appDescription.setLibStrings(key, value);
 	}
-
 }

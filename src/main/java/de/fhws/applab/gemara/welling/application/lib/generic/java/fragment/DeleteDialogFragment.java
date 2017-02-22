@@ -11,8 +11,12 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelCl
 
 import javax.lang.model.element.Modifier;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getAlertDialogBuilderClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBundleClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getDialogFragmentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getDialogInterfaceClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getDialogInterfaceOnClickListenerClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods.getOnCreateDialog;
 
 public class DeleteDialogFragment extends AbstractModelClass {
 
@@ -52,55 +56,60 @@ public class DeleteDialogFragment extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
-
+		// @formatter:off
 		TypeSpec networkCallback = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(networkCallBackClassName)
-				.addMethod(MethodSpec.methodBuilder("onFailure")
-						.addAnnotation(Override.class)
-						.addModifiers(Modifier.PUBLIC)
-						.addStatement("listener.onDialogClosed(false)")
-						.returns(void.class)
-						.build())
-				.addMethod(MethodSpec.methodBuilder("onSuccess")
-						.addAnnotation(Override.class)
-						.addModifiers(Modifier.PUBLIC)
-						.addParameter(networkResponseClassName, "response")
-						.addStatement("listener.onDialogClosed(true)")
-						.returns(void.class)
-						.build()).build();
+				.addMethod(
+						MethodSpec.methodBuilder("onFailure")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.addStatement("listener.onDialogClosed(false)")
+								.returns(void.class)
+								.build())
+				.addMethod(
+						MethodSpec.methodBuilder("onSuccess")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.addParameter(networkResponseClassName, "response")
+								.addStatement("listener.onDialogClosed(true)")
+								.returns(void.class)
+								.build())
+				.build();
 
 		MethodSpec delete = MethodSpec.methodBuilder("delete")
-				.addModifiers(Modifier.PRIVATE).returns(void.class)
+				.addModifiers(Modifier.PRIVATE)
+				.returns(void.class)
 				.addParameter(ParameterSpec.builder(deleteDialogListenerClassName, "listener", Modifier.FINAL).build())
-				.addStatement("$T client = new $T(getActivity(), new $T().url($N).delete())", networkClientClassName, networkClientClassName, networkRequestClassName, url)
+				.addStatement("$T client = new $T(getActivity(), new $T().url($N).delete())",
+						networkClientClassName, networkClientClassName, networkRequestClassName, url)
 				.addStatement("client.sendRequest($L)", networkCallback)
 				.build();
 
-
-
 		TypeSpec positiveClick = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(getDialogInterfaceOnClickListenerClassName())
-				.addMethod(MethodSpec.methodBuilder("onClick")
-						.addAnnotation(Override.class)
-						.addModifiers(Modifier.PUBLIC)
-						.addParameter(getDialogInterfaceClassName(), "dialogInterface")
-						.addParameter(int.class, "i")
-						.returns(void.class)
-						.addStatement("$N($N)", delete, deleteDialogListener)
-						.addStatement("dialogInterface.dismiss()")
-						.build())
+				.addMethod(
+						MethodSpec.methodBuilder("onClick")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.addParameter(getDialogInterfaceClassName(), "dialogInterface")
+								.addParameter(int.class, "i")
+								.returns(void.class)
+								.addStatement("$N($N)", delete, deleteDialogListener)
+								.addStatement("dialogInterface.dismiss()")
+								.build())
 				.build();
 
 		TypeSpec negativeClick = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(getDialogInterfaceOnClickListenerClassName())
-				.addMethod(MethodSpec.methodBuilder("onClick")
-						.addAnnotation(Override.class)
-						.addModifiers(Modifier.PUBLIC)
-						.addParameter(getDialogInterfaceClassName(), "dialogInterface")
-						.addParameter(int.class, "i")
-						.returns(void.class)
-						.addStatement("dialogInterface.dismiss()")
-						.build())
+				.addMethod(
+						MethodSpec.methodBuilder("onClick")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.addParameter(getDialogInterfaceClassName(), "dialogInterface")
+								.addParameter(int.class, "i")
+								.returns(void.class)
+								.addStatement("dialogInterface.dismiss()")
+								.build())
 				.build();
 
 
@@ -128,18 +137,23 @@ public class DeleteDialogFragment extends AbstractModelClass {
 				.addMethod(onCreateDialog)
 				.addMethod(delete)
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
 	}
 
 	private TypeSpec generateInterface() {
+		// @formatter:off
 		MethodSpec onDialogClosed = MethodSpec.methodBuilder("onDialogClosed")
-				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT).returns(void.class)
-				.addParameter(boolean.class, "successfullyDeleted").build();
+				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+				.returns(void.class)
+				.addParameter(boolean.class, "successfullyDeleted")
+				.build();
 
 		return TypeSpec.interfaceBuilder(deleteDialogListenerClassName)
 				.addModifiers(Modifier.PUBLIC)
 				.addMethod(onDialogClosed)
 				.build();
+		// @formatter:on
 	}
 }

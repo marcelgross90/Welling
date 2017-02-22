@@ -18,7 +18,6 @@ import de.fhws.applab.gemara.welling.visitors.InitializeDetailViewVisitor;
 import de.fhws.applab.gemara.welling.visitors.SetTextVisitor;
 
 import javax.lang.model.element.Modifier;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,14 +42,14 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 	private final ParameterSpec attrs = ParameterSpec.builder(getAttributeSetClassName(), "attrs").build();
 	private final ParameterSpec defStyleAttr = ParameterSpec.builder(int.class, "defStyleAttr").build();
 
-
 	public DetailCardViewGenerator(AppDescription appDescription, DetailView detailView) {
 		super(appDescription.getLibPackageName() + ".specific.customView", detailView.getResourceName() + "DetailCardView");
 		this.detailView = detailView;
 		this.appDescription = appDescription;
 
 		this.rClassName = ClassName.get(appDescription.getLibPackageName(), "R");
-		this.specificResourceClassName = ClassName.get(appDescription.getLibPackageName() + ".specific.model", detailView.getResourceName());
+		this.specificResourceClassName = ClassName
+				.get(appDescription.getLibPackageName() + ".specific.model", detailView.getResourceName());
 		this.attributeViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "AttributeView");
 		this.profileImageViewClassName = ClassName.get(appDescription.getLibPackageName() + ".generic.customView", "ProfileImageView");
 
@@ -58,11 +57,13 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 	}
 
 	private void addDeclareStyleables() {
-		appDescription.setDeclareStyleables(detailView.getResourceName() + "DetailCardView", new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailCardView"));
+		appDescription.setDeclareStyleables(detailView.getResourceName() + "DetailCardView",
+				new AppDeclareStyleable.DeclareStyleable(detailView.getResourceName() + "DetailCardView"));
 	}
 
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		TypeSpec typeSpec = TypeSpec.classBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC)
 				.superclass(getCardViewClassName())
@@ -74,6 +75,8 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 				.addMethod(getSetUpView())
 				.addMethod(getHideUnnecessaryViews())
 				.build();
+		// @formatter:on
+
 		return JavaFile.builder(this.packageName, typeSpec).build();
 	}
 
@@ -88,20 +91,23 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 				}
 			}
 		}
-		return fieldSpecs;
 
+		return fieldSpecs;
 	}
 
 	private MethodSpec constructorOne() {
+		// @formatter:off
 		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(context)
 				.addStatement("super($N)", context)
 				.addStatement("$N($N, $N, $N)", getInit(), context, "null", "0")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec constructorTwo() {
+		// @formatter:off
 		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(context)
@@ -109,9 +115,11 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 				.addStatement("super($N, $N)", context, attrs)
 				.addStatement("$N($N, $N, $N)", getInit(), context, attrs, "0")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec constructorThree() {
+		// @formatter:off
 		return MethodSpec.constructorBuilder()
 				.addModifiers(Modifier.PUBLIC)
 				.addParameter(context)
@@ -120,6 +128,7 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 				.addStatement("super($N, $N, $N)", context, attrs, defStyleAttr)
 				.addStatement("$N($N, $N, $N)", getInit(), context, attrs, defStyleAttr)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInit() {
@@ -134,9 +143,12 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 		builder.addParameter(attrs);
 		builder.addParameter(defStyleAttr);
 
-		builder.addStatement("$T $N = ($T) $N.getSystemService($T.LAYOUT_INFLATER_SERVICE)", getLayoutInflaterClassName(), "inflater", getLayoutInflaterClassName(), context, getContextClass());
-		builder.addStatement("this.addView($N.inflate($T.layout.$N, this, false))", "inflater", rClassName, "view_" + detailView.getResourceName().toLowerCase() + "_detail_card");
-		builder.addStatement("$T $N = $N.getTheme().obtainStyledAttributes($N, $T.styleable.$N, $N, 0)", getTypedArrayClassName(), "typedArray", context, attrs, rClassName, detailView.getResourceName() + "DetailCardView", defStyleAttr);
+		builder.addStatement("$T $N = ($T) $N.getSystemService($T.LAYOUT_INFLATER_SERVICE)", getLayoutInflaterClassName(), "inflater",
+				getLayoutInflaterClassName(), context, getContextClass());
+		builder.addStatement("this.addView($N.inflate($T.layout.$N, this, false))", "inflater", rClassName,
+				"view_" + detailView.getResourceName().toLowerCase() + "_detail_card");
+		builder.addStatement("$T $N = $N.getTheme().obtainStyledAttributes($N, $T.styleable.$N, $N, 0)", getTypedArrayClassName(),
+				"typedArray", context, attrs, rClassName, detailView.getResourceName() + "DetailCardView", defStyleAttr);
 		builder.beginControlFlow("try");
 
 		for (Category category : detailView.getCategories()) {
@@ -155,8 +167,8 @@ public class DetailCardViewGenerator extends AbstractModelClass {
 	}
 
 	private MethodSpec getSetUpView() {
-		ParameterSpec specificResource = ParameterSpec.builder(specificResourceClassName,
-				detailView.getResourceName().toLowerCase()).build();
+		ParameterSpec specificResource = ParameterSpec.builder(specificResourceClassName, detailView.getResourceName().toLowerCase())
+				.build();
 
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("setUpView");
 		builder.addModifiers(Modifier.PUBLIC);

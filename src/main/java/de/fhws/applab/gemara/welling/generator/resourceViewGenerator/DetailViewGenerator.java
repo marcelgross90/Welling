@@ -27,23 +27,14 @@ import java.util.List;
 
 public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 
-	private final String appPackageName;
-	private final String appResDirectory;
-	private final String appName;
-
 	public DetailViewGenerator(DetailView detailView, AppDescription appDescription, StateHolder stateHolder) {
 		super(detailView, appDescription, stateHolder);
-
-		this.appPackageName = appDescription.getAppPackageName();
-		this.appResDirectory = appDescription.getAppResDirectory();
-		this.appName = appDescription.getAppName();
-
 	}
-
 
 	@Override
 	protected List<AbstractModelClass> getLibJavaClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
+
 		if (containsImage()) {
 			classes.add(new ResourceDetailActivity(stateHolder, libPackageName));
 			classes.add(new DetailAdapterGenerator(libPackageName, resourceView));
@@ -68,6 +59,7 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 	protected List<GeneratedFile> getLibXMLClasses() {
 		String resourceName = resourceView.getResourceName();
 		List<GeneratedFile> classes = new ArrayList<>();
+
 		if (containsImage()) {
 			classes.add(new DetailViewLayoutGenerator(appDescription, resourceName, "activity_" + resourceName.toLowerCase() + "_detail"));
 			classes.add(new DetailCardLayoutGenerator(appDescription, "view_" + resourceName.toLowerCase() + "_detail_card", resourceView));
@@ -78,11 +70,9 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 			classes.add(new DetailCardLayoutGenerator(appDescription, "view_" + resourceName.toLowerCase() + "_detail", resourceView));
 			classes.add(new DetailViewLayoutGenerator(appDescription, resourceName, "fragment_" + resourceName.toLowerCase() + "_detail"));
 		}
-		if (stateHolder.contains(StateHolder.StateType.DELETE) ||
-				stateHolder.contains(StateHolder.StateType.PUT)) {
+		if (stateHolder.contains(StateHolder.StateType.DELETE) || stateHolder.contains(StateHolder.StateType.PUT)) {
 			classes.add(new DetailMenu(appDescription));
 		}
-
 
 		return classes;
 	}
@@ -90,6 +80,7 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 	@Override
 	protected List<AbstractModelClass> getAppJavaClasses() {
 		List<AbstractModelClass> classes = new ArrayList<>();
+
 		if (containsImage()) {
 			classes.add(new DetailActivityGenerator(appDescription, resourceView, stateHolder));
 		} else {
@@ -102,8 +93,10 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 	@Override
 	protected void addStrings() {
 		String resourceName = resourceView.getResourceName();
+
 		if (stateHolder.contains(StateHolder.StateType.DELETE)) {
-			appDescription.setLibStrings(replaceIllegalCharacters(resourceName.toLowerCase()) + "_delete_error", "Could not delete " + resourceName.toLowerCase());
+			appDescription.setLibStrings(replaceIllegalCharacters(resourceName.toLowerCase()) + "_delete_error",
+					"Could not delete " + resourceName.toLowerCase());
 		}
 	}
 
@@ -111,10 +104,7 @@ public class DetailViewGenerator extends ResourceViewGenerator<DetailView> {
 		return input.replace("-", "_").replace(" ", "_");
 	}
 
-
-
 	private boolean containsImage() {
 		return resourceView.getImage() != null;
 	}
-
 }

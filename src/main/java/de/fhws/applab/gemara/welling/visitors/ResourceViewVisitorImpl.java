@@ -5,8 +5,8 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.Car
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.navigationDrawerView.NavigationDrawerView;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.inputView.InputView;
-import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
+import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.resourceViewGenerator.CardViewGenerator;
 import de.fhws.applab.gemara.welling.generator.resourceViewGenerator.DetailViewGenerator;
 import de.fhws.applab.gemara.welling.generator.resourceViewGenerator.InputViewGenerator;
@@ -37,7 +37,6 @@ public class ResourceViewVisitorImpl implements ResourceViewVisitor {
 	public void visit(CardView cardView) {
 		CardViewGenerator cardViewGenerator = new CardViewGenerator(cardView, appDescription, stateHolder);
 		cardViewGenerator.generate();
-
 
 	}
 

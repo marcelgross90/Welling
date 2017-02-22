@@ -52,8 +52,8 @@ public class SetTextVisitor implements ResourceViewAttributeVisitor {
 		for (int i = 0; i < displayViewAttributes.size(); i++) {
 			if (i == 0) {
 				if (displayViewAttributes.get(i).getAttributeType() == AttributeType.DATE) {
-					literal += "convertDate(" + specificResourceName + "." + GetterSetterGenerator.getGetter(displayViewAttributes.get(i).getAttributeName())
-							+ "())";
+					literal += "convertDate(" + specificResourceName + "." + GetterSetterGenerator
+							.getGetter(displayViewAttributes.get(i).getAttributeName()) + "())";
 				} else {
 					literal += specificResourceName + "." + GetterSetterGenerator.getGetter(displayViewAttributes.get(i).getAttributeName())
 							+ "()";
@@ -69,8 +69,6 @@ public class SetTextVisitor implements ResourceViewAttributeVisitor {
 				}
 			}
 		}
-
 		builder.addStatement("$N.setText($L)", groupResourceViewAttribute.getGroupResouceViewAttribute().getAttributeName(), literal);
 	}
-
 }

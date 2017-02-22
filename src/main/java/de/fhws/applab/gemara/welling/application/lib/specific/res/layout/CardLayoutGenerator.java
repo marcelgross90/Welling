@@ -28,7 +28,6 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 		return getRelativeLayout();
 	}
 
-
 	private View getRelativeLayout() {
 		View relativeLayout = new View("RelativeLayout");
 		List<String> viewAttributes = getLayoutAttributes("match_parent", "match_parent");
@@ -38,11 +37,10 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 		relativeLayout.setViewAttributes(viewAttributes);
 		List<View> attributeViews = new ArrayList<>();
 
-
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
-			CardAttributeVisitor visitor = new CardAttributeVisitor(appDescription,packageName);
+			CardAttributeVisitor visitor = new CardAttributeVisitor(appDescription, packageName);
 			resourceViewAttribute.accept(visitor);
-			List<View> views =  visitor.getViews();
+			List<View> views = visitor.getViews();
 			if (views.size() == 2) {
 				views.forEach(relativeLayout::addSubView);
 			} else {
@@ -78,8 +76,4 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 
 		return linearLayout;
 	}
-
-
-
-
 }

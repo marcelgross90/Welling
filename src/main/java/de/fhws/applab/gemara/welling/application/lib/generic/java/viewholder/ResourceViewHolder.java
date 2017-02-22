@@ -9,7 +9,8 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelCl
 
 import javax.lang.model.element.Modifier;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewHolderClassName;
 
 public class ResourceViewHolder extends AbstractModelClass {
 
@@ -24,25 +25,38 @@ public class ResourceViewHolder extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
-
-		MethodSpec constructor = MethodSpec.constructorBuilder()
-				.addModifiers(Modifier.PUBLIC)
-				.addParameter(ParameterSpec.builder(viewClassName, "itemView").build())
-				.addStatement("super(itemView)")
-				.build();
-
-		MethodSpec assignData = MethodSpec.methodBuilder("assignData")
-				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT).returns(void.class)
-				.addParameter(ParameterSpec.builder(resourceClassName, "resource").addModifiers(Modifier.FINAL).build())
-				.build();
-
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
 				.superclass(viewHolderClassName)
-				.addMethod(constructor)
-				.addMethod(assignData)
+				.addMethod(getConstructor())
+				.addMethod(getAssignData())
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
+	}
+
+	private MethodSpec getAssignData() {
+		// @formatter:off
+		return MethodSpec.methodBuilder("assignData")
+					.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+					.returns(void.class)
+					.addParameter(
+							ParameterSpec.builder(resourceClassName, "resource")
+									.addModifiers(Modifier.FINAL)
+									.build())
+					.build();
+		// @formatter:on
+	}
+
+	private MethodSpec getConstructor() {
+		// @formatter:off
+		return MethodSpec.constructorBuilder()
+					.addModifiers(Modifier.PUBLIC)
+					.addParameter(viewClassName, "itemView")
+					.addStatement("super(itemView)")
+					.build();
+		// @formatter:on
 	}
 }

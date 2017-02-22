@@ -19,7 +19,8 @@ public class ManifestGenerator extends GeneratedFile {
 	@Override
 	public void generate() {
 		appendln("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		appendln("<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n package=\"" + appAndroidManifest.getPackageName() + "\">");
+		appendln("<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n package=\"" + appAndroidManifest.getPackageName()
+				+ "\">");
 		appendPermissions();
 		appendApplication();
 		appendln("</manifest>");
@@ -50,13 +51,7 @@ public class ManifestGenerator extends GeneratedFile {
 		List<AppAndroidManifest.Activity> activities = application.getActivities();
 		List<AppAndroidManifest.Activity> noDuplicates = new ArrayList<>();
 
-		for (AppAndroidManifest.Activity activity : activities) {
-			if (noDuplicates.contains(activity)) {
-				continue;
-			} else {
-				noDuplicates.add(activity);
-			}
-		}
+		activities.stream().filter(activity -> !noDuplicates.contains(activity)).forEach(noDuplicates::add);
 
 		for (AppAndroidManifest.Activity activity : noDuplicates) {
 			appendln("<activity android:name=\"" + activity.getName() + "\">");
@@ -86,8 +81,7 @@ public class ManifestGenerator extends GeneratedFile {
 
 	private void appendData(AppAndroidManifest.Data data) {
 		if (data != null) {
-			appendln("<data android:host=\"" + data.getHost()
-					+ "\" android:scheme=\"" + data.getScheme() + "\"/>");
+			appendln("<data android:host=\"" + data.getHost() + "\" android:scheme=\"" + data.getScheme() + "\"/>");
 		}
 	}
 

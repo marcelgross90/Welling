@@ -19,7 +19,6 @@ public class ActivityMain extends AbstractLayoutGenerator {
 		linearLayout.addSubView(generateFrameLayout());
 
 		return linearLayout;
-
 	}
 
 	private View generateToolbar() {
@@ -37,5 +36,4 @@ public class ActivityMain extends AbstractLayoutGenerator {
 
 		return frameLayout;
 	}
-
 }

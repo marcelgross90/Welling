@@ -7,5 +7,4 @@ public class AppProguardRules extends ProguardRules {
 	public AppProguardRules(String directoryName) {
 		super(directoryName);
 	}
-
 }

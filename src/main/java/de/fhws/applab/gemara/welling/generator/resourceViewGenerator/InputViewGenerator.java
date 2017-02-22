@@ -37,7 +37,8 @@ public class InputViewGenerator extends ResourceViewGenerator<InputView> {
 	private final String appResDirectory;
 	private final ResourceViewVisitorImpl.InputType inputType;
 
-	public InputViewGenerator(InputView inputView, AppDescription appDescription, StateHolder stateHolder, ResourceViewVisitorImpl.InputType inputType) {
+	public InputViewGenerator(InputView inputView, AppDescription appDescription, StateHolder stateHolder,
+			ResourceViewVisitorImpl.InputType inputType) {
 		super(inputView, appDescription, stateHolder);
 
 		this.appResDirectory = appDescription.getAppResDirectory();
@@ -49,7 +50,8 @@ public class InputViewGenerator extends ResourceViewGenerator<InputView> {
 		List<AbstractModelClass> classes = new ArrayList<>();
 
 		classes.add(new ResourceInputView(libPackageName));
-		classes.add(new de.fhws.applab.gemara.welling.application.lib.specific.java.customView.InputViewsGenerator(appDescription, resourceView));
+		classes.add(new de.fhws.applab.gemara.welling.application.lib.specific.java.customView.InputViewsGenerator(appDescription,
+				resourceView));
 		classes.add(new AttributeInput(appDescription));
 
 		if (inputType == ResourceViewVisitorImpl.InputType.POST) {
@@ -69,7 +71,6 @@ public class InputViewGenerator extends ResourceViewGenerator<InputView> {
 			}
 		}
 
-
 		return classes;
 	}
 
@@ -88,7 +89,6 @@ public class InputViewGenerator extends ResourceViewGenerator<InputView> {
 		if (inputType == ResourceViewVisitorImpl.InputType.PUT) {
 			classes.add(new EditResourceFragmentViewGenerator(appResDirectory, resourceView.getResourceName(), libPackageName));
 		}
-
 
 		return classes;
 	}
@@ -114,14 +114,12 @@ public class InputViewGenerator extends ResourceViewGenerator<InputView> {
 			classes.add(new EditSpecificResourceFragment(appDescription, resourceView));
 		}
 
-
-
 		return classes;
 	}
 
 	@Override
 	protected void addStrings() {
-
+		//no Strings to add here
 	}
 
 	private boolean containsImage() {

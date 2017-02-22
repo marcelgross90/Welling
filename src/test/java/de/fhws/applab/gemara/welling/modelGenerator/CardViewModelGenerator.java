@@ -24,12 +24,15 @@ public class CardViewModelGenerator {
 		DisplayViewAttribute nameAttribute = new DisplayViewAttribute("name", ViewAttribute.AttributeType.TEXT);
 		nameAttribute.setFontSize(DisplayViewAttribute.FontSize.LARGE);
 		List<DisplayViewAttribute> nameAttributes = new ArrayList<>();
+
 		DisplayViewAttribute firstNameAttributes = new DisplayViewAttribute("firstName", ViewAttribute.AttributeType.TEXT);
 		firstNameAttributes.setAttributeLabel("FirstName");
 		nameAttributes.add(firstNameAttributes);
+
 		DisplayViewAttribute lastNameAttributes = new DisplayViewAttribute("lastName", ViewAttribute.AttributeType.TEXT);
 		lastNameAttributes.setAttributeLabel("LastName");
 		nameAttributes.add(lastNameAttributes);
+
 		GroupResourceViewAttribute name;
 		try {
 			nameAttribute.setFontColor("#000");
@@ -98,9 +101,11 @@ public class CardViewModelGenerator {
 		DisplayViewAttribute dateAttribute = new DisplayViewAttribute("date", ViewAttribute.AttributeType.TEXT);
 
 		List<DisplayViewAttribute> dateAttributes = new ArrayList<>();
+
 		DisplayViewAttribute startDateAttributes = new DisplayViewAttribute("fromDate", ViewAttribute.AttributeType.DATE);
 		startDateAttributes.setAttributeLabel("Startdate");
 		dateAttributes.add(startDateAttributes);
+
 		DisplayViewAttribute endDateAttributes = new DisplayViewAttribute("toDate", ViewAttribute.AttributeType.DATE);
 		endDateAttributes.setAttributeLabel("Enddate");
 		dateAttributes.add(endDateAttributes);

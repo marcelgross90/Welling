@@ -5,11 +5,10 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
-
 import java.util.List;
 
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBundleClassName;
@@ -36,6 +35,11 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 	protected final FieldSpec url;
 	protected final FieldSpec mediaType;
 
+	protected abstract MethodSpec getOnCreate();
+	protected abstract MethodSpec getSaveResource();
+	protected abstract List<MethodSpec> getAdditionalMethods();
+	protected abstract List<FieldSpec> getAdditionalFields();
+
 	public ResourceInputFragment(String packageName, String className) {
 		super(packageName + ".generic.fragment", className);
 
@@ -47,8 +51,8 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 		ClassName resourceInputViewClassName = ClassName.get(packageName + ".generic.customView", "ResourceInputView");
 		ClassName gensonBuilderClassName = ClassName.get(packageName + ".generic.util", "GensonBuilder");
 
-		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL).initializer("new $T().getDateFormatter()",
-				gensonBuilderClassName).build();
+		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL)
+				.initializer("new $T().getDateFormatter()", gensonBuilderClassName).build();
 		this.inputView = FieldSpec.builder(resourceInputViewClassName, "inputView", Modifier.PROTECTED).build();
 		this.url = FieldSpec.builder(String.class, "url", Modifier.PRIVATE).build();
 		this.mediaType = FieldSpec.builder(String.class, "mediaType", Modifier.PRIVATE).build();
@@ -56,6 +60,7 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
 				.superclass(getFragmentClassName())
@@ -73,26 +78,32 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 				.addMethod(getSaveResource())
 				.addMethods(getAdditionalMethods())
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
 	}
 
 	private MethodSpec getGetLayout() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLayout")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(int.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitializeView() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("initializeView")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.addParameter(getViewClassName(), "view")
 				.returns(void.class)
 				.build();
+		// @formatter:on
 	}
 
 	protected MethodSpec.Builder getOnCreateBuilder() {
+		// @formatter:off
 		return LifecycleMethods.getOnCreateFragment()
 				.addStatement("setHasOptionsMenu(true)")
 				.beginControlFlow("if ($N == null)", getSavedInstanceStateParam())
@@ -100,10 +111,11 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 				.addStatement("$N = $N.getString($S, $S)", url, "bundle", "url", "")
 				.addStatement("$N = $N.getString($S, $S)", mediaType, "bundle", "mediaType", "")
 				.endControlFlow();
+		// @formatter:on
 	}
 
-
 	private MethodSpec getOnCreateView() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onCreateView")
 				.addAnnotation(Override.class)
 				.addParameter(getLayoutInflaterClassName(), "inflater")
@@ -115,9 +127,11 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 				.addStatement("$N($N)", getInitializeView(), "view")
 				.addStatement("return $N", "view")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnCreateOptionsMenu() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onCreateOptionsMenu")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC)
@@ -126,9 +140,11 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 				.addParameter(getMenuInflaterClassName(), "inflater")
 				.addStatement("$N.inflate($T.menu.$N, $N)", "inflater", rClassName, "save_menu", "menu")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnOptionsItemSelected() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onOptionsItemSelected")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC)
@@ -139,13 +155,6 @@ public abstract class ResourceInputFragment extends AbstractModelClass {
 				.endControlFlow()
 				.addStatement("return super.onOptionsItemSelected($N)", "item")
 				.build();
+		// @formatter:on
 	}
-
-	protected abstract MethodSpec getOnCreate();
-
-	protected abstract MethodSpec getSaveResource();
-
-	protected abstract List<MethodSpec> getAdditionalMethods();
-
-	protected abstract List<FieldSpec> getAdditionalFields();
 }

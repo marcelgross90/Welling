@@ -16,7 +16,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getActionbarClassname;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getAppCompatActivityClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getBundleClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentManagerField;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getOnBackStackChangedListenerClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getSavedInstanceStateParam;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getToastClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getToolbarClassname;
 
 public class AbstractMainActivity extends AbstractActivityClass {
 
@@ -50,7 +58,7 @@ public class AbstractMainActivity extends AbstractActivityClass {
 
 	@Override
 	protected Modifier[] getClassModifier() {
-		return new Modifier[]{Modifier.PUBLIC, Modifier.ABSTRACT};
+		return new Modifier[] { Modifier.PUBLIC, Modifier.ABSTRACT };
 	}
 
 	@Override
@@ -76,6 +84,7 @@ public class AbstractMainActivity extends AbstractActivityClass {
 
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.superclass(getAppCompatActivityClassName())
 				.addSuperinterfaces(getSuperInterfaces())
@@ -83,42 +92,61 @@ public class AbstractMainActivity extends AbstractActivityClass {
 				.addFields(getFields())
 				.addMethods(getMethods())
 				.build();
-		return JavaFile.builder(this.packageName, type).addStaticImport(fragmentHandlerClassName, "replaceFragment").build();
+
+		return JavaFile.builder(this.packageName, type)
+				.addStaticImport(fragmentHandlerClassName, "replaceFragment")
+				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetStartFragment() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getStartFragment")
-				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(getFragmentClassName())
+				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
+				.returns(getFragmentClassName())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetLoadErrorMessage() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getLoadErrorMessage")
-				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(int.class)
+				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
+				.returns(int.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnBackPressed() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onBackPressed")
 				.addAnnotation(Override.class)
-				.addModifiers(Modifier.PUBLIC).returns(void.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.beginControlFlow("if ($N.getBackStackEntryCount() > 1)", fragmentManager)
 				.addStatement("super.onBackPressed()")
-				.endControlFlow().beginControlFlow("else")
-				.addStatement("finish()").endControlFlow()
+				.endControlFlow()
+				.beginControlFlow("else")
+				.addStatement("finish()")
+				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnSupportNavigateUp() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onSupportNavigateUp")
 				.addAnnotation(Override.class)
-				.addModifiers(Modifier.PUBLIC).returns(boolean.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(boolean.class)
 				.addStatement("$N.popBackStack()", fragmentManager)
 				.addStatement("return false")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnCreate() {
+		// @formatter:off
 		return LifecycleMethods.getOnCreate()
 				.addStatement("setContentView($T.layout.activity_main)", rClassName)
 				.addStatement("$N = getSupportFragmentManager()", fragmentManager)
@@ -127,24 +155,35 @@ public class AbstractMainActivity extends AbstractActivityClass {
 				.addStatement("$N()", getInitialNetworkRequest())
 				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getInitialNetworkRequest() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("initialNetworkRequest")
-				.addModifiers(Modifier.PRIVATE).returns(void.class)
+				.addModifiers(Modifier.PRIVATE)
+				.returns(void.class)
 				.addStatement("$T $N = new $T(this, new $T().url(getResources().getString($T.string.entry_url)))",
 						networkClientClassName, "client", networkClientClassName, networkRequestClassName, rClassName)
 				.addStatement("$N.sendRequest($L)", "client", getNetworkCallback())
 				.build();
+		// @formatter:on
 	}
 
 	private TypeSpec getNetworkCallback() {
-		ParameterizedTypeName stringLinkMap = ParameterizedTypeName.get(ClassName.get(Map.class), ClassName.get(String.class), linkClassName);
+		ParameterizedTypeName stringLinkMap = ParameterizedTypeName
+				.get(ClassName.get(Map.class), ClassName.get(String.class), linkClassName);
 
+		// @formatter:off
 		return TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(networkCallBackClassName)
-				.addMethod(MethodSpec.methodBuilder("onFailure").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC)
-						.returns(void.class).addStatement("runOnUiThread($L)", getRunnable()).build())
+				.addMethod(
+						MethodSpec.methodBuilder("onFailure")
+								.addAnnotation(Override.class)
+								.addModifiers(Modifier.PUBLIC)
+								.returns(void.class)
+								.addStatement("runOnUiThread($L)", getRunnable())
+								.build())
 				.addMethod(
 						MethodSpec.methodBuilder("onSuccess")
 								.addAnnotation(Override.class)
@@ -162,45 +201,55 @@ public class AbstractMainActivity extends AbstractActivityClass {
 								.addStatement("replaceFragment($N, $N)", fragmentManager, "fragment")
 								.build()
 				).build();
+		// @formatter:on
 	}
 
 	private TypeSpec getRunnable() {
+		// @formatter:off
 		return TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
 				.addMethod(
 						MethodSpec.methodBuilder("run")
-								.addModifiers(Modifier.PUBLIC).returns(void.class)
+								.addModifiers(Modifier.PUBLIC)
+								.returns(void.class)
 								.addAnnotation(Override.class)
 								.addStatement("$T.makeText($T.this, $N(), $T.LENGTH_SHORT).show()",
 										getToastClassName(), thisClassName, getGetLoadErrorMessage(), getToastClassName())
 								.build())
 				.build();
-
+		// @formatter:on
 	}
 
 	private MethodSpec getInitToolbar() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("initToolbar")
 				.addModifiers(Modifier.PRIVATE).returns(void.class)
-				.addStatement("$T $N = ($T) findViewById($T.id.toolbar)", getToolbarClassname(), "toolbar", getToolbarClassname(), rClassName)
+				.addStatement("$T $N = ($T) findViewById($T.id.toolbar)",
+						getToolbarClassname(), "toolbar", getToolbarClassname(), rClassName)
 				.addStatement("setSupportActionBar($N)", "toolbar")
 				.addStatement("$N.addOnBackStackChangedListener($L)", fragmentManager, getOnBackStackChangedListener())
 				.addStatement("$N()", getCanBack())
 				.build();
+		// @formatter:on
 	}
 
 	private TypeSpec getOnBackStackChangedListener() {
+		// @formatter:off
 		return TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(getOnBackStackChangedListenerClassName())
-				.addMethod(MethodSpec.methodBuilder("onBackStackChanged")
-						.addModifiers(Modifier.PUBLIC).returns(void.class)
-						.addAnnotation(Override.class)
-						.addStatement("$N()", getCanBack())
-						.build())
+				.addMethod(
+						MethodSpec.methodBuilder("onBackStackChanged")
+							.addModifiers(Modifier.PUBLIC)
+							.returns(void.class)
+							.addAnnotation(Override.class)
+							.addStatement("$N()", getCanBack())
+							.build())
 				.build();
-
+		// @formatter:on
 	}
 
 	private MethodSpec getCanBack() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("canBack")
 				.addModifiers(Modifier.PRIVATE).returns(void.class)
 				.addStatement("$T $N = getSupportActionBar()", getActionbarClassname(), "actionBar")
@@ -208,5 +257,6 @@ public class AbstractMainActivity extends AbstractActivityClass {
 				.addStatement("$N.setDisplayHomeAsUpEnabled($N.getBackStackEntryCount() > 1)", "actionBar", fragmentManager)
 				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 }

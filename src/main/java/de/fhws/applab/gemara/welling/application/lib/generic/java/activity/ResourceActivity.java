@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.*;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getFragmentManagerField;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getIntentClassName;
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getSavedInstanceStateParam;
 
 public class ResourceActivity extends AbstractActivityClass {
 
@@ -33,7 +36,7 @@ public class ResourceActivity extends AbstractActivityClass {
 
 	@Override
 	protected Modifier[] getClassModifier() {
-		return new Modifier[]{Modifier.PUBLIC, Modifier.ABSTRACT};
+		return new Modifier[] { Modifier.PUBLIC, Modifier.ABSTRACT };
 	}
 
 	@Override
@@ -54,28 +57,38 @@ public class ResourceActivity extends AbstractActivityClass {
 	}
 
 	private MethodSpec getHandleIntentAndPrepareFragment() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("handleIntentAndPrepareFragment")
-				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(getFragmentClassName())
+				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
+				.returns(getFragmentClassName())
 				.addParameter(getIntentClassName(), "intent")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getSetUpToolbar() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("setUpToolbar")
-				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT).returns(void.class)
+				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
+				.returns(void.class)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnSupportNavigateUp() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onSupportNavigateUp")
-				.addModifiers(Modifier.PUBLIC).returns(boolean.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(boolean.class)
 				.addAnnotation(Override.class)
 				.addStatement("onBackPressed()")
 				.addStatement("return false")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnCreate() {
+		// @formatter:off
 		return LifecycleMethods.getOnCreate()
 				.addStatement("setContentView($T.layout.activity_main)", rClassName)
 				.addStatement("$N = getSupportFragmentManager()", fragmentManager)
@@ -86,5 +99,6 @@ public class ResourceActivity extends AbstractActivityClass {
 				.addStatement("$T.replaceFragment($N, $N)", fragmentHandlerClassName, fragmentManager, "fragment")
 				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 }

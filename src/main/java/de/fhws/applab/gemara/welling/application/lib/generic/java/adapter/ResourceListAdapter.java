@@ -48,59 +48,105 @@ public class ResourceListAdapter extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
-
-		MethodSpec constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
+		// @formatter:off
+		MethodSpec constructor = MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
 				.addParameter(ParameterSpec.builder(thisOnResourceClickListener, "onResourceClickListener").build())
 				.addStatement("this.$N = onResourceClickListener", onResourceClickListener).build();
 
-		MethodSpec addResource = MethodSpec.methodBuilder("addResource").addModifiers(Modifier.PUBLIC).returns(void.class)
+		MethodSpec addResource = MethodSpec.methodBuilder("addResource")
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
 				.addParameter(ParameterSpec.builder(resourceListType, "resources").build())
 				.beginControlFlow("for ($T resource : resources)", resourceClassName)
-				.beginControlFlow("if (!this.$N.contains(resource))", resourceList).addStatement("this.$N.add(resource)", resourceList)
-				.endControlFlow().endControlFlow().addStatement("notifyDataSetChanged()").build();
-
-		MethodSpec getLayout = MethodSpec.methodBuilder("getLayout").addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED).returns(int.class)
+				.beginControlFlow("if (!this.$N.contains(resource))", resourceList)
+				.addStatement("this.$N.add(resource)", resourceList)
+				.endControlFlow()
+				.endControlFlow()
+				.addStatement("notifyDataSetChanged()")
 				.build();
 
-		MethodSpec getViewHolder = MethodSpec.methodBuilder("getViewHolder").addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED)
-				.returns(TypeVariableName.get("T")).addParameter(ParameterSpec.builder(getViewClassName(), "moduleCard").build())
-				.addParameter(ParameterSpec.builder(thisOnResourceClickListener, "onResourceClickListener").build()).build();
+		MethodSpec getLayout = MethodSpec.methodBuilder("getLayout")
+				.addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED)
+				.returns(int.class)
+				.build();
 
-		MethodSpec onCreateViewHolder = MethodSpec.methodBuilder("onCreateViewHolder").addModifiers(Modifier.PUBLIC)
-				.returns(TypeVariableName.get("T")).addAnnotation(Override.class)
-				.addParameter(ParameterSpec.builder(getViewGroupClassName(), "parent").build())
-				.addParameter(ParameterSpec.builder(int.class, "viewType").build())
-				.addStatement("$T moduleCard = $T.from(parent.getContext()).inflate($N(), parent, false)", getViewClassName(),
-						getLayoutInflaterClassName(), getLayout)
-				.addStatement("return $N(moduleCard, $N)", getViewHolder, onResourceClickListener).build();
+		MethodSpec getViewHolder = MethodSpec.methodBuilder("getViewHolder")
+				.addModifiers(Modifier.ABSTRACT, Modifier.PROTECTED)
+				.returns(TypeVariableName.get("T"))
+				.addParameter(ParameterSpec.builder(getViewClassName(), "moduleCard").build())
+				.addParameter(ParameterSpec.builder(thisOnResourceClickListener, "onResourceClickListener").build())
+				.build();
 
-		MethodSpec onBindViewHolder = MethodSpec.methodBuilder("onBindViewHolder").addModifiers(Modifier.PUBLIC).returns(void.class)
-				.addAnnotation(Override.class).addParameter(TypeVariableName.get("T"), "holder").addParameter(int.class, "position")
-				.addStatement("holder.assignData($N.get(position))", resourceList).build();
+		MethodSpec onCreateViewHolder = MethodSpec.methodBuilder("onCreateViewHolder")
+				.addModifiers(Modifier.PUBLIC)
+				.returns(TypeVariableName.get("T"))
+				.addAnnotation(Override.class)
+				.addParameter(
+						ParameterSpec.builder(getViewGroupClassName(), "parent").build())
+				.addParameter(
+						ParameterSpec.builder(int.class, "viewType").build())
+				.addStatement("$T moduleCard = $T.from(parent.getContext()).inflate($N(), parent, false)",
+						getViewClassName(), getLayoutInflaterClassName(), getLayout)
+				.addStatement("return $N(moduleCard, $N)", getViewHolder, onResourceClickListener)
+				.build();
 
-		MethodSpec getItemCount = MethodSpec.methodBuilder("getItemCount").addModifiers(Modifier.PUBLIC).returns(int.class)
-				.addAnnotation(Override.class).addStatement("return $N.size()", resourceList).build();
+		MethodSpec onBindViewHolder = MethodSpec.methodBuilder("onBindViewHolder")
+				.addModifiers(Modifier.PUBLIC)
+				.returns(void.class)
+				.addAnnotation(Override.class)
+				.addParameter(TypeVariableName.get("T"), "holder")
+				.addParameter(int.class, "position")
+				.addStatement("holder.assignData($N.get(position))", resourceList)
+				.build();
 
-		TypeSpec type = TypeSpec.classBuilder(thisClass).superclass(ParameterizedTypeName.get(adapterClassName, TypeVariableName.get("T")))
-				.addTypeVariable(TypeVariableName.get("T", resourceViewHolderClassName)).addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-				.addField(this.onResourceClickListener).addField(this.resourceList).addType(generateInterface()).addMethod(getLayout)
-				.addMethod(getViewHolder).addMethod(constructor).addMethod(addResource).addMethod(onCreateViewHolder)
-				.addMethod(onBindViewHolder).addMethod(getItemCount).build();
+		MethodSpec getItemCount = MethodSpec.methodBuilder("getItemCount")
+				.addModifiers(Modifier.PUBLIC)
+				.returns(int.class)
+				.addAnnotation(Override.class)
+				.addStatement("return $N.size()", resourceList)
+				.build();
+
+		TypeSpec type = TypeSpec.classBuilder(thisClass)
+				.superclass(ParameterizedTypeName.get(adapterClassName, TypeVariableName.get("T")))
+				.addTypeVariable(TypeVariableName.get("T", resourceViewHolderClassName))
+				.addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
+				.addField(this.onResourceClickListener)
+				.addField(this.resourceList)
+				.addType(generateInterface())
+				.addMethod(getLayout)
+				.addMethod(getViewHolder)
+				.addMethod(constructor)
+				.addMethod(addResource)
+				.addMethod(onCreateViewHolder)
+				.addMethod(onBindViewHolder)
+				.addMethod(getItemCount)
+				.build();
+		// @formatter:on
 
 		return JavaFile.builder(thisClass.packageName(), type).build();
 	}
 
 	private TypeSpec generateInterface() {
+		// @formatter:off
 		MethodSpec onResourceClickWithView = MethodSpec.methodBuilder("onResourceClickWithView")
-				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT).returns(void.class)
+				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+				.returns(void.class)
 				.addParameter(ParameterSpec.builder(resourceClassName, "resource").build())
-				.addParameter(ParameterSpec.builder(getViewClassName(), "view").build()).build();
+				.addParameter(ParameterSpec.builder(getViewClassName(), "view").build())
+				.build();
 
-		MethodSpec onResourceClick = MethodSpec.methodBuilder("onResourceClick").addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
-				.returns(void.class).addParameter(ParameterSpec.builder(resourceClassName, "resource").build()).build();
+		MethodSpec onResourceClick = MethodSpec.methodBuilder("onResourceClick")
+				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+				.returns(void.class)
+				.addParameter(ParameterSpec.builder(resourceClassName, "resource").build())
+				.build();
 
-		return TypeSpec.interfaceBuilder(thisOnResourceClickListener).addModifiers(Modifier.PUBLIC).addMethod(onResourceClickWithView)
-				.addMethod(onResourceClick).build();
-
+		return TypeSpec.interfaceBuilder(thisOnResourceClickListener)
+				.addModifiers(Modifier.PUBLIC)
+				.addMethod(onResourceClickWithView)
+				.addMethod(onResourceClick)
+				.build();
+		// @formatter:on
 	}
 }

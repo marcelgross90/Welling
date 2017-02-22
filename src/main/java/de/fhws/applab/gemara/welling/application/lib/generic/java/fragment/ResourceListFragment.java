@@ -5,8 +5,8 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.application.androidSpecifics.LifecycleMethods;
+import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 
 import javax.lang.model.element.Modifier;
 
@@ -58,12 +58,13 @@ public class ResourceListFragment extends AbstractModelClass {
 		this.networkClientClassName = ClassName.get(packageName + ".generic.network", "NetworkClient");
 		this.networkRequestClassName = ClassName.get(packageName + ".generic.network", "NetworkRequest");
 		this.resourceListAdapterClassName = ClassName.get(packageName + ".generic.adapter", "ResourceListAdapter");
-		this.onResourceClickListenerClassName = ClassName.get(packageName + ".generic.adapter.ResourceListAdapter", "OnResourceClickListener");
+		this.onResourceClickListenerClassName = ClassName
+				.get(packageName + ".generic.adapter.ResourceListAdapter", "OnResourceClickListener");
 		ClassName gensonBuilderClassName = ClassName.get(packageName + ".generic.util", "GensonBuilder");
 		ClassName linkClassName = ClassName.get(packageName + ".generic.model", "Link");
 
-		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL).initializer("new $T().getDateFormatter()",
-				gensonBuilderClassName).build();
+		this.genson = FieldSpec.builder(getGensonClassName(), "genson", Modifier.PROTECTED, Modifier.FINAL)
+				.initializer("new $T().getDateFormatter()", gensonBuilderClassName).build();
 		this.progressBar = FieldSpec.builder(progressBarClassName, "progressBar", Modifier.PRIVATE).build();
 		this.url = FieldSpec.builder(String.class, "url", Modifier.PRIVATE).build();
 		this.mediaType = FieldSpec.builder(String.class, "mediaType", Modifier.PRIVATE).build();
@@ -73,6 +74,7 @@ public class ResourceListFragment extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
+		// @formatter:off
 		TypeSpec type = TypeSpec.classBuilder(this.className)
 				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
 				.superclass(getFragmentClassName())
@@ -95,30 +97,34 @@ public class ResourceListFragment extends AbstractModelClass {
 				.addMethod(getGetAdapter())
 				.addMethod(getGetFragment())
 				.build();
+		// @formatter:on
 
 		return JavaFile.builder(this.packageName, type).build();
 	}
 
 	private MethodSpec getOnCreate() {
+		// @formatter:off
 		return LifecycleMethods.getOnCreateFragment()
 				.addStatement("$T $N = getArguments()", getBundleClassName(), "bundle")
 				.addStatement("$N = $N.getString($S, $S)", url, "bundle", "url", "")
 				.addStatement("$N = $N.getString($S, $S)", mediaType, "bundle", "mediaType", "")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnCreateView() {
+		// @formatter:off
 		TypeSpec scrollListener = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(onScrollListenerClassName)
 				.addMethod(
 						MethodSpec.methodBuilder("load")
-						.addAnnotation(Override.class)
-						.addModifiers(Modifier.PUBLIC)
-						.returns(void.class)
-						.beginControlFlow("if ($N != null && !$N.isEmpty())", nextUrl, nextUrl)
-						.addStatement("$N($N)", getLoadResources(), nextUrl)
-						.endControlFlow()
-						.build()
+							.addAnnotation(Override.class)
+							.addModifiers(Modifier.PUBLIC)
+							.returns(void.class)
+							.beginControlFlow("if ($N != null && !$N.isEmpty())", nextUrl, nextUrl)
+							.addStatement("$N($N)", getLoadResources(), nextUrl)
+							.endControlFlow()
+							.build()
 				).build();
 
 		return MethodSpec.methodBuilder("onCreateView")
@@ -131,17 +137,23 @@ public class ResourceListFragment extends AbstractModelClass {
 				.addStatement("$T $N = $N.inflate($T.layout.$N, $N, false)", getViewClassName(), "view", "inflater", rClassName,
 						"fragment_resource_list", "container")
 				.addStatement("$N = ($T) $N.findViewById($T.id.$N)", progressBar, progressBarClassName, "view", rClassName, "progressBar")
-				.addStatement("$T $N = ($T) $N.findViewById($T.id.$N)", getRecyclerViewClassName(), "recyclerView", getRecyclerViewClassName(), "view", rClassName, "resource_recycler_view")
-				.addStatement("$T $N = new $T(getContext())", getLinearLayoutManagerClassName(), "linearLayoutManager", getLinearLayoutManagerClassName())
+				.addStatement("$T $N = ($T) $N.findViewById($T.id.$N)",
+						getRecyclerViewClassName(), "recyclerView", getRecyclerViewClassName(),
+						"view", rClassName, "resource_recycler_view")
+				.addStatement("$T $N = new $T(getContext())",
+						getLinearLayoutManagerClassName(), "linearLayoutManager", getLinearLayoutManagerClassName())
 				.addStatement("$N.setLayoutManager($N)", "recyclerView", "linearLayoutManager")
 				.addStatement("$N.setAdapter($N())", "recyclerView", getGetAdapter())
-				.addStatement("$N.addOnScrollListener(new $T($N, $L))", "recyclerView", scrollListenerClassName, "linearLayoutManager", scrollListener)
+				.addStatement("$N.addOnScrollListener(new $T($N, $L))",
+						"recyclerView", scrollListenerClassName, "linearLayoutManager", scrollListener)
 				.addStatement("$N($N)", getLoadResources(), url)
 				.addStatement("return $N", "view")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnResourceClickWithView() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onResourceClickWithView")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
@@ -149,18 +161,22 @@ public class ResourceListFragment extends AbstractModelClass {
 				.addParameter(resourceClassName, "resource")
 				.addParameter(getViewClassName(), "view")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnResourceClick() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onResourceClick")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
 				.returns(void.class)
 				.addParameter(resourceClassName, "resource")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnCreateOptionsMenu() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onCreateOptionsMenu")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC)
@@ -169,9 +185,11 @@ public class ResourceListFragment extends AbstractModelClass {
 				.addParameter(getMenuInflaterClassName(), "inflater")
 				.addStatement("$N.inflate($T.menu.$N, $N)", "inflater", rClassName, "list_menu", "menu")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getOnOptionsItemSelected() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("onOptionsItemSelected")
 				.addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC)
@@ -189,18 +207,21 @@ public class ResourceListFragment extends AbstractModelClass {
 				.endControlFlow()
 				.addStatement("return super.onOptionsItemSelected($N)", "item")
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getShowProgressBar() {
+		// @formatter:off
 		TypeSpec runnable = TypeSpec.anonymousClassBuilder("")
 				.addSuperinterface(Runnable.class)
 				.addMethod(
 						MethodSpec.methodBuilder("run")
-						.addModifiers(Modifier.PUBLIC)
-						.returns(void.class)
-						.addAnnotation(Override.class)
-						.addStatement("$N.setVisibility($N ? $T.VISIBLE : $T.INVISIBLE)", progressBar, "show", getViewClassName(), getViewClassName())
-						.build()
+							.addModifiers(Modifier.PUBLIC)
+							.returns(void.class)
+							.addAnnotation(Override.class)
+							.addStatement("$N.setVisibility($N ? $T.VISIBLE : $T.INVISIBLE)",
+									progressBar, "show", getViewClassName(), getViewClassName())
+							.build()
 				).build();
 
 		return MethodSpec.methodBuilder("showProgressBar")
@@ -211,9 +232,11 @@ public class ResourceListFragment extends AbstractModelClass {
 				.addStatement("getActivity().runOnUiThread($L)", runnable)
 				.endControlFlow()
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getLoadResources() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("loadResources")
 				.addModifiers(Modifier.PRIVATE)
 				.returns(void.class)
@@ -223,26 +246,33 @@ public class ResourceListFragment extends AbstractModelClass {
 						networkClientClassName, "client", networkClientClassName, networkRequestClassName, url, mediaType)
 				.addStatement("$N.sendRequest($N())", "client", getGetCallBack())
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetCallBack() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getCallBack")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(networkCallbackClassName)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetAdapter() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getAdapter")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(resourceListAdapterClassName)
 				.build();
+		// @formatter:on
 	}
 
 	private MethodSpec getGetFragment() {
+		// @formatter:off
 		return MethodSpec.methodBuilder("getFragment")
 				.addModifiers(Modifier.PROTECTED, Modifier.ABSTRACT)
 				.returns(getFragmentClassName())
 				.build();
+		// @formatter:on
 	}
 }

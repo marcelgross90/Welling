@@ -21,7 +21,8 @@ public class TitleVisitor implements ResourceViewAttributeVisitor {
 	public void visit(SingleResourceViewAttribute singleResourceViewAttribute) {
 		DisplayViewAttribute displayViewAttribute = singleResourceViewAttribute.getDisplayViewAttribute();
 
-		this.title = getInputWithSmallStart(resourceName) + "." + GetterSetterGenerator.getGetter(displayViewAttribute.getAttributeName()) + "()";
+		this.title = getInputWithSmallStart(resourceName) + "." + GetterSetterGenerator.getGetter(displayViewAttribute.getAttributeName())
+				+ "()";
 	}
 
 	@Override
@@ -31,12 +32,13 @@ public class TitleVisitor implements ResourceViewAttributeVisitor {
 		List<DisplayViewAttribute> attributes = groupResourceViewAttribute.getDisplayViewAttributes();
 
 		for (int i = 0; i < attributes.size(); i++) {
-			result += getInputWithSmallStart(resourceName) + "." + GetterSetterGenerator.getGetter(attributes.get(i).getAttributeName()) + "()";
-			if (i < attributes.size() -1) {
+			result += getInputWithSmallStart(resourceName) + "." + GetterSetterGenerator.getGetter(attributes.get(i).getAttributeName())
+					+ "()";
+			if (i < attributes.size() - 1) {
 				result += "+ \" \" + ";
 			}
 		}
-		 this.title = result;
+		this.title = result;
 	}
 
 	public String getTitle() {
