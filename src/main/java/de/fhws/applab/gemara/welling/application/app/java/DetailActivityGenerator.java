@@ -15,6 +15,7 @@ import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.metaModelExtension.AppAndroidManifest;
+import de.fhws.applab.gemara.welling.visitors.ClickActionDetailViewVisitor;
 import de.fhws.applab.gemara.welling.visitors.ContainsSubResourceVisitor;
 import de.fhws.applab.gemara.welling.visitors.TitleVisitor;
 
@@ -303,7 +304,7 @@ public class DetailActivityGenerator extends AbstractModelClass {
 		method.addStatement("$T $N = ($T) $N", specificResourceClassName, "current" + detailView.getResourceName(),
 				specificResourceClassName, "currentResource");
 
-		method.beginControlFlow("switch ($N.getId())", "view");
+		method.addStatement("$T $N = $N.getId()", int.class, "i", "view");
 
 		for (Category category : detailView.getCategories()) {
 			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
@@ -311,7 +312,8 @@ public class DetailActivityGenerator extends AbstractModelClass {
 				if (visitor.isContainsSubResource()) {
 					TitleVisitor titleVisitor = new TitleVisitor("current" + detailView.getResourceName());
 					detailView.getTitle().accept(titleVisitor);
-					method.addCode("case $T.id.$N:\n", rClassName, "tv" + getInputWithCapitalStart(visitor.getViewName()) + "Value");
+					method.beginControlFlow("if ($N == $T.id.$N)", "i", rClassName,
+							"tv" + getInputWithCapitalStart(visitor.getViewName()) + "Value");
 
 					method.addStatement("$T $N = new $T($T.this, $T.class)", getIntentClassName(), "intent3", getIntentClassName(),
 							thisClassName, getSubResourceActivityClassname(visitor.getViewName()));
@@ -323,13 +325,12 @@ public class DetailActivityGenerator extends AbstractModelClass {
 							"current" + detailView.getResourceName() + ".get" + getInputWithCapitalStart(visitor.getViewName())
 									+ "().getType()");
 					method.addStatement("startActivity($N)", "intent3");
-					method.addStatement("break");
+					method.endControlFlow();
 				}
+				resourceViewAttribute
+						.accept(new ClickActionDetailViewVisitor(method, "i", rClassName, "current" + detailView.getResourceName(), false));
 			}
 		}
-		method.addCode("default:\n");
-		method.addStatement("break");
-		method.endControlFlow();
 
 		return method.build();
 	}

@@ -10,6 +10,8 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.C
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.detailView.DetailView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.visitors.ContainsSubResourceVisitor;
+import de.fhws.applab.gemara.welling.visitors.InitializeClickableAttributesDetailViewVisitor;
+import de.fhws.applab.gemara.welling.visitors.SetOnClickListenerVisitor;
 
 import javax.lang.model.element.Modifier;
 
@@ -27,6 +29,7 @@ public class DetailViewHolderGenerator extends AbstractModelClass {
 	private final ClassName rClassName;
 	private final ClassName specificResourceClassName;
 	private final ClassName buttonClassName;
+	private final ClassName attributeViewClassName;
 
 	private final FieldSpec resourceDetailCardView;
 
@@ -39,6 +42,7 @@ public class DetailViewHolderGenerator extends AbstractModelClass {
 		this.rClassName = ClassName.get(packageName, "R");
 		this.specificResourceClassName = ClassName.get(packageName + ".specific.model", resourceName);
 		this.buttonClassName = getButtonClassName();
+		this.attributeViewClassName = ClassName.get(packageName + ".generic.customView", "AttributeView");
 
 		this.resourceDetailCardView = FieldSpec.builder(resourceDetailCardViewClassName, "cardView", Modifier.PRIVATE, Modifier.FINAL)
 				.build();
@@ -46,23 +50,19 @@ public class DetailViewHolderGenerator extends AbstractModelClass {
 
 	@Override
 	public JavaFile javaFile() {
-		// @formatter:off
-		TypeSpec type = TypeSpec.classBuilder(this.className)
-				.addModifiers(Modifier.PUBLIC)
-				.superclass(getViewHolderClassName())
-				.addField(resourceDetailCardView)
-				.addMethod(constructor())
-				.addMethod(getAssignData())
-				.build();
-		// @formatter:on
+		TypeSpec.Builder type = TypeSpec.classBuilder(this.className);
+		type.addModifiers(Modifier.PUBLIC);
+		type.superclass(getViewHolderClassName());
+		type.addField(resourceDetailCardView);
+		type.addMethod(constructor());
+		type.addMethod(getAssignData());
 
-		return JavaFile.builder(this.packageName, type).build();
+		return JavaFile.builder(this.packageName, type.build()).build();
 	}
 
 	private MethodSpec constructor() {
 		ContainsSubResourceVisitor visitor = new ContainsSubResourceVisitor();
 
-		//todo add onclicklistener for items
 		MethodSpec.Builder method = MethodSpec.constructorBuilder();
 		method.addModifiers(Modifier.PUBLIC);
 		method.addParameter(getViewClassName(), "itemView");
@@ -81,8 +81,27 @@ public class DetailViewHolderGenerator extends AbstractModelClass {
 				}
 			}
 		}
+		addInitializeClickableAttributes(method, "itemView");
+		addOnClickListener(method);
 
 		return method.build();
+	}
+
+	private void addInitializeClickableAttributes(MethodSpec.Builder method, String viewName) {
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				resourceViewAttribute
+						.accept(new InitializeClickableAttributesDetailViewVisitor(method, viewName, attributeViewClassName, rClassName));
+			}
+		}
+	}
+
+	private void addOnClickListener(MethodSpec.Builder method) {
+		for (Category category : detailView.getCategories()) {
+			for (ResourceViewAttribute resourceViewAttribute : category.getResourceViewAttributes()) {
+				resourceViewAttribute.accept(new SetOnClickListenerVisitor(method, "listener"));
+			}
+		}
 	}
 
 	private MethodSpec getAssignData() {

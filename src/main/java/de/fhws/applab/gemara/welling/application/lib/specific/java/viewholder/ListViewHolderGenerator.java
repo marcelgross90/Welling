@@ -9,10 +9,15 @@ import com.squareup.javapoet.TypeSpec;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
+import de.fhws.applab.gemara.welling.visitors.ClickActionCardViewVisitor;
+import de.fhws.applab.gemara.welling.visitors.ClickableFieldVisitor;
 import de.fhws.applab.gemara.welling.visitors.ContainsImageVisitor;
+import de.fhws.applab.gemara.welling.visitors.InitializeClickableAttributesCardViewVisitor;
+import de.fhws.applab.gemara.welling.visitors.SetOnClickListenerVisitor;
 
 import javax.lang.model.element.Modifier;
 
+import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getContextClass;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewClassName;
 import static de.fhws.applab.gemara.welling.application.androidSpecifics.AndroidSpecificClasses.getViewOnClickListenerClassName;
 
@@ -28,6 +33,7 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 	private final ClassName profileImgClassName;
 	private final ClassName resourceClassName;
 	private final ClassName resourceTypeClassName;
+	private final ClassName attributeViewClassName;
 
 	private final FieldSpec cardViewField;
 	private final FieldSpec onResourceClickListener;
@@ -46,20 +52,24 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		this.profileImgClassName = ClassName.get(packageName + ".generic.customView", "ProfileImageView");
 		this.resourceClassName = ClassName.get(packageName + ".generic.model", "Resource");
 		this.resourceTypeClassName = ClassName.get(packageName + ".specific.model", resourceName);
+		this.attributeViewClassName = ClassName.get(packageName + ".generic.customView", "AttributeView");
+
 		this.cardViewField = FieldSpec.builder(resourceCardView, "cardViewField", Modifier.PRIVATE, Modifier.FINAL).build();
 		this.onResourceClickListener = FieldSpec
 				.builder(onResourceClickListenerClassName, "onResourceClickListener", Modifier.PRIVATE, Modifier.FINAL).build();
-
 		this.profileImg = FieldSpec.builder(profileImgClassName, "profileImg", Modifier.PRIVATE, Modifier.FINAL).build();
 	}
 
 	@Override
 	public JavaFile javaFile() {
 		TypeSpec.Builder type = TypeSpec.classBuilder(this.className);
+		type.addSuperinterface(getViewOnClickListenerClassName());
 		type.addModifiers(Modifier.PUBLIC);
 		type.superclass(resourceViewHolderClassName);
+		type.addField(resourceTypeClassName, resourceName.toLowerCase(), Modifier.PRIVATE);
 		type.addField(cardViewField);
 		type.addField(onResourceClickListener);
+		type.addField(getContextClass(), "context", Modifier.PRIVATE, Modifier.FINAL);
 
 		ContainsImageVisitor visitor = new ContainsImageVisitor();
 		boolean containsImage = false;
@@ -75,8 +85,17 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		}
 		type.addMethod(getConstructor());
 		type.addMethod(getAssignData());
+		type.addMethod(getOnClick());
+
+		addFieldsClickableAttributes(type);
 
 		return JavaFile.builder(this.packageName, type.build()).build();
+	}
+
+	private void addFieldsClickableAttributes(TypeSpec.Builder type) {
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(new ClickableFieldVisitor(type, attributeViewClassName));
+		}
 	}
 
 	private MethodSpec getConstructor() {
@@ -89,6 +108,7 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		constructor.addParameter(clickListenerParam);
 		constructor.addStatement("super($N)", itemViewParam);
 		constructor.addStatement("this.$N = $N", onResourceClickListener, clickListenerParam);
+		constructor.addStatement("this.$N = $N.getContext()", "context", itemViewParam);
 		constructor.addStatement("$N = ($T) $N.findViewById($T.id.$N)", cardViewField, resourceCardView, itemViewParam, rClassName,
 				this.resourceName.toLowerCase() + "_card");
 
@@ -101,26 +121,42 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 			}
 		}
 
+		addInitializeClickableAttributes(constructor, "itemView");
+
 		return constructor.build();
+	}
+
+	private void addInitializeClickableAttributes(MethodSpec.Builder method, String viewName) {
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(new InitializeClickableAttributesCardViewVisitor(method, viewName, attributeViewClassName, rClassName));
+		}
 	}
 
 	private MethodSpec getAssignData() {
 		ParameterSpec resource = ParameterSpec.builder(resourceClassName, "resource", Modifier.FINAL).build();
 
-		// @formatter:off
-		return MethodSpec.methodBuilder("assignData")
-				.addModifiers(Modifier.PUBLIC)
-				.returns(void.class)
-				.addAnnotation(Override.class)
-				.addParameter(resource)
-				.addStatement("final $T $N = ($T) $N", resourceTypeClassName, resourceName.toLowerCase(), resourceTypeClassName, resource)
-				.addStatement("$N.setOnClickListener($L)", cardViewField, getOnClick())
-				.addStatement("$N.setUpView($N)", cardViewField, resourceName.toLowerCase())
-				.build();
-		// @formatter:on
+		MethodSpec.Builder method = MethodSpec.methodBuilder("assignData");
+		method.addModifiers(Modifier.PUBLIC);
+		method.returns(void.class);
+		method.addAnnotation(Override.class);
+		method.addParameter(resource);
+		method.addStatement("final $T $N = ($T) $N", resourceTypeClassName, resourceName.toLowerCase(), resourceTypeClassName, resource);
+		method.addStatement("$N.setOnClickListener($L)", cardViewField, getInnerOnClick());
+		method.addStatement("$N.setUpView($N)", cardViewField, resourceName.toLowerCase());
+		method.addStatement("this.$N = $N", resourceName.toLowerCase(), resourceName.toLowerCase());
+
+		addOnClickListener(method);
+
+		return method.build();
 	}
 
-	private TypeSpec getOnClick() {
+	private void addOnClickListener(MethodSpec.Builder method) {
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute.accept(new SetOnClickListenerVisitor(method, "this"));
+		}
+	}
+
+	private TypeSpec getInnerOnClick() {
 		MethodSpec.Builder onClick = MethodSpec.methodBuilder("onClick");
 		onClick.addModifiers(Modifier.PUBLIC).returns(void.class);
 		onClick.addAnnotation(Override.class);
@@ -150,5 +186,21 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 				.addMethod(onClick.build())
 				.build();
 		// @formatter:on
+	}
+
+	private MethodSpec getOnClick() {
+		MethodSpec.Builder method = MethodSpec.methodBuilder("onClick");
+		method.addAnnotation(Override.class);
+		method.returns(void.class);
+		method.addModifiers(Modifier.PUBLIC);
+		method.addParameter(getViewClassName(), "view");
+		method.addStatement("$T $N = $N.getId()", int.class, "i", "view");
+
+		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
+			resourceViewAttribute
+					.accept(new ClickActionCardViewVisitor(method, "i", rClassName, cardView.getResourceName().toLowerCase(), true));
+		}
+
+		return method.build();
 	}
 }

@@ -241,6 +241,10 @@ public class AndroidSpecificClasses {
 		return ClassName.get("android.app", "ActivityOptions");
 	}
 
+	public static ClassName getUriClassName() {
+		return ClassName.get("android.net", "Uri");
+	}
+
 	//Fields
 	public static FieldSpec getFragmentManagerField(Modifier... modifiers) {
 		return FieldSpec.builder(getFragmentManagerClassName(), "fragmentManager").addModifiers(modifiers).build();

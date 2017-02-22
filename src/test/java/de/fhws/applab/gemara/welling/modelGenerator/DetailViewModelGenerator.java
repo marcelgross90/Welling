@@ -142,7 +142,7 @@ public class DetailViewModelGenerator {
 
 		DisplayViewAttribute charge = new DisplayViewAttribute("chargeUrl", ViewAttribute.AttributeType.SUBRESOURCE);
 		charge.setAttributeLabel("Charge");
-		charge.setClickActionAndroid(true);
+		charge.setClickActionAndroid(false);
 		SingleResourceViewAttribute chargeResourceViewAttribute = new SingleResourceViewAttribute(charge);
 		chargeAttributes.add(chargeResourceViewAttribute);
 
