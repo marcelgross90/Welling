@@ -1,4 +1,4 @@
-package de.fhws.applab.gemara.welling.generator.conastantsGenerator;
+package de.fhws.applab.gemara.welling.generator.constantsGenerator;
 
 import de.fhws.applab.gemara.welling.metaModelExtension.AppStyle;
 

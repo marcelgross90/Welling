@@ -11,7 +11,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.Car
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.generator.StateHolder;
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
-import de.fhws.applab.gemara.welling.visitors.ContainsImageVisitor;
+import de.fhws.applab.gemara.welling.visitors.ImageAnalyserVisitor;
 import de.fhws.applab.gemara.welling.visitors.TitleVisitor;
 
 import javax.lang.model.element.Modifier;
@@ -72,7 +72,7 @@ public class ListFragmentGenerator extends AbstractModelClass {
 		this.cardView = cardView;
 		String packageName = appDescription.getAppPackageName();
 
-		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		ImageAnalyserVisitor visitor = new ImageAnalyserVisitor();
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
 			resourceViewAttribute.accept(visitor);
 			containsImage = visitor.isContainsImage();

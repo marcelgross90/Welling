@@ -75,7 +75,7 @@ public class CardViewModelGenerator {
 
 		DisplayViewAttribute imageAttribute = new DisplayViewAttribute("profileImageUrl", ViewAttribute.AttributeType.PICTURE);
 		imageAttribute.setAttributeLabel("ProfileImage");
-		imageAttribute.setPicturePosition(DisplayViewAttribute.PicturePosition.LEFT);
+		imageAttribute.setPicturePosition(DisplayViewAttribute.PicturePosition.RIGHT);
 		SingleResourceViewAttribute image = new SingleResourceViewAttribute(imageAttribute);
 		resourceViewAttributes.add(image);
 

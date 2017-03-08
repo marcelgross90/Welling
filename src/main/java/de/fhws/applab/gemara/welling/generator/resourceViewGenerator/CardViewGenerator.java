@@ -25,7 +25,7 @@ import de.fhws.applab.gemara.welling.generator.abstractGenerator.GeneratedFile;
 import de.fhws.applab.gemara.welling.metaModelExtension.AppDeclareStyleable;
 import de.fhws.applab.gemara.welling.metaModelExtension.AppResource;
 import de.fhws.applab.gemara.welling.metaModelExtension.Resource;
-import de.fhws.applab.gemara.welling.visitors.ContainsImageVisitor;
+import de.fhws.applab.gemara.welling.visitors.ImageAnalyserVisitor;
 import de.fhws.applab.gemara.welling.visitors.LinkDescriptionVisitor;
 
 import java.util.ArrayList;
@@ -145,12 +145,12 @@ public class CardViewGenerator extends ResourceViewGenerator<CardView> {
 			classes.add(new ListFragmentGenerator(stateHolder, appDescription, resourceView));
 		}
 
-		ContainsImageVisitor containsImageVisitor = new ContainsImageVisitor();
+		ImageAnalyserVisitor imageAnalyserVisitor = new ImageAnalyserVisitor();
 
 		boolean containsImage = false;
 		for (ResourceViewAttribute resourceViewAttribute : resourceView.getResourceViewAttributes()) {
-			resourceViewAttribute.accept(containsImageVisitor);
-			if (containsImageVisitor.isContainsImage()) {
+			resourceViewAttribute.accept(imageAnalyserVisitor);
+			if (imageAnalyserVisitor.isContainsImage()) {
 				containsImage = true;
 				break;
 			}

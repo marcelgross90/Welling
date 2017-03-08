@@ -1,11 +1,12 @@
 package de.fhws.applab.gemara.welling.application.lib.specific.res.layout;
 
+import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.DisplayViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.ResourceViewAttribute;
 import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.CardView;
 import de.fhws.applab.gemara.welling.application.lib.generic.res.layout.AbstractLayoutGenerator;
 import de.fhws.applab.gemara.welling.generator.AppDescription;
 import de.fhws.applab.gemara.welling.visitors.CardAttributeVisitor;
-import de.fhws.applab.gemara.welling.visitors.ContainsImageVisitor;
+import de.fhws.applab.gemara.welling.visitors.ImageAnalyserVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 
 		List<String> viewAttributes = getLayoutAttributes("wrap_content", "wrap_content");
 		viewAttributes.add("android:layout_alignParentTop=\"true\"");
-		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		ImageAnalyserVisitor visitor = new ImageAnalyserVisitor();
 		boolean containsImage = false;
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
 			resourceViewAttribute.accept(visitor);
@@ -65,8 +66,17 @@ public class CardLayoutGenerator extends AbstractLayoutGenerator {
 		}
 
 		if (containsImage) {
-			viewAttributes.add("android:layout_toRightOf=\"@+id/border\"");
-			viewAttributes.add("android:layout_toEndOf=\"@+id/border\"");
+			if (visitor.getPicturePosition() == DisplayViewAttribute.PicturePosition.RIGHT) {
+				viewAttributes.add("android:layout_alignParentStart=\"true\"");
+				viewAttributes.add("android:layout_alignParentLeft=\"true\"");
+				viewAttributes.add("android:layout_toLeftOf=\"@+id/border\"");
+				viewAttributes.add("android:layout_toStartOf=\"@+id/border\"");
+				viewAttributes.add("android:layout_marginStart=\"@dimen/spacing_small\"");
+				viewAttributes.add("android:layout_marginLeft=\"@dimen/spacing_small\"");
+			} else {
+				viewAttributes.add("android:layout_toRightOf=\"@+id/border\"");
+				viewAttributes.add("android:layout_toEndOf=\"@+id/border\"");
+			}
 		}
 
 		viewAttributes.add("android:orientation=\"vertical\"");

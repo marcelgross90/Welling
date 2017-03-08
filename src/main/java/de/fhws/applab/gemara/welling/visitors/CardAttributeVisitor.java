@@ -31,7 +31,7 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 	public void visit(SingleResourceViewAttribute singleResourceViewAttribute) {
 		DisplayViewAttribute displayViewAttribute = singleResourceViewAttribute.getDisplayViewAttribute();
 		if (displayViewAttribute.getAttributeType() == ViewAttribute.AttributeType.PICTURE) {
-			getImageView(displayViewAttribute.getAttributeLabel(), packageName);
+			getImageView(displayViewAttribute.getAttributeLabel(), packageName, displayViewAttribute.getPicturePosition());
 		} else {
 			_visitForCardSubView(displayViewAttribute);
 		}
@@ -53,7 +53,7 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		addViews(views);
 	}
 
-	private void getImageView(String imageLabel, String packageName) {
+	private void getImageView(String imageLabel, String packageName, DisplayViewAttribute.PicturePosition picturePosition) {
 		addString(imageLabel.toLowerCase(), imageLabel);
 
 		AbstractLayoutGenerator.View imageView = new AbstractLayoutGenerator.View(packageName + ".generic.customView.ProfileImageView");
@@ -64,16 +64,23 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		viewAttributes.add("android:layout_height=\"@dimen/picture_height\"");
 		viewAttributes.add("android:id=\"@+id/profileImg\"");
 		viewAttributes.add("android:contentDescription=\"@string/" + imageLabel.toLowerCase() + "\"");
-		viewAttributes.add("android:layout_alignParentLeft=\"true\"");
-		viewAttributes.add("android:layout_alignParentStart=\"true\"");
-		viewAttributes.add("android:layout_alignParentTop=\"true\"");
 		viewAttributes.add("android:minWidth=\"@dimen/picture_width\"");
+		viewAttributes.add("android:layout_alignParentTop=\"true\"");
+
+		if (picturePosition == DisplayViewAttribute.PicturePosition.RIGHT) {
+			viewAttributes.add("android:layout_alignParentRight=\"true\"");
+			viewAttributes.add("android:layout_alignParentEnd=\"true\"");
+		} else {
+			viewAttributes.add("android:layout_alignParentLeft=\"true\"");
+			viewAttributes.add("android:layout_alignParentStart=\"true\"");
+		}
+
 
 		imageView.setViewAttributes(viewAttributes);
 
 		List<AbstractLayoutGenerator.View> imageViews = new ArrayList<>();
 		imageViews.add(imageView);
-		imageViews.add(getBorderView("profileImg"));
+		imageViews.add(getBorderView("profileImg", picturePosition));
 
 		addViews(imageViews);
 	}
@@ -83,7 +90,7 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 	}
 
 	@SuppressWarnings("SameParameterValue")
-	private AbstractLayoutGenerator.View getBorderView(String imageName) {
+	private AbstractLayoutGenerator.View getBorderView(String imageName, DisplayViewAttribute.PicturePosition picturePosition) {
 		AbstractLayoutGenerator.View border = new AbstractLayoutGenerator.View("View");
 		List<String> viewAttributes = new ArrayList<>();
 
@@ -92,11 +99,20 @@ public class CardAttributeVisitor implements ResourceViewAttributeVisitor {
 		viewAttributes.add("android:id=\"@+id/border\"");
 		viewAttributes.add("android:layout_alignBottom=\"@+id/" + imageName + "\"");
 		viewAttributes.add("android:layout_alignTop=\"@+id/" + imageName + "\"");
-		viewAttributes.add("android:layout_marginEnd=\"@dimen/spacing_small\"");
-		viewAttributes.add("android:layout_marginRight=\"@dimen/spacing_small\"");
-		viewAttributes.add("android:layout_toEndOf=\"@+id/" + imageName + "\"");
-		viewAttributes.add("android:layout_toRightOf=\"@+id/" + imageName + "\"");
 		viewAttributes.add("android:background=\"@color/colorPrimary\"");
+		if (picturePosition == DisplayViewAttribute.PicturePosition.RIGHT) {
+			viewAttributes.add("android:layout_marginStart=\"@dimen/spacing_small\"");
+			viewAttributes.add("android:layout_marginLeft=\"@dimen/spacing_small\"");
+			viewAttributes.add("android:layout_toStartOf=\"@+id/" + imageName + "\"");
+			viewAttributes.add("android:layout_toLeftOf=\"@+id/" + imageName + "\"");
+		}
+		else {
+			viewAttributes.add("android:layout_marginEnd=\"@dimen/spacing_small\"");
+			viewAttributes.add("android:layout_marginRight=\"@dimen/spacing_small\"");
+			viewAttributes.add("android:layout_toEndOf=\"@+id/" + imageName + "\"");
+			viewAttributes.add("android:layout_toRightOf=\"@+id/" + imageName + "\"");
+		}
+
 
 		border.setViewAttributes(viewAttributes);
 

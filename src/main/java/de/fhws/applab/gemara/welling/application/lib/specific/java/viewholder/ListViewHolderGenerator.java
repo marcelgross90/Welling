@@ -11,7 +11,7 @@ import de.fhws.applab.gemara.enfield.metamodel.wembley.displayViews.cardView.Car
 import de.fhws.applab.gemara.welling.generator.abstractGenerator.AbstractModelClass;
 import de.fhws.applab.gemara.welling.visitors.ClickActionCardViewVisitor;
 import de.fhws.applab.gemara.welling.visitors.ClickableFieldVisitor;
-import de.fhws.applab.gemara.welling.visitors.ContainsImageVisitor;
+import de.fhws.applab.gemara.welling.visitors.ImageAnalyserVisitor;
 import de.fhws.applab.gemara.welling.visitors.InitializeClickableAttributesCardViewVisitor;
 import de.fhws.applab.gemara.welling.visitors.SetOnClickListenerVisitor;
 
@@ -71,7 +71,7 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		type.addField(onResourceClickListener);
 		type.addField(getContextClass(), "context", Modifier.PRIVATE, Modifier.FINAL);
 
-		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		ImageAnalyserVisitor visitor = new ImageAnalyserVisitor();
 		boolean containsImage = false;
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
 			resourceViewAttribute.accept(visitor);
@@ -112,7 +112,7 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		constructor.addStatement("$N = ($T) $N.findViewById($T.id.$N)", cardViewField, resourceCardView, itemViewParam, rClassName,
 				this.resourceName.toLowerCase() + "_card");
 
-		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		ImageAnalyserVisitor visitor = new ImageAnalyserVisitor();
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
 			resourceViewAttribute.accept(visitor);
 			if (visitor.isContainsImage()) {
@@ -164,7 +164,7 @@ public class ListViewHolderGenerator extends AbstractModelClass {
 		onClick.addParameter(getViewClassName(), "view");
 		onClick.beginControlFlow("if ($N != null)", onResourceClickListener);
 
-		ContainsImageVisitor visitor = new ContainsImageVisitor();
+		ImageAnalyserVisitor visitor = new ImageAnalyserVisitor();
 		boolean containsImage = false;
 		for (ResourceViewAttribute resourceViewAttribute : cardView.getResourceViewAttributes()) {
 			resourceViewAttribute.accept(visitor);
