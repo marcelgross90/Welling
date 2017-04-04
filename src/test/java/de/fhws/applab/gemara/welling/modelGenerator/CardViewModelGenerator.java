@@ -13,6 +13,10 @@ import java.util.List;
 
 public class CardViewModelGenerator {
 
+
+	private static DisplayViewAttribute.PicturePosition picturePosition =  DisplayViewAttribute.PicturePosition.LEFT;
+	private static String homepageDescription = "welearn";
+
 	public static CardView lecturer() {
 		List<ResourceViewAttribute> resourceViewAttributes = new ArrayList<>();
 
@@ -69,13 +73,13 @@ public class CardViewModelGenerator {
 		DisplayViewAttribute welearnAttribute = new DisplayViewAttribute("homepage", ViewAttribute.AttributeType.URL);
 		welearnAttribute.setAttributeLabel("welearn");
 		welearnAttribute.setClickActionAndroid(true);
-		welearnAttribute.setLinkDescription("welearn");
+		welearnAttribute.setLinkDescription(homepageDescription);
 		SingleResourceViewAttribute welearn = new SingleResourceViewAttribute(welearnAttribute);
 		resourceViewAttributes.add(welearn);
 
 		DisplayViewAttribute imageAttribute = new DisplayViewAttribute("profileImageUrl", ViewAttribute.AttributeType.PICTURE);
 		imageAttribute.setAttributeLabel("ProfileImage");
-		imageAttribute.setPicturePosition(DisplayViewAttribute.PicturePosition.RIGHT);
+		imageAttribute.setPicturePosition(picturePosition);
 		SingleResourceViewAttribute image = new SingleResourceViewAttribute(imageAttribute);
 		resourceViewAttributes.add(image);
 

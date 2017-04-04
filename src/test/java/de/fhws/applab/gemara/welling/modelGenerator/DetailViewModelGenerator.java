@@ -14,6 +14,8 @@ import java.util.List;
 
 public class DetailViewModelGenerator {
 
+	private static String homepageDescription = "welearn";
+
 	public static DetailView lecturer() {
 
 		DetailView detailView;
@@ -130,7 +132,7 @@ public class DetailViewModelGenerator {
 		DisplayViewAttribute welearnAttribute = new DisplayViewAttribute("homepage", ViewAttribute.AttributeType.URL);
 		welearnAttribute.setAttributeLabel("welearn");
 		welearnAttribute.setClickActionAndroid(true);
-		welearnAttribute.setLinkDescription("welearn");
+		welearnAttribute.setLinkDescription(homepageDescription);
 		SingleResourceViewAttribute welearn = new SingleResourceViewAttribute(welearnAttribute);
 		contactAttributes.add(welearn);
 

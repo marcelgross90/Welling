@@ -11,4 +11,4 @@ debug:
 	cd gemara/android/src-gen/generated && chmod 777 gradlew && ./gradlew clean assembleDebug
 
 install:
-	adb $(TARGET) install -rk $(APK)
+	adb $(TARGET) install -r $(APK)
